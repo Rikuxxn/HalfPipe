@@ -66,3 +66,16 @@ vcpkg_installed/
 # test output & cache
 Testing/
 .cache/
+
+/.vs
+/x64
+/BloomBrightPass.cso
+/BloomCombine.cso
+/BloomHorizontalBlur.cso
+/BloomVerticalBlur.cso
+/ShaderFBX.cso
+*.log
+*.tlog
+imgui.ini
+/data/ranking.txt
+
