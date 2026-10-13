@@ -91,16 +91,20 @@ void CUIAnimationEditor::Update(void)
             animationChanged = DrawClipSettings(data->Animations[m_SelectedClipIndex]);
         }
 
+        auto it = m_GeneratedObjects.find(m_SelectedAnimationName);
+
         // 基本設定が変更された場合
-        if (settingsChanged && m_GeneratedObject)
+        if (settingsChanged &&
+            (it != m_GeneratedObjects.end() && it->second))
         {
-            CUIFactory::ApplyTransform(m_GeneratedObject, *data);
+            CUIFactory::ApplyTransform(it->second, *data);
         }
 
         // クリップが変更された場合のみ、アニメーションを更新
-        if (animationChanged && m_GeneratedObject)
+        if (animationChanged &&
+            (it != m_GeneratedObjects.end() && it->second))
         {
-            CUIFactory::ApplyAnimations(m_GeneratedObject, *data);
+            CUIFactory::ApplyAnimations(it->second, *data);
         }
     }
     else
@@ -120,7 +124,12 @@ void CUIAnimationEditor::Update(void)
     {
         if (data && scene)
         {
-            m_GeneratedObject = CUIFactory::Create(scene, *data);
+            CGameObject* object = CUIFactory::Create(scene, *data);
+
+            if (object)
+            {
+                m_GeneratedObjects[data->AnimationName] = object;
+            }
         }
     }
 

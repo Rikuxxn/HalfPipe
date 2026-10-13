@@ -55,8 +55,8 @@ private:
     // アニメーションマネージャー
     CUIAnimationManager* m_Manager = nullptr;
 
-    // 生成したUIオブジェクト
-    CGameObject* m_GeneratedObject = nullptr;
+    // 生成したUIを個別に管理
+    std::unordered_map<std::string, CGameObject*> m_GeneratedObjects;
 
     // 選択中のアニメーション名
     std::string m_SelectedAnimationName;
