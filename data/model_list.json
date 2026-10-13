@@ -1,0 +1,26 @@
+[
+  {
+    "type": 0,
+    "category": "Model",
+    "name": "Floor",
+    "filepath": "data/MODELS/floor_01.x"
+  },
+  {
+    "type": 1,
+    "category": "Model",
+    "name": "Wall",
+    "filepath": "data/MODELS/wall_01.x"
+  },
+  {
+    "type": 2,
+    "category": "Model",
+    "name": "Torch",
+    "filepath": "data/MODELS/torch.x"
+  },
+  {
+    "type": 3,
+    "category": "Model",
+    "name": "HalfPipe",
+    "filepath": "data/MODELS/HalfPipe.x"
+  }
+]

@@ -1,0 +1,25 @@
+{
+  "keyFrames": [
+    {
+      "posV": {
+        "x": 0.0,
+        "y": 5.0,
+        "z": -10.0
+      },
+      "posR": {
+        "x": 0.0,
+        "y": 2.0,
+        "z": 0.0
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "distance": 10.0,
+      "duration": 2.0,
+      "delay": 0.5,
+      "easing": "EaseInOutSine"
+    }
+  ]
+}

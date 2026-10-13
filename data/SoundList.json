@@ -1,0 +1,33 @@
+{
+  "sounds": [
+    {
+      "label": 0,
+      "filename": "data/BGM/gameBGM.wav",
+      "category": 0,
+      "spatial": 0,
+      "loopCount": -1,
+      "maxInstances": 1,
+      "volume": 1.0
+    },
+    {
+      "label": 1,
+      "filename": "data/BGM/titleBGM.wav",
+      "category": 0,
+      "spatial": 0,
+      "loopCount": -1,
+      "maxInstances": 1,
+      "volume": 0.5
+    },
+    {
+      "label": 2,
+      "filename": "data/SE/fire.wav",
+      "category": 1,
+      "spatial": 1,
+      "loopCount": -1,
+      "maxInstances": 0,
+      "volume": 1.0,
+      "minDistance": 100.0,
+      "maxDistance": 500.0
+    }
+  ]
+}

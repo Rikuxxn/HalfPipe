@@ -1,0 +1,10 @@
+[
+  {
+    "type": 0,
+    "name": "EventArea"
+  },
+  {
+    "type": 1,
+    "name": "SpawnArea"
+  }
+]

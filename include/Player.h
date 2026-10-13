@@ -1,0 +1,116 @@
+//=============================================================================
+//
+// プレイヤー処理 [Player.h]
+// Author : RIKU TANEKAWA
+//
+//=============================================================================
+#ifndef _PLAYER_H_// このマクロ定義がされていなかったら
+#define _PLAYER_H_// 2重インクルード防止のマクロ定義
+
+//*****************************************************************************
+// インクルードファイル
+//*****************************************************************************
+#include "GameObject.h"
+#include "State.h"
+
+//*****************************************************************************
+// プレイヤークラス
+//*****************************************************************************
+class CPlayer : public CGameObject
+{
+public:
+    CPlayer();
+    virtual ~CPlayer();
+
+    static constexpr float SPEED        = 180.0f;	// 通常移動時スピード
+
+    HRESULT Init    (void) override;
+    void    Update  (void) override;
+
+#ifdef _DEBUG
+    // Imguiのデバッグ描画
+    void DrawDebugGUI(void) override;
+#endif
+
+    // 入力データ構造体
+    struct InputData
+    {
+        D3DXVECTOR3 moveDir;	// 前後移動ベクトル
+    };
+
+    void SetControlFlag(bool flag) { m_bControlFlag = flag; }
+
+    InputData GatherInput(void);
+
+    bool IsMoving(void) const { return m_bIsMoving; }
+
+    // ステート用のフラグ更新処理
+    void UpdateMovementFlags(const D3DXVECTOR3& moveDir);
+
+    // 当たり判定
+    void OnCollisionEnter(CGameObject* other) override;
+    void OnCollisionStay(CGameObject* other) override;
+    void OnCollisionExit(CGameObject* other) override;
+
+public:
+    // ネットワーク関係
+    void SetNetworkControlled(bool enable)
+    {
+        m_NetworkControlled = enable;
+    }
+
+    bool IsNetworkControlled(void) const
+    {
+        return m_NetworkControlled;
+    }
+
+    void SetNetworkInput(const InputData& input)
+    {
+        m_NetworkInput = input;
+    }
+
+    void SetPlayerId(uint8_t id)
+    {
+        m_PlayerId = id;
+    }
+
+    uint8_t GetPlayerId(void) const
+    {
+        return m_PlayerId;
+    }
+
+    void SetLocalPlayer(bool enable)
+    {
+        m_IsLocalPlayer = enable;
+    }
+
+    bool IsLocalPlayer(void) const
+    {
+        return m_IsLocalPlayer;
+    }
+
+    void UpdateNetworkMotion(bool isMoving);
+
+private:
+
+    D3DXVECTOR3 m_rotDest;      // 目標の向き
+    bool        m_bIsMoving;	// 移動入力フラグ
+    bool        m_bControlFlag; // 移動許可フラグ
+
+    // ステートを管理するクラスのインスタンス
+    StateMachine<CPlayer> m_stateMachine;
+
+    bool m_NetworkControlled = false;
+    bool m_IsLocalPlayer = false;
+    bool m_NetworkMoving = false;
+    InputData m_NetworkInput{};
+    uint8_t m_PlayerId = 0;
+
+    // Network interpolation
+    D3DXVECTOR3 m_NetworkTargetPosition = INIT_VEC3;
+    D3DXVECTOR3 m_NetworkTargetRotation = INIT_VEC3;
+
+
+};
+
+#endif
