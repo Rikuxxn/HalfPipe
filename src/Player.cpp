@@ -456,8 +456,17 @@ void CPlayer::DrawDebugGUI(void)
 		}
 
 		ImGui::TreePop(); // 閉じる
-    }
 
+		// 自動移動ポイントエディターの描画
+		DrawMovePointEditor();
+    }
+}
+
+//=============================================================================
+// 自動移動ポイントエディターの描画
+//=============================================================================
+void CPlayer::DrawMovePointEditor(void)
+{
 	// プレイヤー自動移動ポイント設置エディター
 	if (ImGui::TreeNode("MovePoint Editor"))
 	{
@@ -468,6 +477,8 @@ void CPlayer::DrawDebugGUI(void)
 		static float addPos[3] = { 0.0f,0.0f,0.0f };
 
 		ImGui::DragFloat3("Add Point", addPos, 1.0f);
+
+		ImGui::Dummy(ImVec2(0.0f, 5.0f));
 
 		if (ImGui::Button("Add Move Point"))
 		{

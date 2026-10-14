@@ -36,6 +36,9 @@ public:
 #ifdef _DEBUG
     // Imguiのデバッグ描画
     void DrawDebugGUI(void) override;
+
+    void DrawMovePointEditor(void);
+
 #endif
 
     // 入力データ構造体
