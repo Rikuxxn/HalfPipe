@@ -31,10 +31,12 @@ public:
     // ステージオブジェクトの種類
     enum class StageObjectType
     {
-        Floor,     // テスト : 床
-        Wall,      // テスト : 壁
-        Torch,     // テスト : 松明
-        HalfPipe,  // ハーフパイプステージ
+        Floor,      // テスト : 床
+        Wall,       // テスト : 壁
+        Torch,      // テスト : 松明
+        HalfPipe,   // ハーフパイプステージ
+        Basket,     // かご
+        Right,      // 照明
 
         Max
     };

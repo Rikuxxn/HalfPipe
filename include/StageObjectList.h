@@ -123,6 +123,56 @@ public:
         return ColliderShape::TriangleMesh;
     }
 
+private:
+};
+
+//*****************************************************************************
+// かごブロッククラス
+//*****************************************************************************
+class CBasketBlock : public CStageObject
+{
+public:
+    CBasketBlock();
+    ~CBasketBlock();
+
+    HRESULT Init(void) override;
+    void Update(void) override;
+
+    StageObjectType GetType(void) const override
+    {
+        return StageObjectType::Basket;
+    }
+
+    ColliderShape GetColliderShape(void) const override
+    {
+        return ColliderShape::Box;
+    }
+
+private:
+};
+
+//*****************************************************************************
+// 照明ブロッククラス
+//*****************************************************************************
+class CRightBlock : public CStageObject
+{
+public:
+    CRightBlock();
+    ~CRightBlock();
+
+    HRESULT Init(void) override;
+    void Update(void) override;
+
+    StageObjectType GetType(void) const override
+    {
+        return StageObjectType::Right;
+    }
+
+    ColliderShape GetColliderShape(void) const override
+    {
+        return ColliderShape::Box;
+    }
+
 
 private:
 };

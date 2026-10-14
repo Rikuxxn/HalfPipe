@@ -263,3 +263,49 @@ void CHalfPipeBlock::Update(void)
 	CStageObject::Update();
 
 }
+
+CBasketBlock::CBasketBlock()
+{
+
+}
+
+CBasketBlock::~CBasketBlock()
+{
+
+}
+
+HRESULT CBasketBlock::Init(void)
+{
+
+	return S_OK;
+}
+
+void CBasketBlock::Update(void)
+{
+	// ステージオブジェクトの更新
+	CStageObject::Update();
+
+}
+
+CRightBlock::CRightBlock()
+{
+
+}
+
+CRightBlock::~CRightBlock()
+{
+
+}
+
+HRESULT CRightBlock::Init(void)
+{
+
+	return S_OK;
+}
+
+void CRightBlock::Update(void)
+{
+	// ステージオブジェクトの更新
+	CStageObject::Update();
+
+}

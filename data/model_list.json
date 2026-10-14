@@ -22,5 +22,17 @@
     "category": "Model",
     "name": "HalfPipe",
     "filepath": "data/MODELS/HalfPipe.x"
+  },
+  {
+    "type": 4,
+    "category": "Model",
+    "name": "Basket",
+    "filepath": "data/MODELS/basket.x"
+  },
+  {
+    "type": 5,
+    "category": "Model",
+    "name": "Right",
+    "filepath": "data/MODELS/right.x"
   }
 ]
