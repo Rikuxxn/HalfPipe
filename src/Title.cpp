@@ -103,20 +103,20 @@ HRESULT CTitle::Init(void)
 	// マウスカーソルを表示する
 	CManager::Instance()->GetInput()->GetMouse()->SetCursorVisibility(true);
 
-	// ディレクショナルライトの生成
-	CreateDirectionalLight({ 0.0f, -1.0f, 0.0f }, D3DXCOLOR(1, 1, 1, 1));
+	//// ディレクショナルライトの生成
+	//CreateDirectionalLight({ 0.0f, -1.0f, 0.0f }, D3DXCOLOR(1, 1, 1, 1));
 
-	// ディレクショナルライトの生成
-	CreateDirectionalLight({ 1.0f, 0.0f, 0.0f }, D3DXCOLOR(1, 1, 1, 1));
+	//// ディレクショナルライトの生成
+	//CreateDirectionalLight({ 1.0f, 0.0f, 0.0f }, D3DXCOLOR(1, 1, 1, 1));
 
-	// ディレクショナルライトの生成
-	CreateDirectionalLight({ -1.0f, 0.0f, 0.0f }, D3DXCOLOR(1, 1, 1, 1));
+	//// ディレクショナルライトの生成
+	//CreateDirectionalLight({ -1.0f, 0.0f, 0.0f }, D3DXCOLOR(1, 1, 1, 1));
 
-	// ディレクショナルライトの生成
-	CreateDirectionalLight({ 0.0f, 0.0f, 1.0f }, D3DXCOLOR(1, 1, 1, 1));
+	//// ディレクショナルライトの生成
+	//CreateDirectionalLight({ 0.0f, 0.0f, 1.0f }, D3DXCOLOR(1, 1, 1, 1));
 
-	// ディレクショナルライトの生成
-	CreateDirectionalLight({ 0.0f, 0.0f, -1.0f }, D3DXCOLOR(1, 1, 1, 1));
+	//// ディレクショナルライトの生成
+	//CreateDirectionalLight({ 0.0f, 0.0f, -1.0f }, D3DXCOLOR(1, 1, 1, 1));
 
 	//-----------------------------------------------------
 	// 最初のシーンで初期化する(次のシーンからは呼ばない)
@@ -133,7 +133,7 @@ HRESULT CTitle::Init(void)
 		//trigger->GetTriggerObjectEditor()->Init();
 
 		// ステージオブジェクトの読み込み
-		CManager::Instance()->GetStageManager()->LoadFromJson("data/StageInfo/test.json");
+		CManager::Instance()->GetStageManager()->LoadFromJson("data/StageInfo/Title_Stage.json");
 
 		// トリガーオブジェクトの読み込み
 		CManager::Instance()->GetTriggerObjectManager()->LoadFromJson("data/TriggerInfo/test_trigger.json");
@@ -149,9 +149,9 @@ HRESULT CTitle::Init(void)
 	m_pSky = std::make_unique<CSky>();
 	m_pSky->Init();
 
-	// 水の生成
-	m_pWater = std::make_unique<CWater>();
-	m_pWater->Init();
+	//// 水の生成
+	//m_pWater = std::make_unique<CWater>();
+	//m_pWater->Init();
 
 
 	//// ポイントライトの生成

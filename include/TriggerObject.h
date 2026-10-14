@@ -32,7 +32,7 @@ public:
     enum class TriggerObjectType
     {
         EventArea,
-        SpawnArea,
+        GoalArea,
 
         Max
     };

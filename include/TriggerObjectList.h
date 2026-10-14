@@ -44,16 +44,16 @@ private:
 };
 
 //*****************************************************************************
-// スポーンエリアトリガークラス
+// ゴールエリアトリガークラス
 //*****************************************************************************
-class CSpawnTrigger : public CTriggerObject
+class CGoalTrigger : public CTriggerObject
 {
 public:
 
     // トリガーの種類
     TriggerObjectType GetType(void) const override
     {
-        return TriggerObjectType::SpawnArea;
+        return TriggerObjectType::GoalArea;
     }
 
     // トリガーシェイプの種類

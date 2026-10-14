@@ -48,5 +48,5 @@ void CTriggerFactory::InitFactory(void)
     m_Factory.clear();
 
     m_Factory[CTriggerObject::TriggerObjectType::EventArea] = [](CScene* scene) { return scene->CreateObject<CEventTrigger>(); };
-    m_Factory[CTriggerObject::TriggerObjectType::SpawnArea] = [](CScene* scene) { return scene->CreateObject<CSpawnTrigger >(); };
+    m_Factory[CTriggerObject::TriggerObjectType::GoalArea] = [](CScene* scene) { return scene->CreateObject<CGoalTrigger >(); };
 }

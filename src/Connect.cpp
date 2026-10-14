@@ -94,9 +94,9 @@ HRESULT CConnect::Init(void)
 	// ゲーム時間をリセット
 	time->Reset();
 
-	// 空の生成
-	m_pSky = std::make_unique<CSky>();
-	m_pSky->Init();
+	//// 空の生成
+	//m_pSky = std::make_unique<CSky>();
+	//m_pSky->Init();
 
 
 
