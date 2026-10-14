@@ -124,7 +124,7 @@ HRESULT CGame::Init(void)
 
 				transform->Position =
 				{
-					static_cast<float>(i * 60 - 90),
+					static_cast<float>(/*i * 60*/ - 90),
 					0.0f,
 					0.0f
 				};
@@ -134,6 +134,9 @@ HRESULT CGame::Init(void)
 				character->Load("data/MOTION/motion_player.txt");
 
 				player->Init();
+
+				// Ž©“®ˆÚ“®ƒ|ƒCƒ“ƒg‚Ì“Ç‚Ýž‚Ý
+				player->LoadMovePoint("data/MovePointInfo.json");
 
 				auto rigid = player->AddComponent<CRigidBodyComponent>();
 

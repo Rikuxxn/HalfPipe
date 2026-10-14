@@ -12,6 +12,12 @@
 //*****************************************************************************
 #include "GameObject.h"
 #include "State.h"
+#include "json.hpp"
+
+//*****************************************************************************
+// 型定義
+//*****************************************************************************
+using json = nlohmann::json;
 
 //*****************************************************************************
 // プレイヤークラス
@@ -46,6 +52,18 @@ public:
 
     // ステート用のフラグ更新処理
     void UpdateMovementFlags(const D3DXVECTOR3& moveDir);
+
+    // 自動移動ポイントの追加
+    void AddMovePoint(const D3DXVECTOR3& pos);
+
+    // ポイントデバッグモデル生成
+    void CreateMovePointObject(const D3DXVECTOR3& pos);
+
+    // 自動移動ポイントリストのクリア
+    void ClearMovePoints(void);
+
+    void SaveMovePoint(const char* filename);
+    void LoadMovePoint(const char* filename);
 
     // 当たり判定
     void OnCollisionEnter(CGameObject* other) override;
@@ -110,7 +128,12 @@ private:
     D3DXVECTOR3 m_NetworkTargetPosition = INIT_VEC3;
     D3DXVECTOR3 m_NetworkTargetRotation = INIT_VEC3;
 
+    // 自動移動用ポイント
+    std::vector<D3DXVECTOR3> m_MovePoints;
+    int m_currentPoint;
 
+    // 自動移動ポイントデバッグ表示用
+    std::vector<CGameObject*> m_pPointObj;
 };
 
 #endif

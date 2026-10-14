@@ -17,7 +17,6 @@
 #include "Raycast.h"
 #include "Renderer.h"
 #include "Camera.h"
-//#include "ShadowMap.h"
 
 
 namespace GuiParam
@@ -44,9 +43,9 @@ void CDebugManager::Draw(void)
 
     ImGui::Begin("Debug Info");
 
-    //---------------------------------
+    //-------------------------------------------
     // エンジン情報
-    //---------------------------------
+    //-------------------------------------------
 
     ImGui::Text("FPS : %d", CManager::Instance()->GetTimeSystem()->GetFPS());
 
@@ -74,9 +73,9 @@ void CDebugManager::Draw(void)
     // シーンの取得
     auto scene = CManager::Instance()->GetSceneManager()->GetScene();
 
-    //---------------------------------
+    //-------------------------------------------
     // プレイヤー
-    //---------------------------------
+    //-------------------------------------------
 
     auto player = scene->FindGameObject("Player");
 
@@ -85,9 +84,9 @@ void CDebugManager::Draw(void)
         player->DrawDebugGUI();
     }
 
-    //---------------------------------
+    //-------------------------------------------
     // カメラ
-    //---------------------------------
+    //-------------------------------------------
 
     CCamera* pCamera = CManager::Instance()->GetCamera();
 
@@ -95,25 +94,6 @@ void CDebugManager::Draw(void)
 	{
 		pCamera->DrawDebugGUI();
 	}
-
-    //---------------------------------
-    // ボール
-    //---------------------------------
-
-    auto ball = scene->FindGameObject("Ball");
-
-    if (ball)
-    {
-        ball->DrawDebugGUI();
-    }
-
-    //// シャドウマップの取得
-    //auto shadow = CManager::Instance()->GetRenderer()->GetShadowMap();
-
-    //ImGui::Image(
-    //    (ImTextureID)shadow->GetShadowTexture(),
-    //    ImVec2(256, 256)
-    //);
 
     ImGui::End();
 
