@@ -146,7 +146,11 @@ private:
     // ジャンプポイント(小)
     std::vector<D3DXVECTOR3> m_StartJumpPointsSmall;
 
+    // 現在のポイント
     int m_currentPoint;
+
+    // 自動移動のタイム
+    float m_CurrentTime;
 
     // 自動移動ポイントデバッグ表示用
     std::vector<CGameObject*> m_pPointObj;

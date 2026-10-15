@@ -64,6 +64,12 @@ namespace MathUtil
     // 浮動小数点比較
     //=========================================================================   
     bool NearlyEqual(float a, float b, float epsilon = 0.0001f);
+
+    //=========================================================================   
+    // スプライン
+    //========================================================================= 
+    D3DXVECTOR3 Spline(const D3DXVECTOR3& p0, const D3DXVECTOR3& p1, const D3DXVECTOR3& p2, const D3DXVECTOR3& p3, float t);
+
 }
 
 #endif

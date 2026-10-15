@@ -210,4 +210,24 @@ namespace MathUtil
 	{ 
 		return std::fabs(a - b) <= epsilon; 
 	} 
+
+	//=========================================================================
+	// スプライン
+	//========================================================================= 
+	D3DXVECTOR3 Spline(const D3DXVECTOR3& P0, const D3DXVECTOR3& P1, const D3DXVECTOR3& P2, const D3DXVECTOR3& P3, float t)
+	{
+		// 事前に計算
+		float t2 = t * t;
+		float t3 = t2 * t;
+
+		D3DXVECTOR3 point;
+
+		// キャットマルロムの計算式
+		point.x = 0.5f * ((2.0f * P1.x) + (-P0.x + P2.x) * t + (2.0f * P0.x - 5.0f * P1.x + 4.0f * P2.x - P3.x) * t2 + (-P0.x + 3.0f * P1.x - 3.0f * P2.x + P3.x) * t3);
+		point.y = 0.5f * ((2.0f * P1.y) + (-P0.y + P2.y) * t + (2.0f * P0.y - 5.0f * P1.y + 4.0f * P2.y - P3.y) * t2 + (-P0.y + 3.0f * P1.y - 3.0f * P2.y + P3.y) * t3);
+		point.z = 0.5f * ((2.0f * P1.z) + (-P0.z + P2.z) * t + (2.0f * P0.z - 5.0f * P1.z + 4.0f * P2.z - P3.z) * t2 + (-P0.z + 3.0f * P1.z - 3.0f * P2.z + P3.z) * t3);
+
+		return point;
+
+	}
 }
