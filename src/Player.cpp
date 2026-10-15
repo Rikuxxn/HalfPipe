@@ -54,7 +54,7 @@ CPlayer::CPlayer() :
 	m_CurrentTime		(0.0f),			// 現在の移動時間(0.0f～1.0f)
 	m_AutoMoveSpeed		(250.0f),		// 移動スピード
 	m_SurfaceNormal		({ 0, 1, 0 }),	// 面の法線
-    m_SurfaceForward	({ 0, 0, 1 }),	// 面に沿う進行方向
+    m_SurfaceForward	({ -1, 0, 0 }),	// 面に沿う進行方向
     m_IsGrounded		(false),		// 接地中か
     m_WasGrounded		(false),		// 前フレームの接地状態
     m_AlignToSurface	(true)			// 面に姿勢を合わせるか

@@ -54,4 +54,5 @@ void CStageFactory::InitFactory(void)
     m_Factory[CStageObject::StageObjectType::HalfPipe]  = [](CScene* scene) { return scene->CreateObject<CHalfPipeBlock>(); };
     m_Factory[CStageObject::StageObjectType::Basket]    = [](CScene* scene) { return scene->CreateObject<CBasketBlock>(); };
     m_Factory[CStageObject::StageObjectType::Right]     = [](CScene* scene) { return scene->CreateObject<CRightBlock>(); };
+    m_Factory[CStageObject::StageObjectType::SignBoard] = [](CScene* scene) { return scene->CreateObject<CSignBoardBlock>(); };
 }

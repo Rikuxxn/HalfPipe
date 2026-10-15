@@ -177,4 +177,30 @@ public:
 private:
 };
 
+//*****************************************************************************
+// 広告看板ブロッククラス
+//*****************************************************************************
+class CSignBoardBlock : public CStageObject
+{
+public:
+    CSignBoardBlock();
+    ~CSignBoardBlock();
+
+    HRESULT Init(void) override;
+    void Update(void) override;
+
+    StageObjectType GetType(void) const override
+    {
+        return StageObjectType::SignBoard;
+    }
+
+    ColliderShape GetColliderShape(void) const override
+    {
+        return ColliderShape::Box;
+    }
+
+
+private:
+};
+
 #endif

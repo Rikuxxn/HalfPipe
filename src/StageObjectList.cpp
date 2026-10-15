@@ -309,3 +309,26 @@ void CRightBlock::Update(void)
 	CStageObject::Update();
 
 }
+
+CSignBoardBlock::CSignBoardBlock()
+{
+
+}
+
+CSignBoardBlock::~CSignBoardBlock()
+{
+
+}
+
+HRESULT CSignBoardBlock::Init(void)
+{
+
+	return S_OK;
+}
+
+void CSignBoardBlock::Update(void)
+{
+	// ステージオブジェクトの更新
+	CStageObject::Update();
+
+}

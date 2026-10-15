@@ -34,5 +34,11 @@
     "category": "Model",
     "name": "Right",
     "filepath": "data/MODELS/right.x"
+  },
+  {
+    "type": 6,
+    "category": "Model",
+    "name": "SignBoard",
+    "filepath": "data/MODELS/signboard.x"
   }
 ]
