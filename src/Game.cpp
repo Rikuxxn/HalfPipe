@@ -131,9 +131,9 @@ HRESULT CGame::Init(void)
 
 				transform->Position =
 				{
-					-310.0f,
-					545.0f,
-					-1305.0f
+					-400.0f,
+					580.0f,
+					-1330.0f
 				};
 
 

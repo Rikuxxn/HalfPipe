@@ -133,6 +133,19 @@ private:
 
     // 自動移動用ポイント
     std::vector<D3DXVECTOR3> m_MovePoints;
+
+    // ジャンプ開始ポイント
+    std::vector<D3DXVECTOR3> m_StartJumpPoints;
+
+    // ジャンプポイント(大)
+    std::vector<D3DXVECTOR3> m_JumpPointsBig;
+
+    // ジャンプポイント(中)
+    std::vector<D3DXVECTOR3> m_StartJumpPointsMiddle;
+
+    // ジャンプポイント(小)
+    std::vector<D3DXVECTOR3> m_StartJumpPointsSmall;
+
     int m_currentPoint;
 
     // 自動移動ポイントデバッグ表示用
