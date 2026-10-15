@@ -50,8 +50,9 @@ CPlayer::CPlayer() :
 	m_bControlFlag		(true),			// 移動許可フラグ
 	m_currentPoint		(-1),			// 現在の移動ポイント(エディタ用)
 	m_IsAutoMove		(true),			// 自動移動中か
-	m_CurrentMovePoint	(0),			// 現在目指しているポイント
-	m_AutoMoveSpeed		(200.0f),		// 移動スピード
+	m_CurrentMovePoint	(1),			// 現在目指しているポイント
+	m_CurrentTime		(0.0f),			// 現在の移動時間(0.0f～1.0f)
+	m_AutoMoveSpeed		(250.0f),		// 移動スピード
 	m_SurfaceNormal		({ 0, 1, 0 }),	// 面の法線
     m_SurfaceForward	({ 0, 0, 1 }),	// 面に沿う進行方向
     m_IsGrounded		(false),		// 接地中か
@@ -261,7 +262,7 @@ void CPlayer::UpdateAutoMove(void)
 	}
 
 	// 全ポイントに到達した
-	if (m_CurrentMovePoint >= m_MovePoints.size())
+	if (m_CurrentMovePoint >= m_MovePoints.size()-3)
 	{
 		// 自動移動停止
 		StopAutoMove();
@@ -272,19 +273,25 @@ void CPlayer::UpdateAutoMove(void)
 	D3DXVECTOR3 position = transform->Position;
 
 	// 目標位置
-	D3DXVECTOR3 target = m_MovePoints[m_CurrentMovePoint];
+	D3DXVECTOR3 target = MathUtil::Spline(	m_MovePoints[m_CurrentMovePoint-1], 
+											m_MovePoints[m_CurrentMovePoint],
+											m_MovePoints[m_CurrentMovePoint+1], 
+											m_MovePoints[m_CurrentMovePoint+2],m_CurrentTime);
+
 
 	// 目標への方向
 	D3DXVECTOR3 direction = target - position;
 
 	float distance = D3DXVec3Length(&direction);
 
-	// ポイントに到達した
-	if (distance < 10.0f)
+	// 1.0fになった
+	if (m_CurrentTime >= 1.0f)
 	{
 		++m_CurrentMovePoint;
+		m_CurrentTime = 0.0f;
 		return;
 	}
+	m_CurrentTime += 0.02f;
 
 	// 正規化
 	D3DXVec3Normalize(&direction, &direction);
