@@ -89,7 +89,7 @@ HRESULT CGame::Init(void)
 	//trigger->GetTriggerObjectEditor()->Init();
 
 	// ステージオブジェクトの読み込み
-	CManager::Instance()->GetStageManager()->LoadFromJson("data/StageInfo/test.json");
+	CManager::Instance()->GetStageManager()->LoadFromJson("data/StageInfo/Game_Stage.json");
 
 	// トリガーオブジェクトの読み込み
 	CManager::Instance()->GetTriggerObjectManager()->LoadFromJson("data/TriggerInfo/test_trigger.json");
@@ -108,26 +108,34 @@ HRESULT CGame::Init(void)
 	// Player生成(クライアント)
 	//============================================================
 	{
-		auto network = CManager::Instance()->GetNetworkManager();
+		//auto network = CManager::Instance()->GetNetworkManager();
 
-		if (network)
+		//if (network)
 		{
-			for (uint8_t i = 0; i < Network::MAX_PLAYERS; ++i)
+			//for (uint8_t i = 0; i < Network::MAX_PLAYERS; ++i)
 			{
 				auto player = CreateObject<CPlayer>();
 
 				player->SetTag("Player");
 
-				player->SetPlayerId(static_cast<uint8_t>(i));
+				//player->SetPlayerId(static_cast<uint8_t>(i));
 
 				auto transform = player->AddComponent<CTransformComponent>();
 
+				//transform->Position =
+				//{
+				//	static_cast<float>(/*i * 60*/ - 90),
+				//	0.0f,
+				//	0.0f
+				//};
+
 				transform->Position =
 				{
-					static_cast<float>(/*i * 60*/ - 90),
-					0.0f,
-					0.0f
+					-310.0f,
+					545.0f,
+					-1305.0f
 				};
+
 
 				auto character = player->AddComponent<CCharacterComponent>();
 
@@ -152,7 +160,7 @@ HRESULT CGame::Init(void)
 
 					rigid->SetColliderOffset({ 0.0f, 50.0f, 0.0f });
 
-					rigid->CreateCapsule(15.5f, 45.5f, 1.0f);
+					rigid->CreateCapsule(15.5f, 45.5f, 0.8f);
 
 					rigid->SetDynamic(true);
 

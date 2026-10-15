@@ -30,8 +30,9 @@ public:
 
     static constexpr float SPEED        = 180.0f;	// 通常移動時スピード
 
-    HRESULT Init    (void) override;
-    void    Update  (void) override;
+    HRESULT Init            (void) override;
+    void    Update          (void) override;
+    void    UpdateAutoMove  (void);
 
 #ifdef _DEBUG
     // Imguiのデバッグ描画
@@ -56,6 +57,22 @@ public:
     // ステート用のフラグ更新処理
     void UpdateMovementFlags(const D3DXVECTOR3& moveDir);
 
+    // 自動移動開始
+    void StartAutoMove(void)
+    {
+        m_IsAutoMove = true;
+        m_CurrentMovePoint = 0;
+    }
+
+    // 自動移動停止
+    void StopAutoMove(void)
+    {
+        m_IsAutoMove = false;
+    }
+
+    // 自動移動中か
+    bool IsAutoMoving(void) { return m_IsAutoMove; }
+
     // 自動移動ポイントの追加
     void AddMovePoint(const D3DXVECTOR3& pos);
 
@@ -74,43 +91,26 @@ public:
     void OnCollisionExit(CGameObject* other) override;
 
 public:
+
     // ネットワーク関係
-    void SetNetworkControlled(bool enable)
-    {
-        m_NetworkControlled = enable;
-    }
+    void SetNetworkControlled(bool enable) { m_NetworkControlled = enable; }
+    bool IsNetworkControlled(void) const { return m_NetworkControlled; }
+    void SetNetworkInput(const InputData& input) { m_NetworkInput = input; }
 
-    bool IsNetworkControlled(void) const
-    {
-        return m_NetworkControlled;
-    }
+    // プレイヤーID
+    void SetPlayerId(uint8_t id) { m_PlayerId = id; }
+    uint8_t GetPlayerId(void) const { return m_PlayerId; }
 
-    void SetNetworkInput(const InputData& input)
-    {
-        m_NetworkInput = input;
-    }
+    // ローカルプレイヤー
+    void SetLocalPlayer(bool enable) { m_IsLocalPlayer = enable; }
+    bool IsLocalPlayer(void) const { return m_IsLocalPlayer; }
 
-    void SetPlayerId(uint8_t id)
-    {
-        m_PlayerId = id;
-    }
-
-    uint8_t GetPlayerId(void) const
-    {
-        return m_PlayerId;
-    }
-
-    void SetLocalPlayer(bool enable)
-    {
-        m_IsLocalPlayer = enable;
-    }
-
-    bool IsLocalPlayer(void) const
-    {
-        return m_IsLocalPlayer;
-    }
-
+    // モーション更新
     void UpdateNetworkMotion(bool isMoving);
+
+private:
+
+    void UpdateSurfaceAlignment(float deltaTime);
 
 private:
 
@@ -137,6 +137,22 @@ private:
 
     // 自動移動ポイントデバッグ表示用
     std::vector<CGameObject*> m_pPointObj;
+
+    // 自動移動中か
+    bool m_IsAutoMove;
+
+    // 現在目指しているポイント
+    size_t m_CurrentMovePoint;
+
+    // 移動速度
+    float m_AutoMoveSpeed;
+
+    // ハーフパイプの面に沿って向きを変える用
+    D3DXVECTOR3     m_SurfaceNormal;        // 面の法線
+    D3DXVECTOR3     m_SurfaceForward;       // 面に沿う進行方向
+    bool            m_IsGrounded;           // 接地中か
+    bool            m_WasGrounded;          // 前フレームの接地状態
+    bool            m_AlignToSurface;       // 面に姿勢を合わせるか
 };
 
 #endif

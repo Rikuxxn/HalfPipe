@@ -23,6 +23,7 @@
 #include "RigidBodyComponent.h"
 #include "ColorConstants.h"
 #include "MathUtility.h"
+#include "MathConstants.h"
 #include "RaycastComponent.h"
 #include "MatrixUtility.h"
 #include "NetWorkManager.h"
@@ -36,15 +37,26 @@
 // 名前空間の使用
 using namespace ColorConst;
 using namespace MathUtil;
+using namespace MathConst;
+using namespace MatrixUtil;
 
 
 //=============================================================================
 // コンストラクタ
 //=============================================================================
 CPlayer::CPlayer() :
-	m_rotDest		(INIT_VEC3),	// 目標の向き
-	m_bIsMoving		(false),		// 移動しているか
-	m_bControlFlag	(true)			// 移動許可フラグ
+	m_rotDest			(INIT_VEC3),	// 目標の向き
+	m_bIsMoving			(false),		// 移動しているか
+	m_bControlFlag		(true),			// 移動許可フラグ
+	m_currentPoint		(-1),			// 現在の移動ポイント(エディタ用)
+	m_IsAutoMove		(true),			// 自動移動中か
+	m_CurrentMovePoint	(0),			// 現在目指しているポイント
+	m_AutoMoveSpeed		(200.0f),		// 移動スピード
+	m_SurfaceNormal		({ 0, 1, 0 }),	// 面の法線
+    m_SurfaceForward	({ 0, 0, 1 }),	// 面に沿う進行方向
+    m_IsGrounded		(false),		// 接地中か
+    m_WasGrounded		(false),		// 前フレームの接地状態
+    m_AlignToSurface	(true)			// 面に姿勢を合わせるか
 {
 
 }
@@ -101,6 +113,11 @@ HRESULT CPlayer::Init(void)
 
 	//// テクスチャの設定
 	//hpGauge->SetTexture("data/TEXTURE/ball.png");
+
+
+	// レイキャストコンポーネントの追加
+	AddComponent<CRaycastComponent>();
+
 
     // インスタンスのポインタを渡す
     m_stateMachine.Start(this);
@@ -183,22 +200,25 @@ void CPlayer::Update(void)
 	// -π～π に正規化
 	while (diff > D3DX_PI)
 	{
-		diff -= D3DX_PI * 2.0f;
+		diff -= D3DX_PI * F_DOUBLE;
 	}
 
 	while (diff < -D3DX_PI)
 	{
-		diff += D3DX_PI * 2.0f;
+		diff += D3DX_PI * F_DOUBLE;
 	}
 
-	// Time
+	// デルタタイムの取得
 	float dt = CManager::Instance()->GetTimeSystem()->GetDeltaTime();
 
-	// フレームレート非依存補間係数
-	float t = 1.0f - expf(-3.5f * dt);
+	// ハーフパイプの面に合わせた姿勢制御
+	UpdateSurfaceAlignment(dt);
 
-	// 補間
-	transform->Rotation.y += diff * t;
+	//// フレームレート非依存補間係数
+	//float t = 1.0f - expf(-3.5f * dt);
+
+	//// 補間
+	//transform->Rotation.y += diff * t;
 
 
 	//// レイキャストコンポーネントの取得
@@ -219,6 +239,206 @@ void CPlayer::Update(void)
 	//		int n = 0;
 	//	}
 	//}
+}
+
+//=============================================================================
+// 移動ポイントに沿った自動移動
+//=============================================================================
+void CPlayer::UpdateAutoMove(void)
+{
+	if (!m_IsAutoMove || m_MovePoints.empty())
+	{
+		return;
+	}
+
+	// コンポーネントの取得
+	auto transform = GetComponent<CTransformComponent>();
+	auto rigid = GetComponent<CRigidBodyComponent>();
+
+	if (!transform || !rigid)
+	{
+		return;
+	}
+
+	// 全ポイントに到達した
+	if (m_CurrentMovePoint >= m_MovePoints.size())
+	{
+		// 自動移動停止
+		StopAutoMove();
+		return;
+	}
+
+	// 現在位置
+	D3DXVECTOR3 position = transform->Position;
+
+	// 目標位置
+	D3DXVECTOR3 target = m_MovePoints[m_CurrentMovePoint];
+
+	// 目標への方向
+	D3DXVECTOR3 direction = target - position;
+
+	float distance = D3DXVec3Length(&direction);
+
+	// ポイントに到達した
+	if (distance < 10.0f)
+	{
+		++m_CurrentMovePoint;
+		return;
+	}
+
+	// 正規化
+	D3DXVec3Normalize(&direction, &direction);
+
+	// 目標速度
+	D3DXVECTOR3 velocity = direction * m_AutoMoveSpeed;
+
+	// 物理速度を設定
+	rigid->SetPhysicsVelocity(velocity);
+}
+
+//=============================================================================
+// ハーフパイプの面に姿勢を合わせる
+//=============================================================================
+void CPlayer::UpdateSurfaceAlignment(float deltaTime)
+{
+	// コンポーネント取得
+	auto ray = GetComponent<CRaycastComponent>();
+	auto transform = GetComponent<CTransformComponent>();
+
+	if (!ray || !transform)
+	{
+		return;
+	}
+
+	// 前フレームの接地状態を保存
+	m_WasGrounded = m_IsGrounded;
+
+	// プレイヤーの位置
+	D3DXVECTOR3 position = transform->Position;
+
+	// プレイヤーの少し上から下向きにレイを飛ばす
+	D3DXVECTOR3 origin = position;
+	origin.y += 50.0f;
+
+	D3DXVECTOR3 direction(0.0f, -1.0f, 0.0f);
+
+	// レイキャスト
+	bool hit = ray->Raycast(origin, direction, 100.0f);
+
+	m_IsGrounded = false;
+
+	if (hit)
+	{
+		CGameObject* hitObject = ray->GetHitObject();
+
+		// 必要に応じて、ハーフパイプ以外のオブジェクトを除外する
+		if (hitObject)
+		{
+			m_SurfaceNormal = ray->GetHitNormal();
+
+			// 正規化
+			D3DXVec3Normalize(&m_SurfaceNormal, &m_SurfaceNormal);
+
+			m_IsGrounded = true;
+		}
+	}
+
+	// 空中では面に合わせた姿勢制御をしない
+	if (!m_AlignToSurface || !m_IsGrounded)
+	{
+		return;
+	}
+
+	//=============================================================================
+	// 面の法線に沿う姿勢を計算する
+	//=============================================================================
+
+	// 面の法線をUp方向として使用する
+	D3DXVECTOR3 up = m_SurfaceNormal;
+
+	// プレイヤーの進行方向を取得する
+	D3DXVECTOR3 forward = m_SurfaceForward;
+
+	// 進行方向から、面の法線方向の成分を取り除く
+	// これによって進行方向を面に沿わせる
+	float dot = D3DXVec3Dot(&forward, &up);
+
+	forward -= up * dot;
+
+	// 投影後のベクトルが十分な長さを持つか確認する
+	if (D3DXVec3LengthSq(&forward) > 0.0001f)
+	{
+		// 正規化
+		D3DXVec3Normalize(&forward, &forward);
+
+		// 右方向を計算する
+		D3DXVECTOR3 right;
+		D3DXVec3Cross(&right, &up, &forward);
+
+		if (D3DXVec3LengthSq(&right) > 0.0001f)
+		{
+			D3DXVec3Normalize(&right, &right);
+
+			// 直交性を保つため、Forwardを再計算する
+			D3DXVec3Cross(&forward, &right, &up);
+			D3DXVec3Normalize(&forward, &forward);
+
+			// 面に沿う方向を保存
+			m_SurfaceForward = forward;
+
+			//=============================================================
+			// 面の法線と進行方向から回転行列を作成
+			//=============================================================
+			D3DXMATRIX rotationMatrix = Identity();
+
+			// Right方向
+			rotationMatrix._11 = right.x;
+			rotationMatrix._12 = right.y;
+			rotationMatrix._13 = right.z;
+
+			// Up方向
+			rotationMatrix._21 = up.x;
+			rotationMatrix._22 = up.y;
+			rotationMatrix._23 = up.z;
+
+			// Forward方向
+			rotationMatrix._31 = forward.x;
+			rotationMatrix._32 = forward.y;
+			rotationMatrix._33 = forward.z;
+
+			//=============================================================
+			// 回転行列をクォータニオンに変換
+			//=============================================================
+			D3DXQUATERNION surfaceRotation = MatrixToQuaternion(rotationMatrix);
+
+			D3DXQUATERNION currentQuaternion = transform->Quaternion;
+			D3DXQUATERNION targetQuaternion = surfaceRotation;
+
+			// 補間率
+			float t = 1.0f - expf(-5.0f * deltaTime);
+
+			// クォータニオン補間
+			D3DXQUATERNION resultQuaternion;
+
+			D3DXQuaternionSlerp(
+				&resultQuaternion,
+				&currentQuaternion,
+				&targetQuaternion,
+				t
+			);
+
+			D3DXQuaternionNormalize(
+				&resultQuaternion,
+				&resultQuaternion
+			);
+
+			//=============================================================
+			// トランスフォームに反映
+			//=============================================================
+			transform->Quaternion = resultQuaternion;
+			transform->UseQuaternion = true;
+		}
+	}
 }
 
 //=============================================================================
@@ -365,17 +585,17 @@ void CPlayer::DrawDebugGUI(void)
 
 		ImGui::Text("X:"); ImGui::SameLine();
 		ImGui::SetNextItemWidth(80); // 幅を狭く
-		ImGui::DragFloat("##Player_pos_x", (float*)&transform->Position.x, 1.0f, -1000.0f, 1000.0f, "%.1f");
+		ImGui::DragFloat("##Player_pos_x", (float*)&transform->Position.x, 1.0f, -7000.0f, 7000.0f, "%.1f");
 
 		ImGui::SameLine();
 		ImGui::Text("Y:"); ImGui::SameLine();
 		ImGui::SetNextItemWidth(80);
-		ImGui::DragFloat("##Player_pos_y", (float*)&transform->Position.y, 1.0f, -1000.0f, 1000.0f, "%.1f");
+		ImGui::DragFloat("##Player_pos_y", (float*)&transform->Position.y, 1.0f, -7000.0f, 7000.0f, "%.1f");
 
 		ImGui::SameLine();
 		ImGui::Text("Z:"); ImGui::SameLine();
 		ImGui::SetNextItemWidth(80);
-		ImGui::DragFloat("##Player_pos_z", (float*)&transform->Position.z, 1.0f, -1000.0f, 1000.0f, "%.1f");
+		ImGui::DragFloat("##Player_pos_z", (float*)&transform->Position.z, 1.0f, -7000.0f, 7000.0f, "%.1f");
 
 		//*********************************************************************
 		// ROT の情報

@@ -42,11 +42,18 @@ void CPlayerStandState::OnUpdate(CPlayer* pPlayer)
 	// 入力を取得
 	CPlayer::InputData input = pPlayer->GatherInput();
 
-	// 入力状態を更新
-	pPlayer->UpdateMovementFlags(input.moveDir);
+	//// 入力状態を更新
+	//pPlayer->UpdateMovementFlags(input.moveDir);
 
-	// 移動入力されていたら
-	if (pPlayer->IsMoving())
+	//// 移動入力されていたら
+	//if (pPlayer->IsMoving())
+	//{
+	//	// 移動状態へ移行
+	//	m_pMachine->ChangeState<CPlayerMoveState>();
+	//}
+
+	// 自動移動中だったら
+	if (pPlayer->IsAutoMoving())
 	{
 		// 移動状態へ移行
 		m_pMachine->ChangeState<CPlayerMoveState>();
@@ -89,21 +96,27 @@ void CPlayerMoveState::OnUpdate(CPlayer* pPlayer)
 		return;
 	}
 
-	// デルタタイム
-	float deltaTime = CManager::Instance()->GetTimeSystem()->GetDeltaTime();
-	
-	// 物理移動の設定
-	rigid->MovePhysics(
-		input.moveDir, 
-		CPlayer::SPEED, 
-		10.0f,     // 加速
-		15.0f,     // 減速
-		deltaTime);
-
-	// 移動していなかったら
-	if (!pPlayer->IsMoving())
+	// 自動移動中の場合、自動移動更新
+	if (pPlayer->IsAutoMoving())
 	{
-		// 待機状態へ移行
-		m_pMachine->ChangeState<CPlayerStandState>();
+		pPlayer->UpdateAutoMove();
 	}
+
+	//// デルタタイム
+	//float deltaTime = CManager::Instance()->GetTimeSystem()->GetDeltaTime();
+	//
+	//// 物理移動の設定
+	//rigid->MovePhysics(
+	//	input.moveDir, 
+	//	CPlayer::SPEED, 
+	//	10.0f,     // 加速
+	//	15.0f,     // 減速
+	//	deltaTime);
+
+	//// 移動していなかったら
+	//if (!pPlayer->IsMoving())
+	//{
+	//	// 待機状態へ移行
+	//	m_pMachine->ChangeState<CPlayerStandState>();
+	//}
 }
