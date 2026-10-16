@@ -35,6 +35,7 @@
 #include "NetWorkManager.h"
 #include "UIComponent.h"
 #include "UIAnimationComponent.h"
+#include "JumpTiming.h"
 
 
 
@@ -103,6 +104,9 @@ HRESULT CGame::Init(void)
 	// 空の生成
 	m_pSky = std::make_unique<CSky>();
 	m_pSky->Init();
+
+	auto jump = CreateObject<CJumpTiming>();
+	jump->Init();
 
 	//============================================================
 	// Player生成(クライアント)
