@@ -213,14 +213,6 @@ void CPlayer::Update(void)
 	// デルタタイムの取得
 	float dt = CManager::Instance()->GetTimeSystem()->GetDeltaTime();
 
-	// 自動移動コンポーネントの取得
-	auto autoMove = GetComponent<CAutoMoveComponent>();
-
-	if (autoMove)
-	{
-		autoMove->Update(dt);
-	}
-
 	// ハーフパイプの面に合わせた姿勢制御
 	UpdateSurfaceAlignment(dt);
 

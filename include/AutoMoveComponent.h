@@ -66,7 +66,7 @@ public:
     void StartAutoMove(void)
     {
         m_IsAutoMove = true;
-        m_CurrentMovePoint = 0;
+        m_CurrentMovePoint = 1;
     }
 
     // 自動移動停止
@@ -109,19 +109,19 @@ private:
     std::vector<CGameObject*> m_pPointObj;
 
     // 現在の移動ポイント
-    size_t m_CurrentMovePoint = 0;
+    size_t m_CurrentMovePoint;
 
     // 現在のポイント(エディタ用)
     int m_currentPoint;
 
     // スプライン補間時間
-    float m_CurrentTime = 0.0f;
+    float m_CurrentTime;
 
     // 自動移動中か
-    bool m_IsAutoMove = false;
+    bool m_IsAutoMove;
 
     // 移動速度
-    float m_AutoMoveSpeed = 1.0f;
+    float m_AutoMoveSpeed;
 
     // ジャンプ中か
     bool m_IsJumping = false;

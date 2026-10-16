@@ -32,7 +32,7 @@ using namespace MathUtil;
 CAutoMoveComponent::CAutoMoveComponent() :
     m_IsAutoMove        (true),			// 自動移動中か
     m_CurrentMovePoint  (1),			// 現在目指しているポイント
-	m_currentPoint		(-1),			// 現在の移動ポイント(エディタ用)
+	m_currentPoint		(0),			// 現在の移動ポイント(エディタ用)
     m_CurrentTime       (0.0f),			// 現在の移動時間(0.0f～1.0f)
     m_AutoMoveSpeed     (250.0f)		// 移動スピード
 {
@@ -58,10 +58,10 @@ void CAutoMoveComponent::Update(float deltaTime)
         return;
     }
 
-    if (m_IsAutoMove)
-    {
-        UpdateAutoMove(deltaTime);
-    }
+    //if (m_IsAutoMove)
+    //{
+    //    UpdateAutoMove(deltaTime);
+    //}
 }
 
 //=============================================================================
@@ -152,10 +152,10 @@ void CAutoMoveComponent::UpdateAutoMove(float deltaTime)
 	D3DXVECTOR3 position = transform->Position;
 
 	// スプライン補間用のポイント
-	 D3DXVECTOR3 p0 = m_MovePoints[m_CurrentMovePoint - 1].Position;
-	 D3DXVECTOR3 p1 = m_MovePoints[m_CurrentMovePoint].Position;
-	 D3DXVECTOR3 p2 = m_MovePoints[m_CurrentMovePoint + 1].Position;
-	 D3DXVECTOR3 p3 = m_MovePoints[m_CurrentMovePoint + 2].Position;
+	const D3DXVECTOR3& p0 = m_MovePoints[m_CurrentMovePoint - 1].Position;
+	const D3DXVECTOR3& p1 = m_MovePoints[m_CurrentMovePoint].Position;
+	const D3DXVECTOR3& p2 = m_MovePoints[m_CurrentMovePoint + 1].Position;
+	const D3DXVECTOR3& p3 = m_MovePoints[m_CurrentMovePoint + 2].Position;
 
 	// 目標位置
 	D3DXVECTOR3 target = MathUtil::Spline(
