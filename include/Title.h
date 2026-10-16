@@ -39,6 +39,13 @@ private:
 	std::unique_ptr<CSky>	m_pSky;
 	std::unique_ptr<CWater> m_pWater;
 
+	// タイムアップUI
+	CGameObject* m_pTestUI = nullptr;
+
+	// タイムアップ処理済みか
+	bool m_IsTimeUp = false;
+
+	float m_fTime = 5.0f;
 };
 
 #endif

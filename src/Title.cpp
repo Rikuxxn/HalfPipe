@@ -42,6 +42,10 @@
 #include "StageEditor.h"
 #include "TriggerObjectEditor.h"
 #include "RaycastComponent.h"
+#include "UIAnimationManager.h"
+#include "UIFactory.h"
+#include "UIAnimationComponent.h"
+#include "TimeSystem.h"
 
 
 //*****************************************************************************
@@ -153,6 +157,27 @@ HRESULT CTitle::Init(void)
 	//m_pWater = std::make_unique<CWater>();
 	//m_pWater->Init();
 
+	// UIアニメーションデータの読み込み
+	auto uiManager = CManager::Instance()->GetUIAnimationManager();
+
+	if (uiManager)
+	{
+		uiManager->Load("data/UIAnimation/test_UIAnimation_TitleLogo.json");
+	}
+
+	// 登録済みのUIデータを取得
+	UIAnimationData* data = uiManager->GetData("TitleLogo");
+
+	// UI生成
+	m_pTestUI = CUIFactory::Create(this, *data);
+
+	// 最初は非表示
+	auto sprite = m_pTestUI->GetComponent<CSpriteRenderComponent>();
+
+	if (sprite)
+	{
+		sprite->SetIsVisible(false);
+	}
 
 	//// ポイントライトの生成
 	//CreatePointLight({ 0,10,0 }, D3DXCOLOR(1, 0, 0, 1), 300.0f, 0.01f);
@@ -454,64 +479,38 @@ void CTitle::Update(void)
 		pFade->StartFadeOut(Mode::Connect);
 	}
 
-	// 
-	auto logo = FindGameObject("TitleLogo");
+	float dt = CManager::Instance()->GetTimeSystem()->GetDeltaTime();
 
-	if (logo && pKeyboard->GetTrigger(DIK_O))
+	m_fTime -= dt;
+
+	//=============================================================================
+	// タイムアップ判定
+	//=============================================================================
+	if (m_fTime <= 0 && !m_IsTimeUp)
 	{
-		// ロゴの破棄
-		logo->Destroy();
+		m_IsTimeUp = true;
+
+		if (m_pTestUI)
+		{
+			// UIを表示
+			auto sprite = m_pTestUI->GetComponent<CSpriteRenderComponent>();
+
+			if (sprite)
+			{
+				sprite->SetIsVisible(true);
+			}
+
+			// アニメーション再生
+			auto animation = m_pTestUI->GetComponent<CUIAnimationComponent>();
+
+			if (animation)
+			{
+				animation->Play();
+			}
+		}
 	}
-
-	//if (logo)
-	//{
-	//	// ロゴのトランスフォームコンポーネントの取得
-	//	auto transform = logo->GetComponent<CTransformComponent>();
-
-	//	// 位置をずらす
-	//	if (transform)
-	//	{
-	//		transform->Position.x += 1.0f;
-	//	}
-	//}
-
-	//// ロゴの更新処理
-	//UpdateLogoVertex();
-
-	//// 項目選択の更新処理
-	//m_pItemSelect->Update();
-
-	//// ブロックマネージャーの更新処理
-	//m_pBlockManager->Update();
 }
-////=============================================================================
-//// ロゴの更新処理
-////=============================================================================
-//void CTitle::UpdateLogoVertex(void)
-//{
-//	// バックバッファサイズの取得
-//	float screenW = (float)CManager::GetRenderer()->GetBackBufferWidth();
-//	float screenH = (float)CManager::GetRenderer()->GetBackBufferHeight();
-//
-//	float logoW = screenW * TitleUI::LOGO_WIDTH_RATE * CMathConstant::HALF;
-//	float logoH = screenH * TitleUI::LOGO_HEIGHT_RATE * CMathConstant::HALF;
-//
-//	float cx = screenW * TitleUI::ANCHOR_X;
-//	float cy = screenH * TitleUI::ANCHOR_Y;
-//
-//	VERTEX_2D* pVtx;// 頂点情報へのポインタ
-//
-//	// 頂点バッファをロックし、頂点情報へのポインタを取得
-//	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
-//
-//	pVtx[0].pos = { cx - logoW, cy - logoH, 0.0f };
-//	pVtx[1].pos = { cx + logoW, cy - logoH, 0.0f };
-//	pVtx[2].pos = { cx - logoW, cy + logoH, 0.0f };
-//	pVtx[3].pos = { cx + logoW, cy + logoH, 0.0f };
-//
-//	// 頂点バッファをアンロックする
-//	m_pVtxBuff->Unlock();
-//}
+
 //=============================================================================
 // 描画処理
 //=============================================================================
