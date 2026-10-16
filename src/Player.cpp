@@ -584,10 +584,10 @@ CPlayer::InputData CPlayer::GatherInput(void)
 
 	// ローカルプレイヤーではない場合
 	// ネットワークから受信した入力を使用
-	if (!m_IsLocalPlayer)
-	{
-		return m_NetworkInput;
-	}
+	//if (!m_IsLocalPlayer)
+	//{
+	//	return m_NetworkInput;
+	//}
 
 	CInputKeyboard* pKeyboard = CManager::Instance()->GetInput()->GetKeyboard();// キーボードの取得
 	CInputJoypad* pJoypad = CManager::Instance()->GetInput()->GetJoypad();		// ジョイパッドの取得
