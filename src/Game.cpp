@@ -143,8 +143,8 @@ HRESULT CGame::Init(void)
 
 				player->Init();
 
-				// 自動移動ポイントの読み込み
-				player->LoadMovePoint("data/MovePointInfo.json");
+				//// 自動移動ポイントの読み込み
+				//player->LoadMovePoint("data/MovePointInfo.json");
 
 				auto rigid = player->AddComponent<CRigidBodyComponent>();
 

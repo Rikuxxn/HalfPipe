@@ -16,6 +16,7 @@
 #include "CharacterComponent.h"
 #include "RigidBodyComponent.h"
 #include "TimeSystem.h"
+#include "AutoMoveComponent.h"
 
 
 //=============================================================================
@@ -52,8 +53,11 @@ void CPlayerStandState::OnUpdate(CPlayer* pPlayer)
 	//	m_pMachine->ChangeState<CPlayerMoveState>();
 	//}
 
+	// 自動移動コンポーネントの取得
+	auto autoMove = pPlayer->GetComponent<CAutoMoveComponent>();
+
 	// 自動移動中だったら
-	if (pPlayer->IsAutoMoving())
+	if (autoMove && autoMove->IsAutoMove())
 	{
 		// 移動状態へ移行
 		m_pMachine->ChangeState<CPlayerMoveState>();
@@ -96,14 +100,18 @@ void CPlayerMoveState::OnUpdate(CPlayer* pPlayer)
 		return;
 	}
 
+	// デルタタイム
+	float deltaTime = CManager::Instance()->GetTimeSystem()->GetDeltaTime();
+
+	// 自動移動コンポーネントの取得
+	auto autoMove = pPlayer->GetComponent<CAutoMoveComponent>();
+
 	// 自動移動中の場合、自動移動更新
-	if (pPlayer->IsAutoMoving())
+	if (autoMove && autoMove->IsAutoMove())
 	{
-		pPlayer->UpdateAutoMove();
+		autoMove->UpdateAutoMove(deltaTime);
 	}
 
-	//// デルタタイム
-	//float deltaTime = CManager::Instance()->GetTimeSystem()->GetDeltaTime();
 	//
 	//// 物理移動の設定
 	//rigid->MovePhysics(

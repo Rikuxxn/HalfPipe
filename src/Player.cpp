@@ -27,9 +27,7 @@
 #include "RaycastComponent.h"
 #include "MatrixUtility.h"
 #include "NetWorkManager.h"
-#include "SceneManager.h"
-#include "Scene.h"
-#include "FileDialogUtils.h"
+#include "AutoMoveComponent.h"
 //#include "FBXManager.h"
 //#include "FBXModelComponent.h"
 
@@ -48,11 +46,6 @@ CPlayer::CPlayer() :
 	m_rotDest			(INIT_VEC3),	// 目標の向き
 	m_bIsMoving			(false),		// 移動しているか
 	m_bControlFlag		(true),			// 移動許可フラグ
-	m_currentPoint		(-1),			// 現在の移動ポイント(エディタ用)
-	m_IsAutoMove		(true),			// 自動移動中か
-	m_CurrentMovePoint	(1),			// 現在目指しているポイント
-	m_CurrentTime		(0.0f),			// 現在の移動時間(0.0f～1.0f)
-	m_AutoMoveSpeed		(250.0f),		// 移動スピード
 	m_SurfaceNormal		({ 0, 1, 0 }),	// 面の法線
     m_SurfaceForward	({ -1, 0, 0 }),	// 面に沿う進行方向
     m_IsGrounded		(false),		// 接地中か
@@ -115,6 +108,14 @@ HRESULT CPlayer::Init(void)
 	//// テクスチャの設定
 	//hpGauge->SetTexture("data/TEXTURE/ball.png");
 
+	// 自動移動コンポーネントの追加
+	auto autoMove = AddComponent<CAutoMoveComponent>();
+
+	// 自動移動ポイントの読み込み
+	autoMove->LoadMovePoint("data/MovePointInfo.json");
+
+	// 自動移動開始
+	autoMove->StartAutoMove();
 
 	// レイキャストコンポーネントの追加
 	AddComponent<CRaycastComponent>();
@@ -212,6 +213,14 @@ void CPlayer::Update(void)
 	// デルタタイムの取得
 	float dt = CManager::Instance()->GetTimeSystem()->GetDeltaTime();
 
+	// 自動移動コンポーネントの取得
+	auto autoMove = GetComponent<CAutoMoveComponent>();
+
+	if (autoMove)
+	{
+		autoMove->Update(dt);
+	}
+
 	// ハーフパイプの面に合わせた姿勢制御
 	UpdateSurfaceAlignment(dt);
 
@@ -242,66 +251,66 @@ void CPlayer::Update(void)
 	//}
 }
 
-//=============================================================================
-// 移動ポイントに沿った自動移動
-//=============================================================================
-void CPlayer::UpdateAutoMove(void)
-{
-	if (!m_IsAutoMove || m_MovePoints.empty())
-	{
-		return;
-	}
-
-	// コンポーネントの取得
-	auto transform = GetComponent<CTransformComponent>();
-	auto rigid = GetComponent<CRigidBodyComponent>();
-
-	if (!transform || !rigid)
-	{
-		return;
-	}
-
-	// 全ポイントに到達した
-	if (m_CurrentMovePoint >= m_MovePoints.size()-3)
-	{
-		// 自動移動停止
-		StopAutoMove();
-		return;
-	}
-
-	// 現在位置
-	D3DXVECTOR3 position = transform->Position;
-
-	// 目標位置
-	D3DXVECTOR3 target = MathUtil::Spline(	m_MovePoints[m_CurrentMovePoint-1], 
-											m_MovePoints[m_CurrentMovePoint],
-											m_MovePoints[m_CurrentMovePoint+1], 
-											m_MovePoints[m_CurrentMovePoint+2],m_CurrentTime);
-
-
-	// 目標への方向
-	D3DXVECTOR3 direction = target - position;
-
-	float distance = D3DXVec3Length(&direction);
-
-	// 1.0fになった
-	if (m_CurrentTime >= 1.0f)
-	{
-		++m_CurrentMovePoint;
-		m_CurrentTime = 0.0f;
-		return;
-	}
-	m_CurrentTime += 0.02f;
-
-	// 正規化
-	D3DXVec3Normalize(&direction, &direction);
-
-	// 目標速度
-	D3DXVECTOR3 velocity = direction * m_AutoMoveSpeed;
-
-	// 物理速度を設定
-	rigid->SetPhysicsVelocity(velocity);
-}
+////=============================================================================
+//// 移動ポイントに沿った自動移動
+////=============================================================================
+//void CPlayer::UpdateAutoMove(void)
+//{
+//	if (!m_IsAutoMove || m_MovePoints.empty())
+//	{
+//		return;
+//	}
+//
+//	// コンポーネントの取得
+//	auto transform = GetComponent<CTransformComponent>();
+//	auto rigid = GetComponent<CRigidBodyComponent>();
+//
+//	if (!transform || !rigid)
+//	{
+//		return;
+//	}
+//
+//	// 全ポイントに到達した
+//	if (m_CurrentMovePoint >= m_MovePoints.size()-3)
+//	{
+//		// 自動移動停止
+//		StopAutoMove();
+//		return;
+//	}
+//
+//	// 現在位置
+//	D3DXVECTOR3 position = transform->Position;
+//
+//	// 目標位置
+//	D3DXVECTOR3 target = MathUtil::Spline(	m_MovePoints[m_CurrentMovePoint-1], 
+//											m_MovePoints[m_CurrentMovePoint],
+//											m_MovePoints[m_CurrentMovePoint+1], 
+//											m_MovePoints[m_CurrentMovePoint+2],m_CurrentTime);
+//
+//
+//	// 目標への方向
+//	D3DXVECTOR3 direction = target - position;
+//
+//	float distance = D3DXVec3Length(&direction);
+//
+//	// 1.0fになった
+//	if (m_CurrentTime >= 1.0f)
+//	{
+//		++m_CurrentMovePoint;
+//		m_CurrentTime = 0.0f;
+//		return;
+//	}
+//	m_CurrentTime += 0.02f;
+//
+//	// 正規化
+//	D3DXVec3Normalize(&direction, &direction);
+//
+//	// 目標速度
+//	D3DXVECTOR3 velocity = direction * m_AutoMoveSpeed;
+//
+//	// 物理速度を設定
+//	rigid->SetPhysicsVelocity(velocity);
+//}
 
 //=============================================================================
 // ハーフパイプの面に姿勢を合わせる
@@ -480,68 +489,6 @@ void CPlayer::UpdateNetworkMotion(bool isMoving)
 	}
 }
 
-//=============================================================================
-// 自動移動ポイントの追加
-//=============================================================================
-void CPlayer::AddMovePoint(const D3DXVECTOR3& pos)
-{
-	m_MovePoints.push_back(pos);
-
-#ifdef _DEBUG
-
-	// ポイントデバッグモデル生成
-	CreateMovePointObject(pos);
-
-#endif
-}
-
-//=============================================================================
-// ポイントデバッグ表示用モデル生成
-//=============================================================================
-void CPlayer::CreateMovePointObject(const D3DXVECTOR3& pos)
-{
-	// シーンの取得
-	auto scene = CManager::Instance()->GetSceneManager()->GetScene();
-
-	if (scene)
-	{
-		// ゲームオブジェクトの生成
-		auto point = scene->CreateObject();
-
-		// タグの設定
-		point->SetTag("MovePoint");
-
-		// トランスフォームコンポーネントの追加
-		auto transform = point->AddComponent<CTransformComponent>();
-
-		transform->Position = pos;
-
-		//-----------------------------------------
-		// モデル描画
-		//-----------------------------------------
-
-		// モデルレンダーコンポーネントの追加
-		auto model = point->AddComponent<CXModelRenderComponent>();
-
-		// 描画順の設定
-		model->SetLayer(RenderLayer::Model);
-
-		// モデルのロード
-		model->Load("data/MODELS/MovePoint.x");
-
-		// ゲームオブジェクトの追加
-		m_pPointObj.push_back(point);
-	}
-}
-
-//=============================================================================
-// 徘徊ポイントのクリア
-//=============================================================================
-void CPlayer::ClearMovePoints(void)
-{
-	m_MovePoints.clear();
-}
-
 #ifdef _DEBUG
 //=============================================================================
 // Imguiのデバッグ描画処理
@@ -684,231 +631,17 @@ void CPlayer::DrawDebugGUI(void)
 
 		ImGui::TreePop(); // 閉じる
 
-		// 自動移動ポイントエディターの描画
-		DrawMovePointEditor();
+		// 自動移動コンポーネントの取得
+		auto autoMove = GetComponent<CAutoMoveComponent>();
+
+		if (autoMove)
+		{
+			// 自動移動ポイントエディターの描画
+			autoMove->DrawMovePointEditor();
+		}
     }
 }
-
-//=============================================================================
-// 自動移動ポイントエディターの描画
-//=============================================================================
-void CPlayer::DrawMovePointEditor(void)
-{
-	// プレイヤー自動移動ポイント設置エディター
-	if (ImGui::TreeNode("MovePoint Editor"))
-	{
-		//=========================================================
-		// ポイントの種類
-		//=========================================================
-
-
-
-		//=========================================================
-		// 自動移動ポイントの追加
-		//=========================================================
-
-		static float addPos[3] = { 0.0f,0.0f,0.0f };
-
-		ImGui::DragFloat3("Add Point", addPos, 1.0f);
-
-		ImGui::Dummy(ImVec2(0.0f, 5.0f));
-
-		if (ImGui::Button("Add Move Point"))
-		{
-			AddMovePoint(D3DXVECTOR3(addPos[0], addPos[1], addPos[2]));
-		}
-
-		ImGui::Dummy(ImVec2(0.0f, 10.0f));
-
-		//=========================================================
-		// 自動移動ポイントリスト
-		//=========================================================
-
-		for (int i = 0; i < (int)m_MovePoints.size(); i++)
-		{
-			ImGui::PushID(i);
-
-			D3DXVECTOR3& point = m_MovePoints[i];
-
-			char label[64];
-
-			sprintf_s(label, "Point %d", i);
-
-			if (ImGui::TreeNode(label))
-			{
-				//=================================================
-				// 位置
-				//=================================================
-
-				if (ImGui::DragFloat3("Pos", &point.x, 1.0f))
-				{
-					if (i < m_pPointObj.size())
-					{
-						auto pointTransform = m_pPointObj[i]->GetComponent<CTransformComponent>();
-
-						if (pointTransform)
-						{
-							pointTransform->Position = point;
-						}
-					}
-				}
-
-				ImGui::Dummy(ImVec2(0.0f, 5.0f));
-
-				//=================================================
-				// 削除
-				//=================================================
-
-				if (ImGui::Button("Delete Point"))
-				{
-					// モデル削除
-					if (i < m_pPointObj.size())
-					{
-						if (m_pPointObj[i])
-						{
-							m_pPointObj[i]->Destroy();
-							m_pPointObj[i] = nullptr;
-						}
-
-						m_pPointObj.erase(m_pPointObj.begin() + i);
-					}
-
-					m_MovePoints.erase(m_MovePoints.begin() + i);
-
-					// currentPoint補正
-					if (m_currentPoint >= (int)m_MovePoints.size())
-					{
-						m_currentPoint = std::max(0, (int)m_MovePoints.size() - 1);
-					}
-
-					ImGui::TreePop();
-
-					ImGui::PopID();
-
-					break;
-				}
-
-				ImGui::TreePop();
-			}
-
-			ImGui::PopID();
-		}
-
-		ImGui::Dummy(ImVec2(0.0f, 10.0f)); // 空白を空ける
-
-		if (ImGui::Button("Save"))
-		{
-			// ダイアログを開いてファイルに保存
-			std::string path = OpenWindowsSaveFileDialog();
-
-			if (!path.empty())
-			{
-				// データの保存
-				SaveMovePoint(path.c_str());
-			}
-		}
-
-		ImGui::SameLine(0);
-
-		if (ImGui::Button("Load"))
-		{
-			// ダイアログを開いてファイルを開く
-			std::string path = OpenWindowsOpenFileDialog();
-
-			if (!path.empty())
-			{
-				// データの読み込み
-				LoadMovePoint(path.c_str());
-			}
-		}
-
-		ImGui::TreePop(); // 閉じる
-	}
-}
 #endif
-
-//=============================================================================
-// JSONでの保存
-//=============================================================================
-void CPlayer::SaveMovePoint(const char* filename)
-{
-	// JSONオブジェクト
-	json j;
-
-	json b;
-	json patrolArray = json::array();
-
-	for (const auto& point : m_MovePoints)
-	{
-		patrolArray.push_back({ point.x,point.y,point.z });
-	}
-
-	b["move_points"] = patrolArray;
-
-	// 追加
-	j.push_back(b);
-
-	// 出力ファイルストリーム
-	std::ofstream file(filename);
-
-	if (file.is_open())
-	{
-		file << std::setw(4) << j;
-
-		// ファイルを閉じる
-		file.close();
-	}
-}
-
-//=============================================================================
-// JSONでの読み込み
-//=============================================================================
-void CPlayer::LoadMovePoint(const char* filename)
-{
-	std::ifstream file(filename);
-
-	if (!file.is_open())
-	{// 開けなかった
-		return;
-	}
-
-	json j;
-	file >> j;
-
-	// ファイルを閉じる
-	file.close();
-
-	// 新たに生成
-	for (const auto& b : j)
-	{
-		// すべて削除
-		for (auto obj : m_pPointObj)
-		{
-			if (obj)
-			{
-				obj->Destroy();
-			}
-		}
-
-		m_pPointObj.clear();
-		m_MovePoints.clear();
-
-		if (b.contains("move_points"))
-		{
-			for (const auto& p : b["move_points"])
-			{
-				D3DXVECTOR3 point(p[0], p[1], p[2]);
-
-				m_MovePoints.push_back(point);
-
-#ifdef _DEBUG
-				// ポイントデバッグ表示用モデルの生成
-				CreateMovePointObject(point);
-#endif
-			}
-		}
-	}
-}
 
 //=============================================================================
 // 入力判定取得関数

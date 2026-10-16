@@ -12,12 +12,6 @@
 //*****************************************************************************
 #include "GameObject.h"
 #include "State.h"
-#include "json.hpp"
-
-//*****************************************************************************
-// 型定義
-//*****************************************************************************
-using json = nlohmann::json;
 
 //*****************************************************************************
 // プレイヤークラス
@@ -32,13 +26,10 @@ public:
 
     HRESULT Init            (void) override;
     void    Update          (void) override;
-    void    UpdateAutoMove  (void);
 
 #ifdef _DEBUG
     // Imguiのデバッグ描画
     void DrawDebugGUI(void) override;
-
-    void DrawMovePointEditor(void);
 
 #endif
 
@@ -56,34 +47,6 @@ public:
 
     // ステート用のフラグ更新処理
     void UpdateMovementFlags(const D3DXVECTOR3& moveDir);
-
-    // 自動移動開始
-    void StartAutoMove(void)
-    {
-        m_IsAutoMove = true;
-        m_CurrentMovePoint = 0;
-    }
-
-    // 自動移動停止
-    void StopAutoMove(void)
-    {
-        m_IsAutoMove = false;
-    }
-
-    // 自動移動中か
-    bool IsAutoMoving(void) { return m_IsAutoMove; }
-
-    // 自動移動ポイントの追加
-    void AddMovePoint(const D3DXVECTOR3& pos);
-
-    // ポイントデバッグモデル生成
-    void CreateMovePointObject(const D3DXVECTOR3& pos);
-
-    // 自動移動ポイントリストのクリア
-    void ClearMovePoints(void);
-
-    void SaveMovePoint(const char* filename);
-    void LoadMovePoint(const char* filename);
 
     // 当たり判定
     void OnCollisionEnter(CGameObject* other) override;
@@ -130,39 +93,6 @@ private:
     // Network interpolation
     D3DXVECTOR3 m_NetworkTargetPosition = INIT_VEC3;
     D3DXVECTOR3 m_NetworkTargetRotation = INIT_VEC3;
-
-    // 自動移動用ポイント
-    std::vector<D3DXVECTOR3> m_MovePoints;
-
-    // ジャンプ開始ポイント
-    std::vector<D3DXVECTOR3> m_StartJumpPoints;
-
-    // ジャンプポイント(大)
-    std::vector<D3DXVECTOR3> m_JumpPointsBig;
-
-    // ジャンプポイント(中)
-    std::vector<D3DXVECTOR3> m_StartJumpPointsMiddle;
-
-    // ジャンプポイント(小)
-    std::vector<D3DXVECTOR3> m_StartJumpPointsSmall;
-
-    // 現在のポイント
-    int m_currentPoint;
-
-    // 自動移動のタイム
-    float m_CurrentTime;
-
-    // 自動移動ポイントデバッグ表示用
-    std::vector<CGameObject*> m_pPointObj;
-
-    // 自動移動中か
-    bool m_IsAutoMove;
-
-    // 現在目指しているポイント
-    size_t m_CurrentMovePoint;
-
-    // 移動速度
-    float m_AutoMoveSpeed;
 
     // ハーフパイプの面に沿って向きを変える用
     D3DXVECTOR3     m_SurfaceNormal;        // 面の法線

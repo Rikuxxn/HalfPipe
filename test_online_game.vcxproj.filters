@@ -618,6 +618,9 @@
     <ClInclude Include="include\UIFactory.h">
       <Filter>ヘッダー ファイル\UI</Filter>
     </ClInclude>
+    <ClInclude Include="include\AutoMoveComponent.h">
+      <Filter>ヘッダー ファイル\Component</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="imgui\imgui.cpp">
@@ -934,6 +937,9 @@
     </ClCompile>
     <ClCompile Include="src\UIFactory.cpp">
       <Filter>ソース ファイル\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AutoMoveComponent.cpp">
+      <Filter>ソース ファイル\Component</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
