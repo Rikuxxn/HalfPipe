@@ -54,7 +54,7 @@ public:
     void DrawMovePointEditor(void);
 
     // XV
-    void Update(float deltaTime);
+    void Update(void) override;
 
     // ’Êí‚Ì©“®ˆÚ“®
     void UpdateAutoMove(float deltaTime);

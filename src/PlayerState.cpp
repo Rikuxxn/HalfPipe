@@ -100,17 +100,17 @@ void CPlayerMoveState::OnUpdate(CPlayer* pPlayer)
 		return;
 	}
 
-	// デルタタイム
-	float deltaTime = CManager::Instance()->GetTimeSystem()->GetDeltaTime();
+	//// デルタタイム
+	//float deltaTime = CManager::Instance()->GetTimeSystem()->GetDeltaTime();
 
-	// 自動移動コンポーネントの取得
-	auto autoMove = pPlayer->GetComponent<CAutoMoveComponent>();
+	//// 自動移動コンポーネントの取得
+	//auto autoMove = pPlayer->GetComponent<CAutoMoveComponent>();
 
-	// 自動移動中の場合、自動移動更新
-	if (autoMove && autoMove->IsAutoMove())
-	{
-		autoMove->UpdateAutoMove(deltaTime);
-	}
+	//// 自動移動中の場合、自動移動更新
+	//if (autoMove && autoMove->IsAutoMove())
+	//{
+	//	autoMove->UpdateAutoMove(deltaTime);
+	//}
 
 	//
 	//// 物理移動の設定

@@ -20,6 +20,7 @@
 #include "RenderComponent.h"
 #include "XModelRenderComponent.h"
 #include "MathUtility.h"
+#include "TimeSystem.h"
 
 
 // 名前空間の使用
@@ -30,7 +31,7 @@ using namespace MathUtil;
 // コンストラクタ
 //=============================================================================
 CAutoMoveComponent::CAutoMoveComponent() :
-    m_IsAutoMove        (true),			// 自動移動中か
+    m_IsAutoMove        (false),			// 自動移動中か
     m_CurrentMovePoint  (1),			// 現在目指しているポイント
 	m_currentPoint		(0),			// 現在の移動ポイント(エディタ用)
     m_CurrentTime       (0.0f),			// 現在の移動時間(0.0f～1.0f)
@@ -50,18 +51,21 @@ CAutoMoveComponent::~CAutoMoveComponent()
 //=============================================================================
 // 更新
 //=============================================================================
-void CAutoMoveComponent::Update(float deltaTime)
+void CAutoMoveComponent::Update(void)
 {
+	// デルタタイムの取得
+	float deltaTime = CManager::Instance()->GetTimeSystem()->GetDeltaTime();
+
     if (m_IsJumping)
     {
         UpdateJump(deltaTime);
         return;
     }
 
-    //if (m_IsAutoMove)
-    //{
-    //    UpdateAutoMove(deltaTime);
-    //}
+    if (m_IsAutoMove)
+    {
+        UpdateAutoMove(deltaTime);
+    }
 }
 
 //=============================================================================

@@ -243,67 +243,6 @@ void CPlayer::Update(void)
 	//}
 }
 
-////=============================================================================
-//// 移動ポイントに沿った自動移動
-////=============================================================================
-//void CPlayer::UpdateAutoMove(void)
-//{
-//	if (!m_IsAutoMove || m_MovePoints.empty())
-//	{
-//		return;
-//	}
-//
-//	// コンポーネントの取得
-//	auto transform = GetComponent<CTransformComponent>();
-//	auto rigid = GetComponent<CRigidBodyComponent>();
-//
-//	if (!transform || !rigid)
-//	{
-//		return;
-//	}
-//
-//	// 全ポイントに到達した
-//	if (m_CurrentMovePoint >= m_MovePoints.size()-3)
-//	{
-//		// 自動移動停止
-//		StopAutoMove();
-//		return;
-//	}
-//
-//	// 現在位置
-//	D3DXVECTOR3 position = transform->Position;
-//
-//	// 目標位置
-//	D3DXVECTOR3 target = MathUtil::Spline(	m_MovePoints[m_CurrentMovePoint-1], 
-//											m_MovePoints[m_CurrentMovePoint],
-//											m_MovePoints[m_CurrentMovePoint+1], 
-//											m_MovePoints[m_CurrentMovePoint+2],m_CurrentTime);
-//
-//
-//	// 目標への方向
-//	D3DXVECTOR3 direction = target - position;
-//
-//	float distance = D3DXVec3Length(&direction);
-//
-//	// 1.0fになった
-//	if (m_CurrentTime >= 1.0f)
-//	{
-//		++m_CurrentMovePoint;
-//		m_CurrentTime = 0.0f;
-//		return;
-//	}
-//	m_CurrentTime += 0.02f;
-//
-//	// 正規化
-//	D3DXVec3Normalize(&direction, &direction);
-//
-//	// 目標速度
-//	D3DXVECTOR3 velocity = direction * m_AutoMoveSpeed;
-//
-//	// 物理速度を設定
-//	rigid->SetPhysicsVelocity(velocity);
-//}
-
 //=============================================================================
 // ハーフパイプの面に姿勢を合わせる
 //=============================================================================

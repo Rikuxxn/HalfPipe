@@ -1134,7 +1134,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\Board_bottom.png";
+    "data/TEXTURE/Board_bottom.png";
    }
   }
   Material {
@@ -1143,7 +1143,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\Board_Top.png";
+    "data/TEXTURE/Board_Top.png";
    }
   }
  }
