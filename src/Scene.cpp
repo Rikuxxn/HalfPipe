@@ -118,6 +118,15 @@ void CScene::Update(void)
         }
     }
 
+    // ”jŠü‘ÎÛ‚ÌI—¹ˆ—
+    for (auto& object : m_Objects)
+    {
+        if (object && object->IsDestroy())
+        {
+            object->Uninit();
+        }
+    }
+
     m_Objects.erase(
         std::remove_if(
             m_Objects.begin(),
