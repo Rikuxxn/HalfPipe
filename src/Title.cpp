@@ -158,56 +158,32 @@ HRESULT CTitle::Init(void)
 	//m_pWater = std::make_unique<CWater>();
 	//m_pWater->Init();
 
-	// UIアニメーションデータの読み込み
-	auto uiManager = CManager::Instance()->GetUIAnimationManager();
-
-	if (uiManager)
+	//-----------------------------------------------------
+	// JSONに保存したUIの使い方
+	//-----------------------------------------------------
 	{
-		uiManager->Load("data/UIAnimation/test_UIAnimation_TitleLogo.json");
+		// UIアニメーションデータの読み込み
+		auto uiManager = CManager::Instance()->GetUIAnimationManager();
+
+		if (uiManager)
+		{
+			uiManager->Load("data/UIAnimation/test_UIAnimation_TitleLogo.json");
+		}
+
+		// 登録済みのUIデータを取得
+		UIAnimationData* data = uiManager->GetData("TitleLogo");
+
+		// UI生成
+		m_pTestUI = CUIFactory::Create(this, *data);
+
+		// 最初は非表示
+		auto sprite = m_pTestUI->GetComponent<CSpriteRenderComponent>();
+
+		if (sprite)
+		{
+			sprite->SetIsVisible(false);
+		}
 	}
-
-	// 登録済みのUIデータを取得
-	UIAnimationData* data = uiManager->GetData("TitleLogo");
-
-	// UI生成
-	m_pTestUI = CUIFactory::Create(this, *data);
-
-	// 最初は非表示
-	auto sprite = m_pTestUI->GetComponent<CSpriteRenderComponent>();
-
-	if (sprite)
-	{
-		sprite->SetIsVisible(false);
-	}
-
-	//// ポイントライトの生成
-	//CreatePointLight({ 0,10,0 }, D3DXCOLOR(1, 0, 0, 1), 300.0f, 0.01f);
-
-	//// スポットライトの生成
-	//CreateSpotLight({ -100,20,0 }, { 0,-1,1 }, D3DXCOLOR(1, 1, 1, 1), 500.0f, 20.0f, 40.0f);
-
-	//// タイトルロゴオブジェクトの生成
-	//auto logo = CreateObject();
-
-	//logo->SetTag("TitleLogo");
-
-	//// トランスフォームコンポーネントに追加
-	//auto transform = logo->AddComponent<CTransformComponent>();
-
-	//// 位置を設定(0.0～1.0の比率)
-	//transform->Position = { 0.5f,0.5f,0.0f };
-
-	//// スプライトレンダーコンポーネントに追加
-	//auto sprite = logo->AddComponent<CSpriteRenderComponent>();
-
-	//// 描画順の設定
-	//sprite->SetLayer(RenderLayer::UI);
-
-	//// テクスチャの設定
-	//sprite->SetTexture("data/TEXTURE/title.png");
-
-	//// サイズの設定
-	//sprite->SetSize(500.0f, 300.0f);
 
 	//// プレイヤーの生成
 	//{
@@ -258,40 +234,6 @@ HRESULT CTitle::Init(void)
 
 	//	// レイキャストコンポーネントの追加
 	//	player->AddComponent<CRaycastComponent>();
-	//}
-
-
-	//for (int n = 0; n < 1; n++)
-	//{
-	//	// ボールの生成
-	//	auto ball = CreateObject<CBall>();
-
-	//	ball->SetTag("Ball");
-
-	//	auto ballTransform = ball->AddComponent<CTransformComponent>();
-
-	//	ballTransform->Position = { 0.0f, -170.0f, 0.0f };
-	//	ballTransform->Scale = { 1.0f, 1.0f, 1.0f };
-
-	//	auto modelBall = ball->AddComponent<CXModelRenderComponent>();
-
-	//	// モデルの読み込み
-	//	modelBall->Load("data/MODELS/ball.x");
-
-	//	// リジッドボディコンポーネントの追加
-	//	auto rigidball = ball->AddComponent<CRigidBodyComponent>();
-	//	rigidball->SetDynamic(false);
-
-	//	auto modelSize = modelBall->GetModelSize();
-
-	//	// モデルサイズから一番大きい辺を使う
-	//	float radius = std::max({ modelSize.x, modelSize.y, modelSize.z }) * 0.5f;
-
-	//	// スフィアコライダーの生成
-	//	rigidball->CreateSphere(radius, 1.0f);
-
-	//	// コライダーコンポーネントの追加
-	//	auto colliderball = ball->AddComponent<CColliderComponent>();
 	//}
 
 	//// 2Dパーティクルオブジェクトの生成
@@ -394,7 +336,7 @@ HRESULT CTitle::Init(void)
 	score->SetLayer(RenderLayer::UI);
 	score->SetTexture("data/TEXTURE/num_01.png");
 	score->SetDigitSize(40.0f, 60.0f);
-	score->SetCountSpeed(300.0f);
+	score->SetCountSpeed(100.0f);
 	score->SetScore(123);
 
 
@@ -469,6 +411,7 @@ void CTitle::Update(void)
 //	}
 //#endif
 
+	// テスト : スコア加算
 	if (pKeyboard->GetTrigger(DIK_I))
 	{
 		auto score = FindGameObject("Score");
@@ -495,7 +438,7 @@ void CTitle::Update(void)
 	m_fTime -= dt;
 
 	//=============================================================================
-	// タイムアップ判定
+	// タイムアップ判定 (テスト)
 	//=============================================================================
 	if (m_fTime <= 0 && !m_IsTimeUp)
 	{
