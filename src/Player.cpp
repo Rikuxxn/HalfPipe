@@ -114,8 +114,8 @@ HRESULT CPlayer::Init(void)
 	// 自動移動ポイントの読み込み
 	autoMove->LoadMovePoint("data/MovePointInfo.json");
 
-	// 自動移動開始
-	autoMove->StartAutoMove();
+	//// 自動移動開始
+	//autoMove->StartAutoMove();
 
 	// レイキャストコンポーネントの追加
 	AddComponent<CRaycastComponent>();

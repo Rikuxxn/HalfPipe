@@ -46,6 +46,7 @@
 #include "UIFactory.h"
 #include "UIAnimationComponent.h"
 #include "TimeSystem.h"
+#include "ScoreRenderComponent.h"
 
 
 //*****************************************************************************
@@ -373,31 +374,28 @@ HRESULT CTitle::Init(void)
 
 
 
-	//// メッシュフィールドオブジェクトの生成
-	//auto meshField = CreateObject();
+	// スコアの生成
+	auto scoreObject = CreateObject<CGameObject>();
 
-	//meshField->SetTag("MeshField");
+	scoreObject->SetTag("Score");
 
-	//auto meshFieldTransform = meshField->AddComponent<CTransformComponent>();
+	// UIコンポーネント
+	auto ui = scoreObject->AddComponent<CUIComponent>();
 
-	//meshFieldTransform->Position = { 0.0f, 0.0f, 0.0f };
+	// 表示位置
+	UITransform transform = ui->GetTransform();
 
-	//auto renderer = meshField->AddComponent<CMeshRenderComponent>();
+	transform.Position = { 0.8f, 0.15f };
+	transform.Scale = { 0.2f, 0.2f };
 
-	//// 描画順の設定
-	//renderer->SetLayer(RenderLayer::Mesh);
+	// スコア描画コンポーネント
+	auto score = scoreObject->AddComponent<CScoreRenderComponent>();
 
-	//// メッシュ生成
-	//auto mesh = std::make_shared<CMeshResource>();
-
-	//// メッシュフィールドの生成
-	//mesh->CreatePlane(800.0f, 800.0f, 100, 100);
-
-	//// ポインタ設定
-	//renderer->SetMesh(mesh);
-
-	//// テクスチャの設定
-	//renderer->SetTexture("data/TEXTURE/field100.jpg");
+	score->SetLayer(RenderLayer::UI);
+	score->SetTexture("data/TEXTURE/num_01.png");
+	score->SetDigitSize(40.0f, 60.0f);
+	score->SetCountSpeed(300.0f);
+	score->SetScore(123);
 
 
 
@@ -470,6 +468,19 @@ void CTitle::Update(void)
 //		pCamera->SetCamMode(CCamera::MODE_EDIT);
 //	}
 //#endif
+
+	if (pKeyboard->GetTrigger(DIK_I))
+	{
+		auto score = FindGameObject("Score");
+
+		if (score)
+		{
+			auto scoreRender = score->GetComponent<CScoreRenderComponent>();
+
+			// スコアを加算する
+			scoreRender->AddScore(100);
+		}
+	}
 
 	if (pFade->GetFade() == CFade::FADE_NONE &&
 		(/*pKeyboard->GetAnyKeyTrigger() || */pJoypad->GetTrigger(CInputJoypad::JOYKEY_A) ||

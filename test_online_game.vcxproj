@@ -246,6 +246,7 @@
     <ClInclude Include="include\RigidBodyComponent.h" />
     <ClInclude Include="include\Scene.h" />
     <ClInclude Include="include\SceneManager.h" />
+    <ClInclude Include="include\ScoreRenderComponent.h" />
     <ClInclude Include="include\ShaderManager.h" />
     <ClInclude Include="include\ShaderResource.h" />
     <ClInclude Include="include\ShadowMap.h" />
@@ -363,6 +364,7 @@
     <ClCompile Include="src\RigidBodyComponent.cpp" />
     <ClCompile Include="src\Scene.cpp" />
     <ClCompile Include="src\SceneManager.cpp" />
+    <ClCompile Include="src\ScoreRenderComponent.cpp" />
     <ClCompile Include="src\ShaderManager.cpp" />
     <ClCompile Include="src\ShaderResource.cpp" />
     <ClCompile Include="src\ShadowMap.cpp" />

@@ -106,7 +106,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE /*hInstancePrev*
 		// 学校でのPC		: 10.70.21.139
 		// 家デスクトップPC	: 192.168.3.154
 		//network->FindLANServer(22333);
-		network->Connect("10.70.21.139", 22333);
+		network->Connect("192.168.3.201", 22333);
 	}
 
 	// 分解能を設定

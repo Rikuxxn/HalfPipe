@@ -57,9 +57,7 @@ public:
         return false;
     }
 
-    virtual void DrawShadow(void)
-    {
-    }
+    virtual void DrawShadow(void) {}
 
     // リソース直接指定
     void SetTexture(std::shared_ptr<CTextureResource> texture);
