@@ -445,6 +445,9 @@ void CNetworkManager::OnReceive( ENetPeer* peer, ENetPacket* packet)
 			return;
 		}
 
+		// 今回のスナップショットに含まれるプレイヤーだけ有効にする
+		std::memset(m_HasPlayerState, 0, sizeof(m_HasPlayerState));
+
 		for (uint8_t i = 0; i < snapshot.playerCount; ++i)
 		{
 			const Network::PlayerState& state = snapshot.players[i];
@@ -536,13 +539,17 @@ void CNetworkManager::OnReceive( ENetPeer* peer, ENetPacket* packet)
 		}
 	
 		// 状態キャッシュを無効化
-		//m_HasPlayerInput[playerId] = false;
 		m_HasPlayerState[playerId] = false;
 	
-		std::printf(
+		char debugMsg[256];
+
+		sprintf_s(
+			debugMsg,
 			"[Network] Player %u がゲームを離れました\n",
 			playerId);
-	
+
+		OutputDebugStringA(debugMsg);
+
 		// ゲーム側でプレイヤーを削除できるように記録する
 		m_LeftPlayerId = playerId;
 		m_HasPlayerLeft = true;
