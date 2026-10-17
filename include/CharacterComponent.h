@@ -67,6 +67,7 @@ public:
     ~CCharacterComponent() = default;
 
     HRESULT Init    (void) override;
+    void    Uninit  (void) override;
     void    Update  (void) override;
 
 public:

@@ -44,6 +44,33 @@ HRESULT CCharacterComponent::Init(void)
 }
 
 //=============================================================================
+// 終了処理
+//=============================================================================
+void CCharacterComponent::Uninit(void)
+{
+    // 先に親Transformへの参照を解除
+    for (auto* transform : m_Transforms)
+    {
+        if (transform)
+        {
+            transform->SetParent(nullptr);
+        }
+    }
+
+    for (auto* part : m_Parts)
+    {
+        if (part)
+        {
+            part->Destroy();
+        }
+    }
+
+    m_Parts.clear();
+    m_Transforms.clear();
+
+}
+
+//=============================================================================
 // 更新処理
 //=============================================================================
 void CCharacterComponent::Update(void)
