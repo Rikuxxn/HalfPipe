@@ -381,7 +381,7 @@ void CConnect::Update(void)
 	// ClientFServer‚©‚çŽóM‚µ‚½Playeró‘Ô‚ð”½‰f
 	//============================================================
 	{
-		if (network && network->IsJoined())
+		if (network && network->IsConnected())
 		{
 			for (uint8_t playerId = 0;
 				playerId < Network::MAX_PLAYERS;
@@ -459,7 +459,7 @@ void CConnect::Update(void)
 
 			if (player)
 			{
-				player->IsDestroy();
+				player->Destroy();
 			}
 		}
 	}
@@ -474,6 +474,9 @@ void CConnect::Update(void)
 			const uint8_t localPlayerId = network->GetLocalPlayerId();
 
 			SpawnPlayer(localPlayerId);
+
+			// ¶¬Ï‚Ý‚É‚·‚é 
+			m_PlayerSpawned = true;
 		}
 
 		// Å‘ål”‚ª‚»‚ë‚Á‚½‚ç‘JˆÚ
@@ -553,7 +556,7 @@ void CConnect::SpawnPlayer(uint8_t playerId)
 {
 	auto network = CManager::Instance()->GetNetworkManager();
 
-	if (!network || !network->IsJoined())
+	if (!network)
 	{
 		return;
 	}
