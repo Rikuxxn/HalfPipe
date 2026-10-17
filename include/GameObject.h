@@ -27,6 +27,7 @@ private:
 
     bool        m_bActive;
     bool        m_bDestroy;
+    bool        m_bUninitialized;
 
     std::string m_Tag;
     std::string m_Name;
@@ -43,6 +44,7 @@ public:
     {
         m_bActive = true;
         m_bDestroy = false;
+        m_bUninitialized = false;
 
         m_Tag = "GameObject";
         m_Name = "Object";
@@ -55,9 +57,9 @@ public:
 public:
 
     virtual HRESULT Init    (void) { return S_OK; }
-    virtual void    Uninit (void) {}
-    virtual void    Update (void);
-    virtual void    Draw   (void);
+    virtual void    Uninit  (void);
+    virtual void    Update  (void);
+    virtual void    Draw    (void);
     void DrawShadow(void);
 
     void SetScene(CScene* scene);
