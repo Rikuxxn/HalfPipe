@@ -17,6 +17,7 @@
 #include "Renderer.h"
 #include "ModelManager.h"
 #include "ModelInstancingRenderer.h"
+#include "TextureManager.h"
 
 
 //=============================================================================
@@ -48,7 +49,8 @@ void CXModelRenderComponent::Draw(void)
         ->AddInstance(
             m_Model.get(),
             transform->GetWorldMatrix(),
-            m_Layer);
+            m_Layer,
+            m_FaceTextures);
 }
 
 //=============================================================================
@@ -99,4 +101,51 @@ D3DXVECTOR3 CXModelRenderComponent::GetModelSize(void) const
 std::shared_ptr<CXModelResource> CXModelRenderComponent::GetModel(void) const
 {
     return m_Model;
+}
+
+//=============================================================================
+// 面のテクスチャを設定
+//=============================================================================
+void CXModelRenderComponent::SetFaceTexture(int faceIndex, const std::string& path)
+{
+    if (faceIndex < 0)
+    {
+        return;
+    }
+
+    // テクスチャをロード
+    auto texture = CManager::Instance()->GetTextureManager()->Load(path);
+
+    if (!texture)
+    {
+        return;
+    }
+
+    // 指定した面のテクスチャとして登録
+    m_FaceTextures[faceIndex] = texture;
+}
+
+//=============================================================================
+// 面のテクスチャを削除
+//=============================================================================
+void CXModelRenderComponent::ClearFaceTexture(int faceIndex)
+{
+    m_FaceTextures.erase(faceIndex);
+}
+
+//=============================================================================
+// すべての面のテクスチャを削除
+//=============================================================================
+void CXModelRenderComponent::ClearFaceTextures(void)
+{
+    m_FaceTextures.clear();
+}
+
+//=============================================================================
+// 面のテクスチャを取得
+//=============================================================================
+const std::unordered_map<int, std::shared_ptr<CTextureResource>>&
+CXModelRenderComponent::GetFaceTextures(void) const
+{
+    return m_FaceTextures;
 }

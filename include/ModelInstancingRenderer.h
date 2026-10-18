@@ -29,7 +29,11 @@ public:
 
     void Begin(void);
 
-    void AddInstance(CXModelResource* model, const D3DXMATRIX& world, RenderLayer layer);
+    void AddInstance(
+        CXModelResource* model, 
+        const D3DXMATRIX& world, 
+        RenderLayer layer,
+        const std::unordered_map<int, std::shared_ptr<CTextureResource>>& faceTextures = {});
 
     void EndMain    (void);
     void FlushMain  (void);
@@ -60,6 +64,9 @@ private:
     {
         CXModelResource* Model;
         std::vector<INSTANCE_DATA> Instances;
+
+        // 面番号と上書きテクスチャ
+        std::unordered_map<int, std::shared_ptr<CTextureResource>> FaceTextures;
     };
 
 private:
@@ -69,7 +76,10 @@ private:
     ComPtr<IDirect3DVertexBuffer9> m_InstanceVB;
     ComPtr<IDirect3DVertexDeclaration9> m_VertexDecl;
 
-    std::unordered_map<CXModelResource*, std::vector<INSTANCE_DATA>> m_Groups;
+    // 通常描画用のインスタンスグループ
+    std::vector<INSTANCE_GROUP> m_Groups;
+
+    // ギズモ描画用
     std::unordered_map<CXModelResource*, std::vector<INSTANCE_DATA>> m_GizmoGroups;
     std::shared_ptr<CShaderResource> m_pShader;
     std::shared_ptr<CShaderResource> m_pShadowShader;

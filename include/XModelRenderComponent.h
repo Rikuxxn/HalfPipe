@@ -15,6 +15,13 @@
 // 前方宣言
 class CXModelResource;
 
+// サブセットごとのテクスチャ上書き設定
+struct FaceTextureOverride
+{
+    int FaceIndex = 0;
+    std::shared_ptr<CTextureResource> Texture;
+};
+
 //*****************************************************************************
 // Xモデルレンダーコンポーネント
 //*****************************************************************************
@@ -46,6 +53,23 @@ public:
 
     HRESULT Load(const char* filepath);
 
+    // 面のテクスチャを設定
+    void SetFaceTexture(
+        int faceIndex,
+        const std::string& path);
+
+    // 面のテクスチャを削除
+    void ClearFaceTexture(int faceIndex);
+
+    // すべての面のテクスチャを削除
+    void ClearFaceTextures(void);
+
+    // 面のテクスチャ取得
+    const std::unordered_map<
+        int,
+        std::shared_ptr<CTextureResource>>&
+        GetFaceTextures(void) const;
+
     // 表示・非表示
     void SetVisible(bool visible) { m_Visible = visible; }
     bool IsVisible(void) const { return m_Visible; }
@@ -64,6 +88,13 @@ private:
         return true;
     }
 
+private:
+
+    // サブセットごとのテクスチャ上書き
+    std::unordered_map<
+        int,
+        std::shared_ptr<CTextureResource>
+    > m_FaceTextures;
 };
 
 #endif

@@ -14,6 +14,7 @@
 #include "Renderer.h"
 #include "ShaderManager.h"
 #include "ShadowMap.h"
+#include "TextureResource.h"
 
 
 //=============================================================================
@@ -94,22 +95,68 @@ void CModelInstancingRenderer::Begin(void)
 //=============================================================================
 // インスタンス追加
 //=============================================================================
-void CModelInstancingRenderer::AddInstance(CXModelResource* model, const D3DXMATRIX& world, RenderLayer layer)
+void CModelInstancingRenderer::AddInstance(
+    CXModelResource* model, 
+    const D3DXMATRIX& world, 
+    RenderLayer layer,
+    const std::unordered_map<int, std::shared_ptr<CTextureResource>>& faceTextures)
 {
-    INSTANCE_DATA data;
+    if (!model)
+    {
+        return;
+    }
 
+    INSTANCE_DATA data;
     memcpy(&data, &world, sizeof(D3DXMATRIX));
 
+    // ギズモ
     if (layer == RenderLayer::Gizmo)
     {
         m_GizmoGroups[model].push_back(data);
-    }
-    else
-    {
-        m_Groups[model].push_back(data);
+        return;
     }
 
-    //m_Groups[model].push_back(data);
+    // 同じモデルかつ同じテクスチャ設定のグループを探す
+    for (auto& group : m_Groups)
+    {
+        if (group.Model != model)
+        {
+            continue;
+        }
+
+        if (group.FaceTextures.size() != faceTextures.size())
+        {
+            continue;
+        }
+
+        bool sameTextures = true;
+
+        for (const auto& [faceIndex, texture] : faceTextures)
+        {
+            auto it = group.FaceTextures.find(faceIndex);
+
+            if (it == group.FaceTextures.end() ||
+                it->second.get() != texture.get())
+            {
+                sameTextures = false;
+                break;
+            }
+        }
+
+        if (sameTextures)
+        {
+            group.Instances.push_back(data);
+            return;
+        }
+    }
+
+    // 一致するグループがなければ新しく作る
+    INSTANCE_GROUP group;
+    group.Model = model;
+    group.Instances.push_back(data);
+    group.FaceTextures = faceTextures;
+
+    m_Groups.push_back(std::move(group));
 }
 
 //=============================================================================
@@ -155,8 +202,8 @@ void CModelInstancingRenderer::Render(ID3DXEffect* effect, bool useMaterial)
 
     for (auto& group : m_Groups)
     {
-        CXModelResource* model = group.first;
-        auto& instances = group.second;
+        CXModelResource* model = group.Model;
+        auto& instances = group.Instances;
 
         // 空の場合
         if (instances.empty())
@@ -223,20 +270,27 @@ void CModelInstancingRenderer::Render(ID3DXEffect* effect, bool useMaterial)
                 {
                     UINT mat = subset.MaterialIndex;
 
+                    // デフォルトではモデル本来のテクスチャを使用
+                    IDirect3DBaseTexture9* texture = nullptr;
+
                     if (mat < model->Textures.size())
                     {
-                        effect->SetTexture("Texture0", model->Textures[mat].Get());
+                        texture = model->Textures[mat].Get();
                     }
-                    else
+
+                    // 面ごとの上書きテクスチャを検索
+                    auto it = group.FaceTextures.find(i);
+
+                    if (it != group.FaceTextures.end() && it->second)
                     {
-                        effect->SetTexture("Texture0", nullptr);
+                        // 上書きテクスチャを設定
+                        texture = it->second->Texture.Get();
                     }
 
-                    bool hasTexture =
-                        mat < model->Textures.size() &&
-                        model->Textures[mat] != nullptr;
+                    // テクスチャを設定
+                    effect->SetTexture("Texture0", texture);
 
-                    effect->SetBool("HasTexture", hasTexture);
+                    effect->SetBool("HasTexture", texture != nullptr);
 
                     if (mat < model->Materials.size())
                     {
@@ -320,8 +374,8 @@ void CModelInstancingRenderer::RenderShadow(ID3DXEffect* effect)
 
     for (auto& group : m_Groups)
     {
-        CXModelResource* model = group.first;
-        auto& instances = group.second;
+        CXModelResource* model = group.Model;
+        auto& instances = group.Instances;
 
         // 空の場合
         if (instances.empty())
