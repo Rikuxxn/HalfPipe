@@ -586,6 +586,7 @@ CPlayer::InputData CPlayer::GatherInput(void)
 	// ネットワークから受信した入力を使用
 	//if (!m_IsLocalPlayer)
 	//{
+	//	// サーバーから受信した入力を使用する
 	//	return m_NetworkInput;
 	//}
 
