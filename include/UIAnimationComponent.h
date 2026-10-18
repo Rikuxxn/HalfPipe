@@ -42,6 +42,9 @@ public:
     // 全アニメーション再生
     void Play(void);
 
+    // 指定したアニメーションだけ再生
+    void PlayAnimation(const std::string& name);
+
     // 全アニメーション停止
     void Stop(void);
 

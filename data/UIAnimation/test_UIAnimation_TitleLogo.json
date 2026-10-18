@@ -7,10 +7,21 @@
             "easing": "EaseOutCubic",
             "from": 1.0,
             "loopCount": 1,
-            "name": "MoveY",
+            "name": "MoveY_UP",
             "playbackMode": "Once",
             "property": "PositionY",
             "to": 0.5
+        },
+        {
+          "delay": 0.0,
+          "duration": 1.0,
+          "easing": "EaseOutCubic",
+          "from": 0.5,
+          "loopCount": 1,
+          "name": "MoveY_DOWN",
+          "playbackMode": "Once",
+          "property": "PositionY",
+          "to": 1.0
         }
     ],
     "objectTag": "TitleLogo",

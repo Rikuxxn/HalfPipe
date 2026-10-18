@@ -440,7 +440,7 @@ void CTitle::Update(void)
 	//=============================================================================
 	// タイムアップ判定 (テスト)
 	//=============================================================================
-	if (m_fTime <= 0 && !m_IsTimeUp)
+	if (m_fTime <= 0.0f && !m_IsTimeUp)
 	{
 		m_IsTimeUp = true;
 
@@ -459,7 +459,33 @@ void CTitle::Update(void)
 
 			if (animation)
 			{
-				animation->Play();
+				animation->PlayAnimation("MoveY_UP");
+			}
+
+			m_fTime = 3.0f;
+		}
+	}
+
+	if (m_IsTimeUp && !m_IsVisible && m_fTime <= 0.0f)
+	{
+		m_IsVisible = true;
+
+		if (m_pTestUI)
+		{
+			// UIを表示
+			auto sprite = m_pTestUI->GetComponent<CSpriteRenderComponent>();
+
+			if (sprite)
+			{
+				sprite->SetIsVisible(true);
+			}
+
+			// アニメーション再生
+			auto animation = m_pTestUI->GetComponent<CUIAnimationComponent>();
+
+			if (animation)
+			{
+				animation->PlayAnimation("MoveY_DOWN");
 			}
 		}
 	}

@@ -45,7 +45,9 @@ private:
 	// タイムアップ処理済みか
 	bool m_IsTimeUp = false;
 
-	float m_fTime = 5.0f;
+	bool m_IsVisible = false;
+
+	float m_fTime = 2.0f;
 };
 
 #endif

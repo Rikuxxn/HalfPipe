@@ -312,6 +312,7 @@ void CUIAnimationComponent::Play(void)
 
     for (auto& animation : m_Animations)
     {
+        // 再生状態の初期化
         animation.ElapsedTime = 0.0f;
         animation.CompletedLoops = 0;
 
@@ -321,6 +322,47 @@ void CUIAnimationComponent::Play(void)
 
         // 開始値を適用
         ApplyValue(animation, animation.Clip.From);
+    }
+}
+
+//=============================================================================
+// 指定したアニメーションだけ再生
+//=============================================================================
+void CUIAnimationComponent::PlayAnimation(const std::string& name)
+{
+    // UIコンポーネントが未取得なら再取得
+    if (!m_pUI && m_pOwner)
+    {
+        m_pUI = m_pOwner->GetComponent<CUIComponent>();
+    }
+
+    if (!m_pUI)
+    {
+        return;
+    }
+
+    // 登録されているアニメーションから名前で検索
+    for (auto& animation : m_Animations)
+    {
+        // 指定した名前以外は再生しない
+        if (animation.Clip.Name != name)
+        {
+            continue;
+        }
+
+        // 再生状態の初期化
+        animation.ElapsedTime = 0.0f;
+        animation.CompletedLoops = 0;
+
+        animation.IsPlaying = true;
+        animation.IsFinished = false;
+        animation.IsReversing = false;
+
+        // 開始値を適用
+        ApplyValue(animation, animation.Clip.From);
+
+        // 対象が見つかったので終了
+        break;
     }
 }
 
