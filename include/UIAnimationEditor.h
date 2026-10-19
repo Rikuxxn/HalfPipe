@@ -45,7 +45,7 @@ private:
     void DrawClipList(UIAnimationData& data);
 
     // 選択中クリップの編集
-    bool  DrawClipSettings(UIAnimationClip& clip);
+    bool DrawClipSettings(UIAnimationClip& clip);
 
     // 保存・読み込みボタン
     void DrawSaveAndLoadButtons(void);
