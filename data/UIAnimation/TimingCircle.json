@@ -1,0 +1,44 @@
+{
+    "animationName": "TimingCircle",
+    "animations": [
+        {
+            "delay": 0.0,
+            "duration": 2.5,
+            "easing": "Linear",
+            "from": 5.0,
+            "loopCount": 1,
+            "name": "Scale_X",
+            "playbackMode": "Once",
+            "property": "ScaleX",
+            "to": 0.029999999329447746
+        },
+        {
+            "delay": 0.0,
+            "duration": 2.5,
+            "easing": "Linear",
+            "from": 5.0,
+            "loopCount": 1,
+            "name": "Scale_Y",
+            "playbackMode": "Once",
+            "property": "ScaleY",
+            "to": 0.029999999329447746
+        }
+    ],
+    "objectTag": "TimingCircle",
+    "size": {
+        "height": 0.20200000703334808,
+        "width": 0.12300000339746475
+    },
+    "texture": "data/TEXTURE/TimingCircle.png",
+    "transform": {
+        "alpha": 1.0,
+        "position": [
+            0.5,
+            0.5
+        ],
+        "scale": [
+            1.0,
+            1.0
+        ]
+    }
+}
