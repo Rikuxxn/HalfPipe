@@ -1,21 +1,21 @@
 {
-    "animationName": "ButtonA",
-    "animations": [],
-    "objectTag": "ButtonA",
-    "size": {
-        "height": 0.19300000369548798,
-        "width": 0.12300000339746475
-    },
-    "texture": "data/TEXTURE/timingcircle_frame.png",
-    "transform": {
-        "alpha": 1.0,
-        "position": [
-            0.5,
-            0.5
-        ],
-        "scale": [
-            1.0,
-            1.0
-        ]
-    }
+  "animationName": "ButtonA",
+  "animations": [],
+  "objectTag": "ButtonA",
+  "size": {
+    "height": 0.5,
+    "width": 0.5
+  },
+  "texture": "data/TEXTURE/timingcircle_frame.png",
+  "transform": {
+    "alpha": 1.0,
+    "position": [
+      0.5,
+      0.5
+    ],
+    "scale": [
+      0.18,
+      0.29
+    ]
+  }
 }

@@ -1,44 +1,44 @@
 {
-    "animationName": "TimingCircle",
-    "animations": [
-        {
-            "delay": 0.0,
-            "duration": 3.0,
-            "easing": "Linear",
-            "from": 5.0,
-            "loopCount": 1,
-            "name": "Scale_X",
-            "playbackMode": "Once",
-            "property": "ScaleX",
-            "to": 0.029999999329447746
-        },
-        {
-            "delay": 0.0,
-            "duration": 3.0,
-            "easing": "Linear",
-            "from": 5.0,
-            "loopCount": 1,
-            "name": "Scale_Y",
-            "playbackMode": "Once",
-            "property": "ScaleY",
-            "to": 0.029999999329447746
-        }
-    ],
-    "objectTag": "TimingCircle",
-    "size": {
-        "height": 0.20200000703334808,
-        "width": 0.12300000339746475
+  "animationName": "TimingCircle",
+  "animations": [
+    {
+      "delay": 0.0,
+      "duration": 3.0,
+      "easing": "Linear",
+      "from": 1.1399999856948853,
+      "loopCount": 1,
+      "name": "Scale_X",
+      "playbackMode": "Once",
+      "property": "ScaleX",
+      "to": 0.1899999976158142
     },
-    "texture": "data/TEXTURE/TimingCircle.png",
-    "transform": {
-        "alpha": 1.0,
-        "position": [
-            0.5,
-            0.5
-        ],
-        "scale": [
-            1.0,
-            1.0
-        ]
+    {
+      "delay": 0.0,
+      "duration": 3.0,
+      "easing": "Linear",
+      "from": 1.8600000143051147,
+      "loopCount": 1,
+      "name": "Scale_Y",
+      "playbackMode": "Once",
+      "property": "ScaleY",
+      "to": 0.3100000023841858
     }
+  ],
+  "objectTag": "TimingCircle",
+  "size": {
+    "height": 0.5,
+    "width": 0.5
+  },
+  "texture": "data/TEXTURE/TimingCircle.png",
+  "transform": {
+    "alpha": 1.0,
+    "position": [
+      0.5,
+      0.5
+    ],
+    "scale": [
+      0.1899999976158142,
+      0.3100000023841858
+    ]
+  }
 }

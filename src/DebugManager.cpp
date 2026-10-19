@@ -95,6 +95,17 @@ void CDebugManager::Draw(void)
 		pCamera->DrawDebugGUI();
 	}
 
+    //-------------------------------------------
+    // ジャンプタイミング
+    //-------------------------------------------
+
+    auto jumpTiming = scene->FindGameObject("jumpTiming");
+
+    if (jumpTiming)
+    {
+        jumpTiming->DrawDebugGUI();
+    }
+
     ImGui::End();
 
 #endif
