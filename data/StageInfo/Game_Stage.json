@@ -22,8 +22,8 @@
         "is_dynamic": false,
         "pos": [
             515.4212036132813,
-            678.2476196289063,
-            -853.5557861328125
+            557.8312377929688,
+            -628.4241333007813
         ],
         "rot": [
             0.0,
@@ -54,7 +54,12 @@
             1.0,
             1.0
         ],
-        "sign_textures": [],
+        "sign_textures": [
+            {
+                "face": 1,
+                "texture": "data/TEXTURE/Add_3.png"
+            }
+        ],
         "type": 6
     },
     {
@@ -74,7 +79,12 @@
             1.0,
             1.0
         ],
-        "sign_textures": [],
+        "sign_textures": [
+            {
+                "face": 1,
+                "texture": "data/TEXTURE/labo.png"
+            }
+        ],
         "type": 6
     },
     {
@@ -94,7 +104,12 @@
             1.0,
             1.0
         ],
-        "sign_textures": [],
+        "sign_textures": [
+            {
+                "face": 1,
+                "texture": "data/TEXTURE/labo.png"
+            }
+        ],
         "type": 6
     },
     {
@@ -114,7 +129,12 @@
             1.0,
             1.0
         ],
-        "sign_textures": [],
+        "sign_textures": [
+            {
+                "face": 1,
+                "texture": "data/TEXTURE/Add_3.png"
+            }
+        ],
         "type": 6
     },
     {
@@ -134,7 +154,12 @@
             1.0,
             1.0
         ],
-        "sign_textures": [],
+        "sign_textures": [
+            {
+                "face": 1,
+                "texture": "data/TEXTURE/Add_1.png"
+            }
+        ],
         "type": 6
     },
     {
@@ -154,7 +179,12 @@
             1.0,
             1.0
         ],
-        "sign_textures": [],
+        "sign_textures": [
+            {
+                "face": 1,
+                "texture": "data/TEXTURE/dakuten.png"
+            }
+        ],
         "type": 6
     },
     {
@@ -174,7 +204,12 @@
             1.0,
             1.0
         ],
-        "sign_textures": [],
+        "sign_textures": [
+            {
+                "face": 1,
+                "texture": "data/TEXTURE/Add_4.png"
+            }
+        ],
         "type": 6
     },
     {
@@ -194,7 +229,12 @@
             1.0,
             1.0
         ],
-        "sign_textures": [],
+        "sign_textures": [
+            {
+                "face": 1,
+                "texture": "data/TEXTURE/Add_1.png"
+            }
+        ],
         "type": 6
     },
     {
@@ -214,7 +254,12 @@
             1.0,
             1.0
         ],
-        "sign_textures": [],
+        "sign_textures": [
+            {
+                "face": 1,
+                "texture": "data/TEXTURE/dakuten.png"
+            }
+        ],
         "type": 6
     },
     {
@@ -234,7 +279,12 @@
             1.0,
             1.0
         ],
-        "sign_textures": [],
+        "sign_textures": [
+            {
+                "face": 1,
+                "texture": "data/TEXTURE/labo.png"
+            }
+        ],
         "type": 6
     },
     {
@@ -254,7 +304,12 @@
             1.0,
             1.0
         ],
-        "sign_textures": [],
+        "sign_textures": [
+            {
+                "face": 1,
+                "texture": "data/TEXTURE/Add_3.png"
+            }
+        ],
         "type": 6
     },
     {
@@ -294,7 +349,12 @@
             1.0,
             1.0
         ],
-        "sign_textures": [],
+        "sign_textures": [
+            {
+                "face": 1,
+                "texture": "data/TEXTURE/Add_1.png"
+            }
+        ],
         "type": 6
     },
     {
@@ -302,7 +362,7 @@
         "pos": [
             -440.0,
             29.0,
-            703.0
+            702.5306396484375
         ],
         "rot": [
             0.0,
@@ -314,7 +374,12 @@
             1.0,
             1.0
         ],
-        "sign_textures": [],
+        "sign_textures": [
+            {
+                "face": 1,
+                "texture": "data/TEXTURE/Add_4.png"
+            }
+        ],
         "type": 6
     },
     {
@@ -334,7 +399,12 @@
             1.0,
             1.0
         ],
-        "sign_textures": [],
+        "sign_textures": [
+            {
+                "face": 1,
+                "texture": "data/TEXTURE/dakuten.png"
+            }
+        ],
         "type": 6
     },
     {
@@ -354,7 +424,12 @@
             1.0,
             1.0
         ],
-        "sign_textures": [],
+        "sign_textures": [
+            {
+                "face": 1,
+                "texture": "data/TEXTURE/Add_3.png"
+            }
+        ],
         "type": 6
     },
     {
@@ -362,7 +437,7 @@
         "pos": [
             -440.0,
             235.0,
-            55.0
+            54.651458740234375
         ],
         "rot": [
             0.0,
@@ -374,7 +449,12 @@
             1.0,
             1.0
         ],
-        "sign_textures": [],
+        "sign_textures": [
+            {
+                "face": 1,
+                "texture": "data/TEXTURE/labo.png"
+            }
+        ],
         "type": 6
     },
     {
@@ -394,7 +474,12 @@
             1.0,
             1.0
         ],
-        "sign_textures": [],
+        "sign_textures": [
+            {
+                "face": 1,
+                "texture": "data/TEXTURE/Add_1.png"
+            }
+        ],
         "type": 6
     },
     {
@@ -414,7 +499,12 @@
             1.0,
             1.0
         ],
-        "sign_textures": [],
+        "sign_textures": [
+            {
+                "face": 1,
+                "texture": "data/TEXTURE/Add_3.png"
+            }
+        ],
         "type": 6
     },
     {
@@ -434,7 +524,12 @@
             1.0,
             1.0
         ],
-        "sign_textures": [],
+        "sign_textures": [
+            {
+                "face": 1,
+                "texture": "data/TEXTURE/Add_4.png"
+            }
+        ],
         "type": 6
     },
     {
@@ -454,7 +549,12 @@
             1.0,
             1.0
         ],
-        "sign_textures": [],
+        "sign_textures": [
+            {
+                "face": 1,
+                "texture": "data/TEXTURE/dakuten.png"
+            }
+        ],
         "type": 6
     },
     {
@@ -474,7 +574,12 @@
             1.0,
             1.0
         ],
-        "sign_textures": [],
+        "sign_textures": [
+            {
+                "face": 1,
+                "texture": "data/TEXTURE/Add_1.png"
+            }
+        ],
         "type": 6
     },
     {
@@ -494,7 +599,12 @@
             1.0,
             1.0
         ],
-        "sign_textures": [],
+        "sign_textures": [
+            {
+                "face": 1,
+                "texture": "data/TEXTURE/labo.png"
+            }
+        ],
         "type": 6
     },
     {
@@ -514,7 +624,12 @@
             1.0,
             1.0
         ],
-        "sign_textures": [],
+        "sign_textures": [
+            {
+                "face": 1,
+                "texture": "data/TEXTURE/Add_1.png"
+            }
+        ],
         "type": 6
     },
     {
@@ -554,7 +669,12 @@
             1.0,
             1.0
         ],
-        "sign_textures": [],
+        "sign_textures": [
+            {
+                "face": 1,
+                "texture": "data/TEXTURE/Add_3.png"
+            }
+        ],
         "type": 6
     },
     {
@@ -574,7 +694,12 @@
             1.0,
             1.0
         ],
-        "sign_textures": [],
+        "sign_textures": [
+            {
+                "face": 1,
+                "texture": "data/TEXTURE/labo.png"
+            }
+        ],
         "type": 6
     },
     {
@@ -594,7 +719,12 @@
             1.0,
             1.0
         ],
-        "sign_textures": [],
+        "sign_textures": [
+            {
+                "face": 1,
+                "texture": "data/TEXTURE/Add_1.png"
+            }
+        ],
         "type": 6
     },
     {
@@ -614,7 +744,12 @@
             1.0,
             1.0
         ],
-        "sign_textures": [],
+        "sign_textures": [
+            {
+                "face": 1,
+                "texture": "data/TEXTURE/Add_3.png"
+            }
+        ],
         "type": 6
     },
     {
@@ -634,7 +769,12 @@
             1.0,
             1.0
         ],
-        "sign_textures": [],
+        "sign_textures": [
+            {
+                "face": 1,
+                "texture": "data/TEXTURE/dakuten.png"
+            }
+        ],
         "type": 6
     },
     {
@@ -654,7 +794,12 @@
             1.0,
             1.0
         ],
-        "sign_textures": [],
+        "sign_textures": [
+            {
+                "face": 1,
+                "texture": "data/TEXTURE/Add_4.png"
+            }
+        ],
         "type": 6
     },
     {
@@ -682,7 +827,7 @@
         "pos": [
             440.0,
             -41.0,
-            917.0
+            914.370361328125
         ],
         "rot": [
             0.0,
@@ -694,7 +839,12 @@
             1.0,
             1.0
         ],
-        "sign_textures": [],
+        "sign_textures": [
+            {
+                "face": 1,
+                "texture": "data/TEXTURE/Add_1.png"
+            }
+        ],
         "type": 6
     },
     {
@@ -714,7 +864,12 @@
             1.0,
             1.0
         ],
-        "sign_textures": [],
+        "sign_textures": [
+            {
+                "face": 1,
+                "texture": "data/TEXTURE/labo.png"
+            }
+        ],
         "type": 6
     },
     {
@@ -734,7 +889,12 @@
             1.0,
             1.0
         ],
-        "sign_textures": [],
+        "sign_textures": [
+            {
+                "face": 1,
+                "texture": "data/TEXTURE/Add_4.png"
+            }
+        ],
         "type": 6
     },
     {
@@ -754,7 +914,12 @@
             1.0,
             1.0
         ],
-        "sign_textures": [],
+        "sign_textures": [
+            {
+                "face": 1,
+                "texture": "data/TEXTURE/Add_1.png"
+            }
+        ],
         "type": 6
     },
     {
@@ -794,7 +959,12 @@
             1.0,
             1.0
         ],
-        "sign_textures": [],
+        "sign_textures": [
+            {
+                "face": 1,
+                "texture": "data/TEXTURE/Add_3.png"
+            }
+        ],
         "type": 6
     },
     {
@@ -814,7 +984,12 @@
             1.0,
             1.0
         ],
-        "sign_textures": [],
+        "sign_textures": [
+            {
+                "face": 1,
+                "texture": "data/TEXTURE/labo.png"
+            }
+        ],
         "type": 6
     },
     {
@@ -834,7 +1009,12 @@
             1.0,
             1.0
         ],
-        "sign_textures": [],
+        "sign_textures": [
+            {
+                "face": 1,
+                "texture": "data/TEXTURE/Add_1.png"
+            }
+        ],
         "type": 6
     },
     {
@@ -854,7 +1034,12 @@
             1.0,
             1.0
         ],
-        "sign_textures": [],
+        "sign_textures": [
+            {
+                "face": 1,
+                "texture": "data/TEXTURE/labo.png"
+            }
+        ],
         "type": 6
     },
     {
@@ -874,7 +1059,12 @@
             1.0,
             1.0
         ],
-        "sign_textures": [],
+        "sign_textures": [
+            {
+                "face": 1,
+                "texture": "data/TEXTURE/dakuten.png"
+            }
+        ],
         "type": 6
     },
     {
@@ -894,7 +1084,12 @@
             1.0,
             1.0
         ],
-        "sign_textures": [],
+        "sign_textures": [
+            {
+                "face": 1,
+                "texture": "data/TEXTURE/Add_4.png"
+            }
+        ],
         "type": 6
     },
     {
@@ -914,7 +1109,12 @@
             1.0,
             1.0
         ],
-        "sign_textures": [],
+        "sign_textures": [
+            {
+                "face": 1,
+                "texture": "data/TEXTURE/labo.png"
+            }
+        ],
         "type": 6
     },
     {
@@ -934,13 +1134,18 @@
             1.0,
             1.0
         ],
-        "sign_textures": [],
+        "sign_textures": [
+            {
+                "face": 1,
+                "texture": "data/TEXTURE/dakuten.png"
+            }
+        ],
         "type": 6
     },
     {
         "is_dynamic": false,
         "pos": [
-            -232.0,
+            -228.98768615722656,
             660.0,
             -2420.0
         ],
@@ -954,7 +1159,12 @@
             1.0,
             1.0
         ],
-        "sign_textures": [],
+        "sign_textures": [
+            {
+                "face": 1,
+                "texture": "data/TEXTURE/Add_4.png"
+            }
+        ],
         "type": 6
     },
     {
@@ -974,7 +1184,12 @@
             1.0,
             1.0
         ],
-        "sign_textures": [],
+        "sign_textures": [
+            {
+                "face": 1,
+                "texture": "data/TEXTURE/Add_2.png"
+            }
+        ],
         "type": 6
     },
     {
@@ -994,7 +1209,12 @@
             1.0,
             1.0
         ],
-        "sign_textures": [],
+        "sign_textures": [
+            {
+                "face": 1,
+                "texture": "data/TEXTURE/Add_1.png"
+            }
+        ],
         "type": 6
     },
     {
@@ -1014,7 +1234,12 @@
             1.0,
             1.0
         ],
-        "sign_textures": [],
+        "sign_textures": [
+            {
+                "face": 1,
+                "texture": "data/TEXTURE/Add_3.png"
+            }
+        ],
         "type": 6
     },
     {
@@ -1034,7 +1259,12 @@
             1.0,
             1.0
         ],
-        "sign_textures": [],
+        "sign_textures": [
+            {
+                "face": 1,
+                "texture": "data/TEXTURE/Add_1.png"
+            }
+        ],
         "type": 6
     },
     {
@@ -1054,7 +1284,12 @@
             1.0,
             1.0
         ],
-        "sign_textures": [],
+        "sign_textures": [
+            {
+                "face": 1,
+                "texture": "data/TEXTURE/dakuten.png"
+            }
+        ],
         "type": 6
     },
     {
@@ -1114,7 +1349,12 @@
             1.0,
             1.0
         ],
-        "sign_textures": [],
+        "sign_textures": [
+            {
+                "face": 1,
+                "texture": "data/TEXTURE/Add_1.png"
+            }
+        ],
         "type": 6
     },
     {
@@ -1134,7 +1374,12 @@
             1.0,
             1.0
         ],
-        "sign_textures": [],
+        "sign_textures": [
+            {
+                "face": 1,
+                "texture": "data/TEXTURE/labo.png"
+            }
+        ],
         "type": 6
     },
     {
@@ -1154,7 +1399,12 @@
             1.0,
             1.0
         ],
-        "sign_textures": [],
+        "sign_textures": [
+            {
+                "face": 1,
+                "texture": "data/TEXTURE/Add_4.png"
+            }
+        ],
         "type": 6
     },
     {
@@ -1162,7 +1412,7 @@
         "pos": [
             360.0,
             575.0,
-            -1842.0
+            -1846.7418212890625
         ],
         "rot": [
             0.0,
@@ -1174,7 +1424,12 @@
             1.0,
             1.0
         ],
-        "sign_textures": [],
+        "sign_textures": [
+            {
+                "face": 1,
+                "texture": "data/TEXTURE/Add_1.png"
+            }
+        ],
         "type": 6
     },
     {
@@ -1182,7 +1437,7 @@
         "pos": [
             397.0,
             543.0,
-            -1741.0
+            -1746.641845703125
         ],
         "rot": [
             0.0,
@@ -1247,14 +1502,19 @@
         "rot": [
             0.0,
             90.0,
-            -12.799995422363281
+            -12.799994468688965
         ],
         "scale": [
             1.0,
             1.0,
             1.0
         ],
-        "sign_textures": [],
+        "sign_textures": [
+            {
+                "face": 1,
+                "texture": "data/TEXTURE/Add_1.png"
+            }
+        ],
         "type": 6
     },
     {
@@ -1274,7 +1534,12 @@
             1.0,
             1.0
         ],
-        "sign_textures": [],
+        "sign_textures": [
+            {
+                "face": 1,
+                "texture": "data/TEXTURE/Add_4.png"
+            }
+        ],
         "type": 6
     },
     {
@@ -1294,7 +1559,12 @@
             1.0,
             1.0
         ],
-        "sign_textures": [],
+        "sign_textures": [
+            {
+                "face": 1,
+                "texture": "data/TEXTURE/Add_3.png"
+            }
+        ],
         "type": 6
     },
     {
@@ -1314,7 +1584,12 @@
             1.0,
             1.0
         ],
-        "sign_textures": [],
+        "sign_textures": [
+            {
+                "face": 1,
+                "texture": "data/TEXTURE/labo.png"
+            }
+        ],
         "type": 6
     },
     {
@@ -1334,13 +1609,18 @@
             1.0,
             1.0
         ],
-        "sign_textures": [],
+        "sign_textures": [
+            {
+                "face": 1,
+                "texture": "data/TEXTURE/Add_1.png"
+            }
+        ],
         "type": 6
     },
     {
         "is_dynamic": false,
         "pos": [
-            -380.0,
+            -380.3081970214844,
             -1225.0,
             4369.0
         ],
@@ -1354,7 +1634,12 @@
             1.0,
             1.0
         ],
-        "sign_textures": [],
+        "sign_textures": [
+            {
+                "face": 1,
+                "texture": "data/TEXTURE/dakuten.png"
+            }
+        ],
         "type": 6
     },
     {
@@ -1374,7 +1659,12 @@
             1.0,
             1.0
         ],
-        "sign_textures": [],
+        "sign_textures": [
+            {
+                "face": 1,
+                "texture": "data/TEXTURE/dakuten.png"
+            }
+        ],
         "type": 6
     },
     {
@@ -1394,7 +1684,12 @@
             1.0,
             1.0
         ],
-        "sign_textures": [],
+        "sign_textures": [
+            {
+                "face": 1,
+                "texture": "data/TEXTURE/Add_4.png"
+            }
+        ],
         "type": 6
     },
     {
@@ -1414,7 +1709,12 @@
             1.0,
             1.0
         ],
-        "sign_textures": [],
+        "sign_textures": [
+            {
+                "face": 1,
+                "texture": "data/TEXTURE/Add_1.png"
+            }
+        ],
         "type": 6
     },
     {
@@ -1434,7 +1734,12 @@
             1.0,
             1.0
         ],
-        "sign_textures": [],
+        "sign_textures": [
+            {
+                "face": 1,
+                "texture": "data/TEXTURE/Add_4.png"
+            }
+        ],
         "type": 6
     },
     {
@@ -1454,7 +1759,12 @@
             1.0,
             1.0
         ],
-        "sign_textures": [],
+        "sign_textures": [
+            {
+                "face": 1,
+                "texture": "data/TEXTURE/dakuten.png"
+            }
+        ],
         "type": 6
     },
     {
@@ -1474,7 +1784,12 @@
             1.0,
             1.0
         ],
-        "sign_textures": [],
+        "sign_textures": [
+            {
+                "face": 1,
+                "texture": "data/TEXTURE/labo.png"
+            }
+        ],
         "type": 6
     },
     {
@@ -1494,7 +1809,12 @@
             1.0,
             1.0
         ],
-        "sign_textures": [],
+        "sign_textures": [
+            {
+                "face": 1,
+                "texture": "data/TEXTURE/Add_3.png"
+            }
+        ],
         "type": 6
     },
     {
@@ -1534,7 +1854,12 @@
             1.0,
             1.0
         ],
-        "sign_textures": [],
+        "sign_textures": [
+            {
+                "face": 1,
+                "texture": "data/TEXTURE/Add_4.png"
+            }
+        ],
         "type": 6
     },
     {
@@ -1554,7 +1879,12 @@
             1.0,
             1.0
         ],
-        "sign_textures": [],
+        "sign_textures": [
+            {
+                "face": 1,
+                "texture": "data/TEXTURE/Add_1.png"
+            }
+        ],
         "type": 6
     },
     {
@@ -1574,7 +1904,12 @@
             1.0,
             1.0
         ],
-        "sign_textures": [],
+        "sign_textures": [
+            {
+                "face": 1,
+                "texture": "data/TEXTURE/Add_1.png"
+            }
+        ],
         "type": 6
     },
     {
@@ -1594,7 +1929,12 @@
             1.0,
             1.0
         ],
-        "sign_textures": [],
+        "sign_textures": [
+            {
+                "face": 1,
+                "texture": "data/TEXTURE/Add_4.png"
+            }
+        ],
         "type": 6
     },
     {
@@ -1722,6 +2062,234 @@
         "rot": [
             0.0,
             -90.0,
+            0.0
+        ],
+        "scale": [
+            1.5,
+            1.5,
+            1.5
+        ],
+        "type": 5
+    },
+    {
+        "is_dynamic": false,
+        "pos": [
+            550.0,
+            350.0,
+            0.0
+        ],
+        "rot": [
+            0.0,
+            90.0,
+            0.0
+        ],
+        "scale": [
+            1.5,
+            1.5,
+            1.5
+        ],
+        "type": 5
+    },
+    {
+        "is_dynamic": false,
+        "pos": [
+            -550.0,
+            350.0,
+            0.0
+        ],
+        "rot": [
+            0.0,
+            -90.0,
+            0.0
+        ],
+        "scale": [
+            1.5,
+            1.5,
+            1.5
+        ],
+        "type": 5
+    },
+    {
+        "is_dynamic": false,
+        "pos": [
+            550.0,
+            700.0,
+            -1045.0
+        ],
+        "rot": [
+            0.0,
+            90.0,
+            0.0
+        ],
+        "scale": [
+            1.5,
+            1.5,
+            1.5
+        ],
+        "type": 5
+    },
+    {
+        "is_dynamic": false,
+        "pos": [
+            -550.0,
+            700.0,
+            -1045.0
+        ],
+        "rot": [
+            0.0,
+            -90.0,
+            0.0
+        ],
+        "scale": [
+            1.5,
+            1.5,
+            1.5
+        ],
+        "type": 5
+    },
+    {
+        "is_dynamic": false,
+        "pos": [
+            -550.0,
+            50.0,
+            980.0
+        ],
+        "rot": [
+            0.0,
+            -90.0,
+            0.0
+        ],
+        "scale": [
+            1.5,
+            1.5,
+            1.5
+        ],
+        "type": 5
+    },
+    {
+        "is_dynamic": false,
+        "pos": [
+            550.0,
+            50.0,
+            980.0
+        ],
+        "rot": [
+            0.0,
+            90.0,
+            0.0
+        ],
+        "scale": [
+            1.5,
+            1.5,
+            1.5
+        ],
+        "type": 5
+    },
+    {
+        "is_dynamic": false,
+        "pos": [
+            -550.0,
+            -230.0,
+            1900.0
+        ],
+        "rot": [
+            0.0,
+            -90.0,
+            0.0
+        ],
+        "scale": [
+            1.5,
+            1.5,
+            1.5
+        ],
+        "type": 5
+    },
+    {
+        "is_dynamic": false,
+        "pos": [
+            550.0,
+            -229.9833526611328,
+            1900.0
+        ],
+        "rot": [
+            0.0,
+            90.0,
+            0.0
+        ],
+        "scale": [
+            1.5,
+            1.5,
+            1.5
+        ],
+        "type": 5
+    },
+    {
+        "is_dynamic": false,
+        "pos": [
+            -550.0,
+            -580.0,
+            2990.0
+        ],
+        "rot": [
+            0.0,
+            -90.0,
+            0.0
+        ],
+        "scale": [
+            1.5,
+            1.5,
+            1.5
+        ],
+        "type": 5
+    },
+    {
+        "is_dynamic": false,
+        "pos": [
+            550.0,
+            -580.0,
+            2990.0
+        ],
+        "rot": [
+            0.0,
+            90.0,
+            0.0
+        ],
+        "scale": [
+            1.5,
+            1.5,
+            1.5
+        ],
+        "type": 5
+    },
+    {
+        "is_dynamic": false,
+        "pos": [
+            -550.0,
+            -930.0,
+            3515.0
+        ],
+        "rot": [
+            0.0,
+            -90.0,
+            0.0
+        ],
+        "scale": [
+            1.5,
+            1.5,
+            1.5
+        ],
+        "type": 5
+    },
+    {
+        "is_dynamic": false,
+        "pos": [
+            550.0,
+            -930.0,
+            3515.0
+        ],
+        "rot": [
+            0.0,
+            90.0,
             0.0
         ],
         "scale": [
