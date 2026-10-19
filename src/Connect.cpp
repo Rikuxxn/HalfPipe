@@ -82,7 +82,7 @@ HRESULT CConnect::Init(void)
 		//trigger->GetTriggerObjectEditor()->Init();
 
 		// ステージオブジェクトの読み込み
-		CManager::Instance()->GetStageManager()->LoadFromJson("data/StageInfo/test.json");
+		CManager::Instance()->GetStageManager()->LoadFromJson("data/StageInfo/Connect_Stage.json");
 
 		// トリガーオブジェクトの読み込み
 		CManager::Instance()->GetTriggerObjectManager()->LoadFromJson("data/TriggerInfo/test_trigger.json");
@@ -94,9 +94,9 @@ HRESULT CConnect::Init(void)
 	// ゲーム時間をリセット
 	time->Reset();
 
-	//// 空の生成
-	//m_pSky = std::make_unique<CSky>();
-	//m_pSky->Init();
+	// 空の生成
+	m_pSky = std::make_unique<CSky>();
+	m_pSky->Init();
 
 
 
@@ -509,18 +509,17 @@ void CConnect::Update(void)
 //=============================================================================
 void CConnect::Draw(void)
 {
-	//// カメラの取得
-	//CCamera* pCamera = CManager::Instance()->GetCamera();
+	// カメラの取得
+	CCamera* pCamera = CManager::Instance()->GetCamera();
 
 	//if (!pCamera->GetMode() == CCamera::MODE_EDIT)
-	//{
-	//	// カメラの設定
-	//	pCamera->SetCamParameter(
-	//		TitleCamera::PARAM.eye,
-	//		TitleCamera::PARAM.at,
-	//		TitleCamera::PARAM.rot,
-	//		TitleCamera::PARAM.distance);
-	//}
+	{
+		// カメラの設定
+		pCamera->SetPosV({ 0.0f, 680.0f, -2350.0f });
+		pCamera->SetPosR({ 0.0f, 680.0f, -2350.0f });
+		pCamera->SetRot({ 0.0f, 0.0f, 0.0f });
+		pCamera->SetDistance(100.0f);
+	}
 
 	// シーンの描画処理
 	CScene::Draw();
