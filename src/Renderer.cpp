@@ -50,7 +50,7 @@ CRenderer::CRenderer() :
 	m_ResizeHeight	(0),					// 再設定時の画面高さ
 	m_d3dpp			({}),					// 再設定用のパラメーター
 	m_bgCol			(DX::BLACK),			// 背景の色
-	m_bloomPower	(1.0f)					// ブルーム強さ
+	m_bloomPower	(0.0f)					// ブルーム強さ
 {
 
 }
