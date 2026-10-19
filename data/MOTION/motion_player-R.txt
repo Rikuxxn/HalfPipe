@@ -14,20 +14,20 @@ NUM_MODEL = 14
 #------------------------------------------------------------------------------
 # モデルファイル名
 #------------------------------------------------------------------------------
-MODEL_FILENAME = data/MODEL/PLAYER_PARTS/00_waist.x				# [0]腰
-MODEL_FILENAME = data/MODEL/PLAYER_PARTS/01_body.x				# [1]腹
-MODEL_FILENAME = data/MODEL/PLAYER_PARTS/02_head.x				# [2]頭
-MODEL_FILENAME = data/MODEL/PLAYER_PARTS/03_toparm_right.x		# [3]右上腕
-MODEL_FILENAME = data/MODEL/PLAYER_PARTS/04_underarm_right.x	# [4]右腕
-MODEL_FILENAME = data/MODEL/PLAYER_PARTS/05_hand_right.x		# [5]右手
-MODEL_FILENAME = data/MODEL/PLAYER_PARTS/06_toparm_left.x		# [6]左上腕
-MODEL_FILENAME = data/MODEL/PLAYER_PARTS/07_underarm_left.x		# [7]左腕
-MODEL_FILENAME = data/MODEL/PLAYER_PARTS/08_hand_left.x			# [8]左手
-MODEL_FILENAME = data/MODEL/PLAYER_PARTS/09_topleg_right.x		# [9]右太腿
-MODEL_FILENAME = data/MODEL/PLAYER_PARTS/10_underleg_right.x	# [10]右腿
-MODEL_FILENAME = data/MODEL/PLAYER_PARTS/11_topleg_left.x		# [11]左太腿
-MODEL_FILENAME = data/MODEL/PLAYER_PARTS/12_underleg_left.x		# [12]左腿
-MODEL_FILENAME = data/MODEL/PLAYER_PARTS/13_snowboard.x			# [13]スノーボード
+MODEL_FILENAME = data/MODELS/PLAYER_PARTS/00_waist.x				# [0]腰
+MODEL_FILENAME = data/MODELS/PLAYER_PARTS/01_body.x				# [1]腹
+MODEL_FILENAME = data/MODELS/PLAYER_PARTS/02_head.x				# [2]頭
+MODEL_FILENAME = data/MODELS/PLAYER_PARTS/03_toparm_right.x		# [3]右上腕
+MODEL_FILENAME = data/MODELS/PLAYER_PARTS/04_underarm_right.x	# [4]右腕
+MODEL_FILENAME = data/MODELS/PLAYER_PARTS/05_hand_right.x		# [5]右手
+MODEL_FILENAME = data/MODELS/PLAYER_PARTS/06_toparm_left.x		# [6]左上腕
+MODEL_FILENAME = data/MODELS/PLAYER_PARTS/07_underarm_left.x		# [7]左腕
+MODEL_FILENAME = data/MODELS/PLAYER_PARTS/08_hand_left.x			# [8]左手
+MODEL_FILENAME = data/MODELS/PLAYER_PARTS/09_topleg_right.x		# [9]右太腿
+MODEL_FILENAME = data/MODELS/PLAYER_PARTS/10_underleg_right.x	# [10]右腿
+MODEL_FILENAME = data/MODELS/PLAYER_PARTS/11_topleg_left.x		# [11]左太腿
+MODEL_FILENAME = data/MODELS/PLAYER_PARTS/12_underleg_left.x		# [12]左腿
+MODEL_FILENAME = data/MODELS/PLAYER_PARTS/13_snowboard.x			# [13]スノーボード
 
 #------------------------------------------------------------------------------
 # キャラクター情報
