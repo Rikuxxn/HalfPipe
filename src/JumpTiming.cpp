@@ -81,7 +81,7 @@ HRESULT CJumpTiming::Init(void)
 
 	if (spriteA)
 	{
-		spriteA->SetIsVisible(true);
+		spriteA->SetIsVisible(false);
 	}
 
 	if (uiManager)
@@ -119,12 +119,12 @@ void CJumpTiming::Update(void)
 	{
 		m_Timing = TIMING_MAX;
 		// 最初は非表示
+		auto spriteA = m_ButtonA->GetComponent<CSpriteRenderComponent>();
 		auto spriteB = m_ButtonB->GetComponent<CSpriteRenderComponent>();
 
-		if (spriteB)
-		{
-			spriteB->SetIsVisible(true);
-		}
+		if (spriteA)spriteA->SetIsVisible(true);
+		if (spriteB)spriteB->SetIsVisible(true);
+
 
 		auto AnimationB = m_ButtonB->GetComponent<CUIAnimationComponent>();
 		if (AnimationB)
@@ -142,7 +142,7 @@ void CJumpTiming::Update(void)
 
 
 	// カウントが0以下になったらreturn;
-	if (m_fTimingCount <= 0.0f)
+	if (m_fTimingCount <= -1.0f)
 	{
 		//spriteB->SetIsVisible(false);
 
@@ -153,10 +153,12 @@ void CJumpTiming::Update(void)
 	if (pKeyboard->GetTrigger(DIK_SPACE))
 	{
 		// タイミングごと
-		if (m_fTimingCount <= 0.0f)m_Timing = TIMING_BAD;
-		else if (m_fTimingCount < deltaTime)m_Timing = TIMING_PERFECT;
-		else if(m_fTimingCount < deltaTime*8)m_Timing = TIMING_GREAT;
-		else if(m_fTimingCount< deltaTime*15)m_Timing = TIMING_GOOD;
+		if (m_fTimingCount < -deltaTime*5)m_Timing = TIMING_BAD;
+		else if (m_fTimingCount < -deltaTime*3)m_Timing = TIMING_GOOD;
+		else if (m_fTimingCount < 0.0f)m_Timing = TIMING_GREAT;
+		else if (m_fTimingCount >= 0.0f&&m_fTimingCount < deltaTime)m_Timing = TIMING_PERFECT;
+		else if(m_fTimingCount < deltaTime*3)m_Timing = TIMING_GREAT;
+		else if(m_fTimingCount< deltaTime*5)m_Timing = TIMING_GOOD;
 		else m_Timing = TIMING_BAD;
 		AnimationB->Stop();
 
