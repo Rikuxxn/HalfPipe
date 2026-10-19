@@ -29,13 +29,29 @@ public:
         TIMING_MAX
     }TIMING;
 
+    enum class TimingState
+    {
+        Inactive,   // 判定していない
+        Waiting,    // 入力待ち
+        Completed   // 判定終了
+    };
+
     CJumpTiming();
     virtual ~CJumpTiming();
 
     HRESULT Init(void) override;
     void    Update(void) override;
 
+    // タイミング判定の開始処理
+    void StartTiming(void);
+
     TIMING GetTiming(void) { return m_Timing; }
+
+    TimingState GetTimingState(void) const { return m_TimingState; }
+
+    // 判定結果を取得する。
+    // 判定が確定していればtrueを返し、取得済み状態にする。
+    bool ConsumeTimingResult(TIMING& result);
 
 #ifdef _DEBUG
     // Imguiのデバッグ描画
@@ -53,6 +69,7 @@ private:
     CGameObject* m_ButtonB;
     float m_fTimingCount;
     TIMING m_Timing;
+    TimingState m_TimingState;
     const char* m_String;
 };
 
