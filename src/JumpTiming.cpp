@@ -14,6 +14,11 @@
 #include "Scene.h"
 #include "UIComponent.h"
 #include "SpriteRenderComponent.h"
+#include "UIFactory.h"
+#include "UIAnimationManager.h"
+#include "UIAnimationComponent.h"
+#include "InputManager.h"
+#include "Input.h"
 
 
 
@@ -21,8 +26,8 @@
 // コンストラクタ
 //=============================================================================
 CJumpTiming::CJumpTiming():
-	m_frame			(nullptr),
-	m_circleButton	(nullptr)
+	m_ButtonA		(nullptr),
+	m_ButtonB		(nullptr)
 {
 
 }
@@ -48,51 +53,47 @@ HRESULT CJumpTiming::Init(void)
 	{
 		return E_FAIL;
 	}
-	// タイトルロゴオブジェクトの生成
-	m_circleButton = scene->CreateObject();
 
-	m_circleButton->SetTag("TimingA");
+	// UIアニメーションデータの読み込み
+	auto uiManager = CManager::Instance()->GetUIAnimationManager();
 
-	// UIコンポーネント
-	auto uiA = m_circleButton->AddComponent<CUIComponent>();
+	if (uiManager)
+	{
+		uiManager->Load("data/UIAnimation/ButtonA.json");
+	}
 
-	auto& uiATransform = uiA->GetTransform();
-	uiATransform.Position = { 0.5f, 0.5f };
-	uiATransform.Alpha = 1.0f;
-	uiATransform.Scale = { 0.3f, 0.3f };
+	// 登録済みのUIデータを取得
+	UIAnimationData* dataA = uiManager->GetData("ButtonA");
 
-	// スプライトコンポーネントに追加
-	auto spriteA = m_circleButton->AddComponent<CSpriteRenderComponent>();
+	// UI生成
+	m_ButtonA = CUIFactory::Create(scene, *dataA);
 
-	// 描画順の設定
-	spriteA->SetLayer(RenderLayer::UI);
+	// 最初は非表示
+	auto spriteA = m_ButtonA->GetComponent<CSpriteRenderComponent>();
 
-	// テクスチャの設定
-	spriteA->SetTexture("data/TEXTURE/timingcircle_frame.png");
+	if (spriteA)
+	{
+		spriteA->SetIsVisible(true);
+	}
 
-	spriteA->SetSize(1.0f, 1.0f);
+	if (uiManager)
+	{
+		uiManager->Load("data/UIAnimation/TimingCircle.json");
+	}
 
-	//// タイトルロゴオブジェクトの生成
-	//m_frame = scene->CreateObject();
+	// 登録済みのUIデータを取得
+	UIAnimationData* dataB = uiManager->GetData("TimingCircle");
 
-	//m_frame->SetTag("TimingB");
+	// UI生成
+	m_ButtonB = CUIFactory::Create(scene, *dataB);
 
-	//// UIコンポーネント
-	//auto uiB = m_frame->AddComponent<CUIComponent>();
+	// 最初は非表示
+	auto spriteB = m_ButtonB->GetComponent<CSpriteRenderComponent>();
 
-	//auto& uiBTransform = uiB->GetTransform();
-	//uiBTransform.Position = { 0.5f, 0.5f };
-	//uiBTransform.Alpha = 1.0f;
-	//uiBTransform.Scale = { 0.1f, 0.1f };
-
-	//// スプライトコンポーネントに追加
-	//auto spriteB = m_frame->AddComponent<CSpriteRenderComponent>();
-
-	//// 描画順の設定
-	//spriteB->SetLayer(RenderLayer::UI);
-
-	//// テクスチャの設定
-	//spriteB->SetTexture("data/TEXTURE/timingcircle.png");
+	if (spriteB)
+	{
+		spriteB->SetIsVisible(false);
+	}
 
 
 	return S_OK;
@@ -103,6 +104,28 @@ HRESULT CJumpTiming::Init(void)
 //=============================================================================
 void CJumpTiming::Update(void)
 {
+	CInputKeyboard* pKeyboard = CManager::Instance()->GetInput()->GetKeyboard();
+
+	// テスト : スコア加算
+	if (pKeyboard->GetTrigger(DIK_G))
+	{
+		// 最初は非表示
+		auto spriteB = m_ButtonB->GetComponent<CSpriteRenderComponent>();
+
+		if (spriteB)
+		{
+			spriteB->SetIsVisible(true);
+		}
+
+		auto AnimationB = m_ButtonB->GetComponent<CUIAnimationComponent>();
+		if (AnimationB)
+		{
+			AnimationB->Play();
+		}
+	}
+
+
+
 
 }
 
