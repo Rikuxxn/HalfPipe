@@ -38,8 +38,8 @@ private:
 
 
 private:
-    CGameObject* m_frame;
-    CGameObject* m_circleButton;
+    CGameObject* m_ButtonA;
+    CGameObject* m_ButtonB;
 
 };
 
