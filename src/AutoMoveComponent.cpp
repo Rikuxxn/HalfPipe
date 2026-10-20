@@ -290,7 +290,7 @@ void CAutoMoveComponent::UpdateAutoMove(float deltaTime)
 	D3DXVec3Normalize(&direction, &direction);
 
 	// –Ú•W‘¬“x
-	D3DXVECTOR3 velocity = direction * m_AutoMoveSpeed;
+	D3DXVECTOR3 velocity = direction /** m_AutoMoveSpeed*/;
 
 	// •¨—‘¬“x‚ðÝ’è
 	rigid->SetPhysicsVelocity(velocity);
