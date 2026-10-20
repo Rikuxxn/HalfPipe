@@ -295,9 +295,9 @@ void CAutoMoveComponent::UpdateAutoMove(float deltaTime)
 	// •¨—‘¬“x‚ðÝ’è
 	rigid->SetPhysicsVelocity(velocity);
 
-	//transform->Position = target;
+	transform->Position = target;
 
-	//rigid->Transform();
+	rigid->Transform();
 }
 
 //=============================================================================
