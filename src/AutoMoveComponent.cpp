@@ -153,8 +153,7 @@ void CAutoMoveComponent::UpdateAutoMove(float deltaTime)
 		if (!m_JumpStartHandled)
 		{
 			// シーンの取得
-			auto scene =
-				CManager::Instance()->GetSceneManager()->GetScene();
+			auto scene = CManager::Instance()->GetSceneManager()->GetScene();
 
 			if (!scene)
 			{
@@ -162,8 +161,7 @@ void CAutoMoveComponent::UpdateAutoMove(float deltaTime)
 			}
 
 			// ジャンプタイミングオブジェクトの取得
-			auto jumpTiming =
-				scene->FindGameObject<CJumpTiming>("jumpTiming");
+			auto jumpTiming = scene->FindGameObject<CJumpTiming>("jumpTiming");
 
 			if (!jumpTiming)
 			{
@@ -262,7 +260,7 @@ void CAutoMoveComponent::UpdateAutoMove(float deltaTime)
 	}
 
 	// 時間を進める
-	m_CurrentTime += deltaTime;
+	m_CurrentTime += 0.01f;
 
 	// 正規化
 	D3DXVec3Normalize(&direction, &direction);
