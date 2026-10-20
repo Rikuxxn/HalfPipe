@@ -117,6 +117,18 @@ private:
     // 現在の移動ポイント
     size_t m_CurrentMovePoint;
 
+    // 現在の移動ポイント
+    size_t m_CurrentMovePointMinas;
+
+
+    // 現在の移動ポイント
+    size_t m_CurrentMovePointPlus;
+
+
+    // 現在の移動ポイント
+    size_t m_CurrentMovePointPlusPlus;
+
+
     // ジャンプ開始ポイント
     size_t m_JumpStartPoint;
 
