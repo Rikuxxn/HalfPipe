@@ -31,11 +31,18 @@ using namespace MathUtil;
 // コンストラクタ
 //=============================================================================
 CAutoMoveComponent::CAutoMoveComponent() :
-    m_IsAutoMove        (false),			// 自動移動中か
-    m_CurrentMovePoint  (1),			// 現在目指しているポイント
-	m_currentPoint		(0),			// 現在の移動ポイント(エディタ用)
-    m_CurrentTime       (0.0f),			// 現在の移動時間(0.0f～1.0f)
-    m_AutoMoveSpeed     (250.0f)		// 移動スピード
+    m_IsAutoMove			(false),					// 自動移動中か
+	m_JumpStartHandled		(false),					// ジャンプ中か
+	m_IsTimingActive		(false),					// タイミング判定中か
+	m_IsWaitingForJumpPoint	(false),					// ジャンプポイントへの分岐待ちか
+	m_HasTimingResult		(false),					// タイミング結果が確定しているか
+    m_CurrentMovePoint		(1),						// 現在目指しているポイント
+	m_JumpStartPoint		(0),						// ジャンプ開始ポイント
+	m_JumpTargetPoint		(0),						// ジャンプ先ポイント
+	m_currentPoint			(0),						// 現在の移動ポイント(エディタ用)
+    m_CurrentTime			(0.0f),						// 現在の移動時間(0.0f～1.0f)
+    m_AutoMoveSpeed			(250.0f),					// 移動スピード
+    m_TimingResult			(CJumpTiming::TIMING_MAX)   // 確定したタイミング結果
 {
 
 }
@@ -56,16 +63,17 @@ void CAutoMoveComponent::Update(void)
 	// デルタタイムの取得
 	float deltaTime = CManager::Instance()->GetTimeSystem()->GetDeltaTime();
 
-    if (m_IsJumping)
-    {
-        UpdateJump(deltaTime);
-        return;
-    }
+	// 自動移動を継続
+	if (m_IsAutoMove)
+	{
+		UpdateAutoMove(deltaTime);
+	}
 
-    if (m_IsAutoMove)
-    {
-        UpdateAutoMove(deltaTime);
-    }
+	// タイミング判定結果の取得
+	if (m_IsTimingActive)
+	{
+		UpdateJump(deltaTime);
+	}
 }
 
 //=============================================================================
@@ -141,12 +149,87 @@ void CAutoMoveComponent::UpdateAutoMove(float deltaTime)
 	//=========================================================
 	if (currentPoint.Type == MovePointType::JumpStart)
 	{
-		// ジャンプ開始ポイントに到達
-		m_IsJumping = true;
+		// まだ判定を開始していない場合
+		if (!m_JumpStartHandled)
+		{
+			// シーンの取得
+			auto scene = CManager::Instance()->GetSceneManager()->GetScene();
 
-		// ジャンプ開始時の処理は、今後ここで実装する
+			if (!scene)
+			{
+				return;
+			}
+
+			// ジャンプタイミングオブジェクトの取得
+			auto jumpTiming = scene->FindGameObject<CJumpTiming>("jumpTiming");
+
+			if (!jumpTiming)
+			{
+				return;
+			}
+
+			// ジャンプ開始ポイントを保存
+			m_JumpStartPoint = m_CurrentMovePoint;
+
+			// 判定結果をリセット
+			m_HasTimingResult = false;
+			m_TimingResult = CJumpTiming::TIMING_MAX;
+
+			// タイミング判定を開始
+			jumpTiming->StartTiming();
+
+			m_IsTimingActive = true;
+			m_IsWaitingForJumpPoint = true;
+
+			// 判定開始済みにする
+			m_JumpStartHandled = true;
+		}
+	}
+	else
+	{
+		// JumpStart以外のポイントに移動した
+		m_JumpStartHandled = false;
+	}
+
+	//=========================================================
+	// ジャンプ分岐地点の判定
+	//=========================================================
+	if (currentPoint.Type == MovePointType::JumpBranch)
+	{
+		// タイミング判定結果がなければBADにする
+		if (!m_HasTimingResult)
+		{
+			m_TimingResult = CJumpTiming::TIMING_BAD;
+			m_HasTimingResult = true;
+		}
+
+		// 判定結果から分岐先の種類を決定
+		MovePointType targetType = GetJumpTargetType(m_TimingResult);
+
+		// ジャンプ開始ポイントより後ろから検索
+		for (size_t i = m_JumpStartPoint + 1; i < m_MovePoints.size(); ++i)
+		{
+			if (m_MovePoints[i].Type == targetType)
+			{
+				m_JumpTargetPoint = i;
+
+				// 選択したルートに切り替える
+				m_CurrentMovePoint = i;
+				m_CurrentTime = 0.0f;
+
+				// 判定結果を消費
+				m_HasTimingResult = false;
+				m_IsWaitingForJumpPoint = false;
+
+				return;
+			}
+		}
+
+		// 対応するジャンプポイントが見つからなかった場合
+		StopAutoMove();
 		return;
 	}
+
 
 	//=========================================================
 	// 通常の自動移動
@@ -177,7 +260,7 @@ void CAutoMoveComponent::UpdateAutoMove(float deltaTime)
 	}
 
 	// 時間を進める
-	m_CurrentTime += deltaTime;
+	m_CurrentTime += 0.01f;
 
 	// 正規化
 	D3DXVec3Normalize(&direction, &direction);
@@ -194,7 +277,67 @@ void CAutoMoveComponent::UpdateAutoMove(float deltaTime)
 //=============================================================================
 void CAutoMoveComponent::UpdateJump(float deltaTime)
 {
+	// 判定中でなければ処理しない
+	if (!m_IsTimingActive)
+	{
+		return;
+	}
 
+	// シーンの取得
+	auto scene = CManager::Instance()->GetSceneManager()->GetScene();
+
+	if (!scene)
+	{
+		return;
+	}
+
+	// ジャンプタイミングオブジェクトの取得
+	auto jumpTiming = scene->FindGameObject<CJumpTiming>("jumpTiming");
+
+	if (!jumpTiming)
+	{
+		return;
+	}
+
+	// 判定結果を取得
+	CJumpTiming::TIMING timing;
+
+	if (jumpTiming->ConsumeTimingResult(timing))
+	{
+		// 判定結果を保存
+		m_TimingResult = timing;
+		m_HasTimingResult = true;
+
+		// タイミング判定終了
+		m_IsTimingActive = false;
+	}
+
+	//// BAD判定
+	//OnTimingResult(CJumpTiming::TIMING_BAD);
+}
+
+//=============================================================================
+// タイミング結果から移動先の種類を取得
+//=============================================================================
+MovePointType CAutoMoveComponent::GetJumpTargetType(CJumpTiming::TIMING timing)
+{
+	switch (timing)
+	{
+	case CJumpTiming::TIMING_PERFECT:
+		return MovePointType::JumpExtraLarge;
+
+	case CJumpTiming::TIMING_GREAT:
+		return MovePointType::JumpLarge;
+
+	case CJumpTiming::TIMING_GOOD:
+		return MovePointType::JumpMedium;
+
+	case CJumpTiming::TIMING_BAD:
+		return MovePointType::JumpSmall;
+
+	default:
+		return MovePointType::Normal;
+	}
 }
 
 //=============================================================================
@@ -240,6 +383,12 @@ void CAutoMoveComponent::CreateMovePointObject(const D3DXVECTOR3& pos, MovePoint
 		{
 			// モデルのロード
 			model->Load("data/MODELS/JumpStartPoint.x");
+			break;
+		}
+		case MovePointType::JumpBranch:
+		{
+			// モデルのロード
+			model->Load("data/MODELS/rock_01.x");
 			break;
 		}
 		case MovePointType::JumpExtraLarge:
@@ -315,6 +464,12 @@ void CAutoMoveComponent::UpdateMovePointModel(size_t index)
 		model->Load("data/MODELS/JumpStartPoint.x");
 		break;
 	}
+	case MovePointType::JumpBranch:
+	{
+		// モデルのロード
+		model->Load("data/MODELS/rock_01.x");
+		break;
+	}
 	case MovePointType::JumpExtraLarge:
 	{
 		// モデルのロード
@@ -360,6 +515,7 @@ void CAutoMoveComponent::DrawMovePointEditor(void)
 		{
 			"Normal",
 			"Jump Start",
+			"Jump Branch",
 			"Jump Extra Large",
 			"Jump Large",
 			"Jump Medium",

@@ -33,6 +33,7 @@ CJumpTiming::CJumpTiming():
 	m_ButtonB		(nullptr),
 	m_fTimingCount	(0.0f),
 	m_Timing		(TIMING_MAX),
+	m_TimingState	(TimingState::Inactive),
 	m_String		("fuck")
 {
 
@@ -81,7 +82,7 @@ HRESULT CJumpTiming::Init(void)
 
 	if (spriteA)
 	{
-		spriteA->SetIsVisible(true);
+		spriteA->SetIsVisible(false);
 	}
 
 	if (uiManager)
@@ -114,55 +115,128 @@ void CJumpTiming::Update(void)
 {
 	CInputKeyboard* pKeyboard = CManager::Instance()->GetInput()->GetKeyboard();
 
-	// テスト : スコア加算
+	// デルタタイムの取得
+	float deltaTime = CManager::Instance()->GetTimeSystem()->GetDeltaTime();
+
+	// テスト : Gキーでタイミング判定開始
 	if (pKeyboard->GetTrigger(DIK_G))
 	{
-		m_Timing = TIMING_MAX;
-		// 最初は非表示
+		StartTiming();
+	}
+
+	// 判定中でなければ処理しない
+	if (m_TimingState != TimingState::Waiting)
+	{
+		return;
+	}
+
+	auto AnimationB = m_ButtonB->GetComponent<CUIAnimationComponent>();
+	
+	if (!AnimationB)
+	{
+		return;
+	}
+
+	if (pKeyboard->GetTrigger(DIK_SPACE))
+	{
+		// タイミングごと
+		if (m_fTimingCount < -deltaTime*5)m_Timing = TIMING_BAD;
+		else if (m_fTimingCount < -deltaTime*3)m_Timing = TIMING_GOOD;
+		else if (m_fTimingCount < 0.0f)m_Timing = TIMING_GREAT;
+		else if (m_fTimingCount >= 0.0f&&m_fTimingCount < deltaTime)m_Timing = TIMING_PERFECT;
+		else if(m_fTimingCount < deltaTime*3)m_Timing = TIMING_GREAT;
+		else if(m_fTimingCount< deltaTime*5)m_Timing = TIMING_GOOD;
+		else m_Timing = TIMING_BAD;
+		
+		// アニメーション停止
+		AnimationB->Stop();
+
+		// 判定終了
+		m_TimingState = TimingState::Completed;
+
+		return;
+	}
+
+	m_fTimingCount-= deltaTime;
+
+	// カウントが0以下ならBADとして判定を終了
+	if (m_fTimingCount <= -1.0f)
+	{
+		m_Timing = TIMING_BAD;
+		m_TimingState = TimingState::Completed;
+
+		AnimationB->Stop();
+	}
+}
+
+//=============================================================================
+// タイミング判定開始処理
+//=============================================================================
+void CJumpTiming::StartTiming(void)
+{
+	// すでに判定中なら開始しない
+	if (m_TimingState == TimingState::Waiting)
+	{
+		return;
+	}
+
+	// 判定結果を初期化
+	m_Timing = TIMING_MAX;
+
+	// 判定中にする
+	m_TimingState = TimingState::Waiting;
+
+	// カウントを初期化
+	m_fTimingCount = 3.0f;
+
+	// ボタンAを表示
+	if (m_ButtonA)
+	{
+		auto spriteA = m_ButtonA->GetComponent<CSpriteRenderComponent>();
+
+		if (spriteA)
+		{
+			spriteA->SetIsVisible(true);
+		}
+	}
+
+	// ボタンBを表示してアニメーション再生
+	if (m_ButtonB)
+	{
 		auto spriteB = m_ButtonB->GetComponent<CSpriteRenderComponent>();
+
+		auto animationB = m_ButtonB->GetComponent<CUIAnimationComponent>();
 
 		if (spriteB)
 		{
 			spriteB->SetIsVisible(true);
 		}
 
-		auto AnimationB = m_ButtonB->GetComponent<CUIAnimationComponent>();
-		if (AnimationB)
+		if (animationB)
 		{
-			AnimationB->Play();
+			animationB->Play();
 		}
-		m_fTimingCount = 3.0;
 	}
-	float deltaTime = CManager::Instance()->GetTimeSystem()->GetDeltaTime();
+}
 
-	auto spriteB = m_ButtonB->GetComponent<CSpriteRenderComponent>();
-	if (!spriteB)return;
-	auto AnimationB = m_ButtonB->GetComponent<CUIAnimationComponent>();
-	if (!AnimationB)return;
-
-
-	// カウントが0以下になったらreturn;
-	if (m_fTimingCount <= 0.0f)
+//=============================================================================
+// タイミング判定結果を取得
+//=============================================================================
+bool CJumpTiming::ConsumeTimingResult(TIMING& result)
+{
+	// 判定が終了していなければ取得できない
+	if (m_TimingState != TimingState::Completed)
 	{
-		//spriteB->SetIsVisible(false);
-
-		return;
+		return false;
 	}
 
+	// 判定結果を取得
+	result = m_Timing;
 
-	if (pKeyboard->GetTrigger(DIK_SPACE))
-	{
-		// タイミングごと
-		if (m_fTimingCount <= 0.0f)m_Timing = TIMING_BAD;
-		else if (m_fTimingCount < deltaTime)m_Timing = TIMING_PERFECT;
-		else if(m_fTimingCount < deltaTime*8)m_Timing = TIMING_GREAT;
-		else if(m_fTimingCount< deltaTime*15)m_Timing = TIMING_GOOD;
-		else m_Timing = TIMING_BAD;
-		AnimationB->Stop();
+	// 取得済みにする
+	m_TimingState = TimingState::Inactive;
 
-		return;
-	}
-	m_fTimingCount-= deltaTime;
+	return true;
 }
 
 #ifdef _DEBUG

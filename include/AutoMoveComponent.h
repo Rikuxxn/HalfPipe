@@ -12,6 +12,8 @@
 //*****************************************************************************
 #include "Component.h"
 #include "json.hpp"
+#include "JumpTiming.h"
+
 
 //*****************************************************************************
 // 型定義
@@ -25,7 +27,8 @@ using json = nlohmann::json;
 enum class MovePointType
 {
     Normal,         // 通常ポイント
-    JumpStart,      // ジャンプ開始ポイント
+    JumpStart,      // タイミング判定を開始する地点
+    JumpBranch,     // タイミング結果に応じて分岐する地点
     JumpExtraLarge, // 特大ジャンプポイント
     JumpLarge,      // 大ジャンプポイント
     JumpMedium,     // 中ジャンプポイント
@@ -92,6 +95,9 @@ public:
         return m_IsAutoMove;
     }
 
+    // タイミング結果から移動先の種類を取得
+    MovePointType GetJumpTargetType(CJumpTiming::TIMING timing);
+
     void SaveMovePoint(const char* filename);
     void LoadMovePoint(const char* filename);
 
@@ -111,6 +117,12 @@ private:
     // 現在の移動ポイント
     size_t m_CurrentMovePoint;
 
+    // ジャンプ開始ポイント
+    size_t m_JumpStartPoint;
+
+    // ジャンプ先ポイント
+    size_t m_JumpTargetPoint;
+
     // 現在のポイント(エディタ用)
     int m_currentPoint;
 
@@ -123,8 +135,20 @@ private:
     // 移動速度
     float m_AutoMoveSpeed;
 
-    // ジャンプ中か
-    bool m_IsJumping = false;
+    // JumpStartで判定を開始済みか
+    bool m_JumpStartHandled;
+
+    // タイミング判定中か
+    bool m_IsTimingActive;
+
+    // ジャンプポイントへの分岐待ちか
+    bool m_IsWaitingForJumpPoint;
+
+    // タイミング結果が確定しているか
+    bool m_HasTimingResult;
+
+    // 確定したタイミング結果
+    CJumpTiming::TIMING m_TimingResult;
 };
 
 #endif
