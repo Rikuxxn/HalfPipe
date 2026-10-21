@@ -1,0 +1,44 @@
+{
+    "animationName": "ButtonA",
+    "animations": [
+        {
+            "delay": 0.0,
+            "duration": 3.0,
+            "easing": "Linear",
+            "from": 0.0,
+            "loopCount": 1,
+            "name": "Alpha_Inc",
+            "playbackMode": "Once",
+            "property": "Alpha",
+            "to": 1.0
+        },
+        {
+            "delay": 0.0,
+            "duration": 3.0,
+            "easing": "Linear",
+            "from": 1.0,
+            "loopCount": 1,
+            "name": "Alpha_Dec",
+            "playbackMode": "Once",
+            "property": "Alpha",
+            "to": 0.0
+        }
+    ],
+    "objectTag": "ButtonA",
+    "size": {
+        "height": 0.5,
+        "width": 0.5
+    },
+    "texture": "data/TEXTURE/timingcircle_frame.png",
+    "transform": {
+        "alpha": 1.0,
+        "position": [
+            0.5,
+            0.5
+        ],
+        "scale": [
+            0.18000000715255737,
+            0.28999999165534973
+        ]
+    }
+}

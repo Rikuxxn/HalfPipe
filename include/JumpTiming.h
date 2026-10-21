@@ -45,6 +45,9 @@ public:
     // タイミング判定の開始処理
     void StartTiming(void);
 
+    // タイミング処理の終了処理
+    void EndTiming(void);
+
     TIMING GetTiming(void) { return m_Timing; }
 
     TimingState GetTimingState(void) const { return m_TimingState; }

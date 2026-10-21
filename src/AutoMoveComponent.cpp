@@ -206,6 +206,25 @@ void CAutoMoveComponent::UpdateAutoMove(float deltaTime)
 			m_HasTimingResult = true;
 		}
 
+		// シーンの取得
+		auto scene = CManager::Instance()->GetSceneManager()->GetScene();
+
+		if (!scene)
+		{
+			return;
+		}
+
+		// ジャンプタイミングオブジェクトの取得
+		auto jumpTiming = scene->FindGameObject<CJumpTiming>("jumpTiming");
+
+		if (!jumpTiming)
+		{
+			return;
+		}
+
+		// タイミング判定終了処理
+		jumpTiming->EndTiming();
+
 		// 判定結果から分岐先の種類を決定
 		MovePointType targetType = GetJumpTargetType(m_TimingResult);
 
