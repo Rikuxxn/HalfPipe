@@ -16,7 +16,6 @@
 #include "Renderer.h"
 #include "MathConstants.h"
 #include "ColorConstants.h"
-#include "UIComponent.h"
 
 // 名前空間の使用
 using namespace MathConst;
@@ -27,15 +26,13 @@ using namespace ColorConst;
 // コンストラクタ
 //=============================================================================
 C3DSpriteRenderComponent::C3DSpriteRenderComponent() :
-    m_pVtxBuff(nullptr),
-    m_Color(ColorConst::DX::WHITE),
-    m_Width(100.0f),
-    m_Height(100.0f)
+    m_pVtxBuff      (nullptr),
+    m_Color         (ColorConst::DX::WHITE),
+    m_Width         (100.0f),
+    m_Height        (100.0f),
+    m_isVisible     (true)
 {
-    m_UV.left = 0;
-    m_UV.top = 0;
-    m_UV.right = 1;
-    m_UV.bottom = 1;
+
 }
 
 //=============================================================================
@@ -67,73 +64,60 @@ void C3DSpriteRenderComponent::Draw(void)
         return;
     }
 
-    // UIコンポーネントの取得
-    auto ui = m_pOwner->GetComponent<CUIComponent>();
+    // トランスフォームコンポーネントの取得
+    auto transform = m_pOwner->GetComponent<CTransformComponent>();
 
-    if (!ui)
+    if (!transform)
     {
         return;
     }
 
-    // UIトランスフォームの取得
-    const auto& transform = ui->GetTransform();
-
     // デバイスの取得
     auto device = CManager::Instance()->GetRenderer()->GetDevice();
-
-    float w = m_Width * transform.Scale.x;
-    float h = m_Height * transform.Scale.y;
-
-    //---------------------------------
-    // 中心基準
-    //---------------------------------
-
-    float left = transform.Position.x - (w * MathConst::HALF);
-    float right = transform.Position.x + (w * MathConst::HALF);
-    float top = transform.Position.y - (h * MathConst::HALF);
-    float bottom = transform.Position.y + (h * MathConst::HALF);
 
     VERTEX_3D* vertex = nullptr;
 
     // 頂点バッファをロックし、頂点情報へのポインタを取得
     m_pVtxBuff->Lock(0, 0, (void**)&vertex, 0);
 
-    vertex[0].pos = { left,  top,    0.0f };
-    vertex[1].pos = { right, top,    0.0f };
-    vertex[2].pos = { left,  bottom, 0.0f };
-    vertex[3].pos = { right, bottom, 0.0f };
+     // 板ポリゴンの半分のサイズ
+    float halfW = m_Width * MathConst::HALF;
+    float halfH = m_Height * MathConst::HALF;
 
-    // UIの色と透明度を反映
-    D3DXCOLOR color = transform.Color;
-    color.a *= transform.Alpha;
+    vertex[0].pos = { -halfW, halfH, 0.0f };    // 左上
+    vertex[1].pos = { halfW, halfH, 0.0f };     // 右上
+    vertex[2].pos = { -halfW, -halfH, 0.0f };   // 左下
+    vertex[3].pos = { halfW, -halfH, 0.0f };    // 右下
 
+    // 法線・色・UVの設定
     for (int i = 0; i < MathConst::VERTEX; i++)
     {
-        // rhwの設定
-        vertex[i].nor = { 0.0f, 1.0f, 0.0f };
-
-        // 色の設定
-        vertex[i].col = color;
+        vertex[i].nor = { 0.0f, -1.0f, 0.0f };
+        vertex[i].col = m_Color;
     }
 
-    float u0 = (float)m_UV.left;
-    float v0 = (float)m_UV.top;
-
-    float u1 = (float)m_UV.right;
-    float v1 = (float)m_UV.bottom;
-
-    vertex[0].tex = { u0, v0 };
-    vertex[1].tex = { u1, v0 };
-    vertex[2].tex = { u0, v1 };
-    vertex[3].tex = { u1, v1 };
+    vertex[0].tex = { 0.0f, 0.0f };
+    vertex[1].tex = { 1.0f, 0.0f };
+    vertex[2].tex = { 0.0f, 1.0f };
+    vertex[3].tex = { 1.0f, 1.0f };
 
     //頂点バッファをアンロックする
     m_pVtxBuff->Unlock();
 
-    // αテストを有効
-    device->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);//デフォルトはfalse
-    device->SetRenderState(D3DRS_ALPHAREF, 0);
-    device->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);//0より大きかったら描画
+    // 計算用マトリックス
+    D3DXMATRIX mtxRot, mtxTrans;
+
+    // ワールド行列の取得
+    D3DXMATRIX matWorld = transform->GetWorldMatrix();
+
+    // カリング設定を無効化
+    device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+
+    // ライティングを無効化
+    device->SetRenderState(D3DRS_LIGHTING, FALSE);
+
+    // ワールドマトリックスを設定
+    device->SetTransform(D3DTS_WORLD, &matWorld);
 
     // テクスチャの設定
     device->SetTexture(0, m_TextureResource ? m_TextureResource->Texture.Get() : nullptr);
@@ -147,6 +131,9 @@ void C3DSpriteRenderComponent::Draw(void)
     // ポリゴンの描画
     device->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
 
-    // αテストを無効に戻す
-    device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);//デフォルトはfalse
+    // カリング設定を有効化
+    device->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+
+    // ライティングを有効化
+    device->SetRenderState(D3DRS_LIGHTING, TRUE);
 }

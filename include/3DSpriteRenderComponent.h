@@ -13,18 +13,17 @@
 #include "RenderComponent.h"
 
 //*****************************************************************************
-// 3Dスプライトコンポーネントクラス
+// 3Dスプライトコンポーネントクラス (3D板ポリゴン)
 //*****************************************************************************
 class C3DSpriteRenderComponent : public CRenderComponent
 {
 private:
 
-    ComPtr<IDirect3DVertexBuffer9> m_pVtxBuff;
-    D3DXCOLOR    m_Color;
-    RECT        m_UV;
-    float       m_Width;
-    float       m_Height;
-    bool m_isVisible = true;
+    ComPtr<IDirect3DVertexBuffer9>  m_pVtxBuff;
+    D3DXCOLOR                       m_Color;
+    float                           m_Width;
+    float                           m_Height;
+    bool                            m_isVisible;
 
 public:
 
@@ -50,22 +49,7 @@ public:
         m_Height = height;
     }
 
-    void SetColor(D3DXCOLOR color)
-    {
-        m_Color = color;
-    }
-
-    void SetUV(
-        int left,
-        int top,
-        int right,
-        int bottom)
-    {
-        m_UV.left = left;
-        m_UV.top = top;
-        m_UV.right = right;
-        m_UV.bottom = bottom;
-    }
+    void SetColor(D3DXCOLOR color) { m_Color = color; }
 
     void SetIsVisible(bool visible) { m_isVisible = visible; }
 };
