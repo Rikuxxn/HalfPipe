@@ -15,7 +15,6 @@
 
 // ‘O•ûéŒ¾
 class CSky;
-class CWater;
 
 
 //*****************************************************************************
@@ -37,7 +36,6 @@ public:
 private:
 
 	std::unique_ptr<CSky>	m_pSky;
-	std::unique_ptr<CWater> m_pWater;
 
 	// Press UI
 	CGameObject* m_pPressUI = nullptr;
