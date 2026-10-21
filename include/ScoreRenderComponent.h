@@ -55,6 +55,12 @@ public:
     // ‰ÁZ’†‚©‚Ç‚¤‚© 
     bool IsCounting(void) const { return m_Score != m_TargetScore; }
 
+    // ‰e‚ğ•`‰æ‚·‚é‚©
+    bool IsShadowCaster(void) override
+    {
+        return false;
+    }
+
 private:
 
     // Œ»İ•\¦‚µ‚Ä‚¢‚éƒXƒRƒA

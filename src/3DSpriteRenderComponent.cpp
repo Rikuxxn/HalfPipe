@@ -47,9 +47,9 @@ HRESULT C3DSpriteRenderComponent::Init(void)
     auto device = CManager::Instance()->GetRenderer()->GetDevice();
 
     device->CreateVertexBuffer(
-        sizeof(VERTEX_2D) * MathConst::VERTEX,
+        sizeof(VERTEX_3D) * MathConst::VERTEX,
         0,
-        FVF_VERTEX_2D,
+        FVF_VERTEX_3D,
         D3DPOOL_MANAGED,
         m_pVtxBuff.GetAddressOf(),
         nullptr);
@@ -81,43 +81,27 @@ void C3DSpriteRenderComponent::Draw(void)
     // デバイスの取得
     auto device = CManager::Instance()->GetRenderer()->GetDevice();
 
-    //---------------------------------
-    // 画面サイズ
-    //---------------------------------
-
-    float screenW = (float)CManager::Instance()->GetRenderer()->GetBackBufferWidth();
-    float screenH = (float)CManager::Instance()->GetRenderer()->GetBackBufferHeight();
-
-    //---------------------------------
-    // 比率 → ピクセル変換
-    //---------------------------------
-
-    float centerX = transform.Position.x * screenW;
-    float centerY = transform.Position.y * screenH;
-
-    float z = 0.0f;
-
-    float w = screenW * m_Width * transform.Scale.x;
-    float h = screenH * m_Height * transform.Scale.y;
+    float w = m_Width * transform.Scale.x;
+    float h = m_Height * transform.Scale.y;
 
     //---------------------------------
     // 中心基準
     //---------------------------------
 
-    float left = centerX - (w * MathConst::HALF);
-    float right = centerX + (w * MathConst::HALF);
-    float top = centerY - (h * MathConst::HALF);
-    float bottom = centerY + (h * MathConst::HALF);
+    float left = transform.Position.x - (w * MathConst::HALF);
+    float right = transform.Position.x + (w * MathConst::HALF);
+    float top = transform.Position.y - (h * MathConst::HALF);
+    float bottom = transform.Position.y + (h * MathConst::HALF);
 
-    VERTEX_2D* vertex = nullptr;
+    VERTEX_3D* vertex = nullptr;
 
     // 頂点バッファをロックし、頂点情報へのポインタを取得
     m_pVtxBuff->Lock(0, 0, (void**)&vertex, 0);
 
-    vertex[0].pos = { left,  top,    z };
-    vertex[1].pos = { right, top,    z };
-    vertex[2].pos = { left,  bottom, z };
-    vertex[3].pos = { right, bottom, z };
+    vertex[0].pos = { left,  top,    0.0f };
+    vertex[1].pos = { right, top,    0.0f };
+    vertex[2].pos = { left,  bottom, 0.0f };
+    vertex[3].pos = { right, bottom, 0.0f };
 
     // UIの色と透明度を反映
     D3DXCOLOR color = transform.Color;
@@ -126,7 +110,7 @@ void C3DSpriteRenderComponent::Draw(void)
     for (int i = 0; i < MathConst::VERTEX; i++)
     {
         // rhwの設定
-        vertex[i].rhw = 1.0f;
+        vertex[i].nor = { 0.0f, 1.0f, 0.0f };
 
         // 色の設定
         vertex[i].col = color;
@@ -155,10 +139,10 @@ void C3DSpriteRenderComponent::Draw(void)
     device->SetTexture(0, m_TextureResource ? m_TextureResource->Texture.Get() : nullptr);
 
     // 頂点バッファをデータストリームに設定
-    device->SetStreamSource(0, m_pVtxBuff.Get(), 0, sizeof(VERTEX_2D));
+    device->SetStreamSource(0, m_pVtxBuff.Get(), 0, sizeof(VERTEX_3D));
 
     // 頂点フォーマットの設定
-    device->SetFVF(FVF_VERTEX_2D);
+    device->SetFVF(FVF_VERTEX_3D);
 
     // ポリゴンの描画
     device->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
