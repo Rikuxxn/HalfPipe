@@ -43,6 +43,7 @@
 #include "RigidBodyComponent.h"
 #include "GhostObjectComponent.h"
 #include "NetWorkManager.h"
+#include <Player.h>
 
 
 //*****************************************************************************
@@ -398,6 +399,45 @@ void CManager::Draw(void)
 
 	// グリッドの描画
 	m_pDebugRenderer->Draw();
+
+	//---------------------------------
+	// プレイヤーのコライダー描画
+	//---------------------------------
+	if (m_pSceneManager)
+	{
+		// シーン内のプレイヤーを取得する
+		auto players = m_pSceneManager->GetScene()->FindGameObjects<CPlayer>();
+
+		for (auto* player : players)
+		{
+			if (!player)
+			{
+				continue;
+			}
+
+			// 剛体コンポーネントを取得
+			auto rigid = player->GetComponent<CRigidBodyComponent>();
+
+			if (!rigid)
+			{
+				continue;
+			}
+
+			// 剛体を取得
+			btRigidBody* body = rigid->GetBody();
+
+			if (!body)
+			{
+				continue;
+			}
+
+			// コライダーを描画
+			m_pDynamicsWorld->debugDrawObject(
+				body->getWorldTransform(),
+				body->getCollisionShape(),
+				btVector3(0.0f, 1.0f, 0.3f));
+		}
+	}
 
 	// Bullet Physicsコライダーデバッグ描画(選択中のオブジェクトのみ)
 	if (m_pStageManager)

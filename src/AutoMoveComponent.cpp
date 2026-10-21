@@ -37,6 +37,9 @@ CAutoMoveComponent::CAutoMoveComponent() :
 	m_IsWaitingForJumpPoint	(false),					// ジャンプポイントへの分岐待ちか
 	m_HasTimingResult		(false),					// タイミング結果が確定しているか
     m_CurrentMovePoint		(1),						// 現在目指しているポイント
+	m_CurrentMovePointMinas	(0),						// 現在目指しているポイント
+	m_CurrentMovePointPlus	(2),						// 現在目指しているポイント
+	m_CurrentMovePointPlusPlus(3),						// 現在目指しているポイント
 	m_JumpStartPoint		(0),						// ジャンプ開始ポイント
 	m_JumpTargetPoint		(0),						// ジャンプ先ポイント
 	m_currentPoint			(0),						// 現在の移動ポイント(エディタ用)
@@ -194,7 +197,7 @@ void CAutoMoveComponent::UpdateAutoMove(float deltaTime)
 	//=========================================================
 	// ジャンプ分岐地点の判定
 	//=========================================================
-	if (currentPoint.Type == MovePointType::JumpBranch)
+	if (currentPoint.Type == MovePointType::JumpBranch&& m_IsWaitingForJumpPoint==true)
 	{
 		// タイミング判定結果がなければBADにする
 		if (!m_HasTimingResult)
@@ -205,6 +208,19 @@ void CAutoMoveComponent::UpdateAutoMove(float deltaTime)
 
 		// 判定結果から分岐先の種類を決定
 		MovePointType targetType = GetJumpTargetType(m_TimingResult);
+		//for (int nCount = 0; nCount < 11; nCount++)
+		//{
+		//	if (points[nCount].nIdx == m_currentPoint + 1 && points[nCount].nType == GetJumpTargetType(m_TimingResult))
+		//	{
+		//		points[nCount].pos;
+		//		m_CurrentTime = 0.0f;
+
+		//		// 判定結果を消費
+		//		m_HasTimingResult = false;
+		//		m_IsWaitingForJumpPoint = false;
+		//	}
+		//}
+
 
 		// ジャンプ開始ポイントより後ろから検索
 		for (size_t i = m_JumpStartPoint + 1; i < m_MovePoints.size(); ++i)
@@ -214,7 +230,10 @@ void CAutoMoveComponent::UpdateAutoMove(float deltaTime)
 				m_JumpTargetPoint = i;
 
 				// 選択したルートに切り替える
-				m_CurrentMovePoint = i;
+				//m_CurrentMovePoint = i;
+				m_CurrentMovePointPlus = i;
+				m_CurrentMovePointPlusPlus += 5;
+
 				m_CurrentTime = 0.0f;
 
 				// 判定結果を消費
@@ -239,10 +258,11 @@ void CAutoMoveComponent::UpdateAutoMove(float deltaTime)
 	D3DXVECTOR3 position = transform->Position;
 
 	// スプライン補間用のポイント
-	const D3DXVECTOR3& p0 = m_MovePoints[m_CurrentMovePoint - 1].Position;
+	const D3DXVECTOR3& p0 = m_MovePoints[m_CurrentMovePointMinas].Position;
 	const D3DXVECTOR3& p1 = m_MovePoints[m_CurrentMovePoint].Position;
-	const D3DXVECTOR3& p2 = m_MovePoints[m_CurrentMovePoint + 1].Position;
-	const D3DXVECTOR3& p3 = m_MovePoints[m_CurrentMovePoint + 2].Position;
+	const D3DXVECTOR3& p2 = m_MovePoints[m_CurrentMovePointPlus].Position;
+	const D3DXVECTOR3& p3 = m_MovePoints[m_CurrentMovePointPlusPlus].Position;
+
 
 	// 目標位置
 	D3DXVECTOR3 target = MathUtil::Spline(
@@ -254,22 +274,30 @@ void CAutoMoveComponent::UpdateAutoMove(float deltaTime)
 	// スプラインの区間が終了した
 	if (m_CurrentTime >= 1.0f)
 	{
-		++m_CurrentMovePoint;
+		//++m_CurrentMovePoint;
+		m_CurrentMovePointMinas = m_CurrentMovePoint;
+		m_CurrentMovePoint = m_CurrentMovePointPlus;
+		m_CurrentMovePointPlus = m_CurrentMovePointPlusPlus;
+		m_CurrentMovePointPlusPlus++;
 		m_CurrentTime = 0.0f;
 		return;
 	}
 
 	// 時間を進める
-	m_CurrentTime += 0.01f;
+	m_CurrentTime += 0.008f;
 
 	// 正規化
 	D3DXVec3Normalize(&direction, &direction);
 
 	// 目標速度
-	D3DXVECTOR3 velocity = direction * m_AutoMoveSpeed;
+	D3DXVECTOR3 velocity = direction /** m_AutoMoveSpeed*/;
 
 	// 物理速度を設定
 	rigid->SetPhysicsVelocity(velocity);
+
+	transform->Position = target;
+
+	rigid->Transform();
 }
 
 //=============================================================================
