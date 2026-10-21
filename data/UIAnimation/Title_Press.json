@@ -1,0 +1,33 @@
+{
+    "animationName": "Press",
+    "animations": [
+        {
+            "delay": 0.0,
+            "duration": 1.5,
+            "easing": "Linear",
+            "from": 1.0,
+            "loopCount": 0,
+            "name": "Alpha",
+            "playbackMode": "PingPong",
+            "property": "Alpha",
+            "to": 0.20000000298023224
+        }
+    ],
+    "objectTag": "Press",
+    "size": {
+        "height": 0.5,
+        "width": 0.5
+    },
+    "texture": "data/TEXTURE/Press.png",
+    "transform": {
+        "alpha": 1.0,
+        "position": [
+            0.5,
+            0.7799999713897705
+        ],
+        "scale": [
+            0.6000000238418579,
+            0.20000000298023224
+        ]
+    }
+}

@@ -159,7 +159,7 @@ HRESULT CTitle::Init(void)
 	//m_pWater->Init();
 
 	//-----------------------------------------------------
-	// JSONに保存したUIの使い方
+	// JSONに保存したUIの使い方 (Press UI)
 	//-----------------------------------------------------
 	{
 		// UIアニメーションデータの読み込み
@@ -167,21 +167,21 @@ HRESULT CTitle::Init(void)
 
 		if (uiManager)
 		{
-			uiManager->Load("data/UIAnimation/test_UIAnimation_TitleLogo.json");
+			uiManager->Load("data/UIAnimation/Title_Press.json");
 		}
 
 		// 登録済みのUIデータを取得
-		UIAnimationData* data = uiManager->GetData("TitleLogo");
+		UIAnimationData* data = uiManager->GetData("Press");
 
 		// UI生成
-		m_pTestUI = CUIFactory::Create(this, *data);
+		m_pPressUI = CUIFactory::Create(this, *data);
 
 		// 最初は非表示
-		auto sprite = m_pTestUI->GetComponent<CSpriteRenderComponent>();
+		auto sprite = m_pPressUI->GetComponent<CSpriteRenderComponent>();
 
 		if (sprite)
 		{
-			sprite->SetIsVisible(false);
+			sprite->SetIsVisible(true);
 		}
 	}
 
@@ -345,10 +345,7 @@ HRESULT CTitle::Init(void)
 	CCamera* pCamera = CManager::Instance()->GetCamera();
 
 	// カメラの初期位置を設定しておく
-	pCamera->SetCamMode(CCamera::MODE_EDIT);
-
-	//// カメラの初期位置を設定しておく
-	//pCamera->SetCamMode(CCamera::MODE_THIRD_PERSON);
+	pCamera->SetCamMode(CCamera::MODE_FIXED);
 
 	// サウンドマネージャーの取得
 	auto sound = CManager::Instance()->GetSoundManager();
@@ -432,63 +429,6 @@ void CTitle::Update(void)
 		// 接続画面に移行
 		pFade->StartFadeOut(Mode::Connect);
 	}
-
-	float dt = CManager::Instance()->GetTimeSystem()->GetDeltaTime();
-
-	m_fTime -= dt;
-
-	//=============================================================================
-	// タイムアップ判定 (テスト)
-	//=============================================================================
-	if (m_fTime <= 0.0f && !m_IsTimeUp)
-	{
-		m_IsTimeUp = true;
-
-		if (m_pTestUI)
-		{
-			// UIを表示
-			auto sprite = m_pTestUI->GetComponent<CSpriteRenderComponent>();
-
-			if (sprite)
-			{
-				sprite->SetIsVisible(true);
-			}
-
-			// アニメーション再生
-			auto animation = m_pTestUI->GetComponent<CUIAnimationComponent>();
-
-			if (animation)
-			{
-				animation->PlayAnimation("MoveY_UP");
-			}
-
-			m_fTime = 3.0f;
-		}
-	}
-
-	if (m_IsTimeUp && !m_IsVisible && m_fTime <= 0.0f)
-	{
-		m_IsVisible = true;
-
-		if (m_pTestUI)
-		{
-			// UIを表示
-			auto sprite = m_pTestUI->GetComponent<CSpriteRenderComponent>();
-
-			if (sprite)
-			{
-				sprite->SetIsVisible(true);
-			}
-
-			// アニメーション再生
-			auto animation = m_pTestUI->GetComponent<CUIAnimationComponent>();
-
-			if (animation)
-			{
-				animation->PlayAnimation("MoveY_DOWN");
-			}
-		}
-	}
 }
 
 //=============================================================================
@@ -496,21 +436,19 @@ void CTitle::Update(void)
 //=============================================================================
 void CTitle::Draw(void)
 {
-	//// カメラの取得
-	//CCamera* pCamera = CManager::Instance()->GetCamera();
-
-	//if (!pCamera->GetMode() == CCamera::MODE_EDIT)
-	//{
-	//	// カメラの設定
-	//	pCamera->SetCamParameter(
-	//		TitleCamera::PARAM.eye,
-	//		TitleCamera::PARAM.at,
-	//		TitleCamera::PARAM.rot,
-	//		TitleCamera::PARAM.distance);
-	//}
-
 	// シーンの描画処理
 	CScene::Draw();
+
+	// カメラの取得
+	CCamera* pCamera = CManager::Instance()->GetCamera();
+
+	//if (!pCamera->GetMode() == CCamera::MODE_EDIT)
+	{
+		// カメラの設定
+		pCamera->SetPosV({ -605.0f, -835.0f, 4608.0f });
+		pCamera->SetPosR({ 7.0f, -835.0f, 4100.0f });
+		pCamera->SetRot({ 0.0f, -0.88f, 0.0f });
+	}
 }
 //=============================================================================
 // ライト設定処理

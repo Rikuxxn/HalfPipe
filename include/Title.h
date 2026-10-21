@@ -39,15 +39,8 @@ private:
 	std::unique_ptr<CSky>	m_pSky;
 	std::unique_ptr<CWater> m_pWater;
 
-	// タイムアップUI
-	CGameObject* m_pTestUI = nullptr;
-
-	// タイムアップ処理済みか
-	bool m_IsTimeUp = false;
-
-	bool m_IsVisible = false;
-
-	float m_fTime = 2.0f;
+	// Press UI
+	CGameObject* m_pPressUI = nullptr;
 };
 
 #endif
