@@ -40,5 +40,11 @@
     "category": "Model",
     "name": "SignBoard",
     "filepath": "data/MODELS/signboard.x"
+  },
+  {
+    "type": 7,
+    "category": "Model",
+    "name": "RiftPole",
+    "filepath": "data/MODELS/riftpole.x"
   }
 ]

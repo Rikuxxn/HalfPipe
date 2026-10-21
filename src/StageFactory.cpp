@@ -55,4 +55,5 @@ void CStageFactory::InitFactory(void)
     m_Factory[CStageObject::StageObjectType::Basket]    = [](CScene* scene) { return scene->CreateObject<CBasketBlock>(); };
     m_Factory[CStageObject::StageObjectType::Right]     = [](CScene* scene) { return scene->CreateObject<CRightBlock>(); };
     m_Factory[CStageObject::StageObjectType::SignBoard] = [](CScene* scene) { return scene->CreateObject<CSignBoardBlock>(); };
+    m_Factory[CStageObject::StageObjectType::RiftPole]  = [](CScene* scene) { return scene->CreateObject<CRiftPoleBlock>(); };
 }

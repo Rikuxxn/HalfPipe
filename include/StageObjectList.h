@@ -217,4 +217,30 @@ private:
     void ApplySignTextures(void);
 };
 
+//*****************************************************************************
+// リフトポールブロッククラス
+//*****************************************************************************
+class CRiftPoleBlock : public CStageObject
+{
+public:
+    CRiftPoleBlock();
+    ~CRiftPoleBlock();
+
+    HRESULT Init(void) override;
+    void Update(void) override;
+
+    StageObjectType GetType(void) const override
+    {
+        return StageObjectType::RiftPole;
+    }
+
+    ColliderShape GetColliderShape(void) const override
+    {
+        return ColliderShape::Box;
+    }
+
+private:
+
+};
+
 #endif
