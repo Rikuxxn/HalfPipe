@@ -73,6 +73,8 @@ public:
     // “®ì’†‚©
     bool IsActive(void) const;
 
+    void SetTime(float fTime) { m_Time = fTime; }
+
 private:
 
     // Œo‰ßŠÔ

@@ -102,6 +102,11 @@ HRESULT CGame::Init(void)
 	// ƒQ[ƒ€ŠÔ‚ğƒŠƒZƒbƒg
 	time->Reset();
 
+	// ŠÔ‚ğ”CˆÓ‚ÌŠÔ‚Å’â~‚·‚é
+	time->Stop();
+	//time->Start();
+	//time->SetTime(30.0f);
+
 	// ‹ó‚Ì¶¬
 	m_pSky = std::make_unique<CSky>();
 	m_pSky->Init();

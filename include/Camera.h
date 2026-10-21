@@ -164,7 +164,7 @@ private:
     //-------------------------------------------------------------------------
 
     static constexpr float FOV              = 80.0f;    // ‹–ìŠp
-    static constexpr float RENDER_DISTANCE  = 3800.0f;  // •`‰æ‹——£
+    static constexpr float RENDER_DISTANCE  = 9000;     // •`‰æ‹——£
     static constexpr float GAMECAM_DISTANCE = 280.0f;   // ƒQ[ƒ€ƒJƒƒ‰‚Ì‹——£
     static constexpr float CAM_MIN_DISTANCE = 100.0f;   // Å’á‹——£
     static constexpr float CAM_MAX_DISTANCE = 800.0f;   // Å‚‹——£
