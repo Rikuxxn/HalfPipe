@@ -78,32 +78,32 @@ HRESULT CPlayer::Init(void)
 	//// 初期モーションを設定しておく
 	//c->SetMotion(CFBXModelComponent::MOTION_TYPE_00, 30);
 
-	//=========================================================================
-	// HPゲージ
-	//=========================================================================
+	////=========================================================================
+	//// HPゲージ
+	////=========================================================================
 
-	auto hpGauge = AddComponent<CHpGaugeComponent>();
+	//auto hpGauge = AddComponent<CHpGaugeComponent>();
 
-	if (!hpGauge)
-	{
-		return E_FAIL;
-	}
+	//if (!hpGauge)
+	//{
+	//	return E_FAIL;
+	//}
 
-	// 位置(オフセット)
-	hpGauge->SetOffset({ 0.0f, 100.0f, 0.0f });
+	//// 位置(オフセット)
+	//hpGauge->SetOffset({ 0.0f, 100.0f, 0.0f });
 
-	// 背景
-	hpGauge->SetBackgroundSize(103.0f, 13.0f);
-	hpGauge->SetBackgroundColor(ColorConst::DX::LIGHT_GRAY);
+	//// 背景
+	//hpGauge->SetBackgroundSize(103.0f, 13.0f);
+	//hpGauge->SetBackgroundColor(ColorConst::DX::LIGHT_GRAY);
 
-	// ゲージのサイズ
-	hpGauge->SetGaugeSize(100.0f, 10.0f);
+	//// ゲージのサイズ
+	//hpGauge->SetGaugeSize(100.0f, 10.0f);
 
-	// ゲージの色
-	hpGauge->SetGaugeColor(ColorConst::DX::RED);
+	//// ゲージの色
+	//hpGauge->SetGaugeColor(ColorConst::DX::RED);
 
-	// 初期HP
-	hpGauge->SetRate(1.0f);
+	//// 初期HP
+	//hpGauge->SetRate(1.0f);
 
 	//// テクスチャの設定
 	//hpGauge->SetTexture("data/TEXTURE/ball.png");
