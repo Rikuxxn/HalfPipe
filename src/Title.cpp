@@ -127,7 +127,7 @@ HRESULT CTitle::Init(void)
 	// ƒQ[ƒ€ŽžŠÔ‚ðƒŠƒZƒbƒg
 	time->Reset();
 
-	// ŽžŠÔ‚ð”CˆÓ‚ÌŽžŠÔ‚Å’âŽ~‚·‚é
+	// ”CˆÓ‚ÌŽžŠÔ‚Å’âŽ~‚·‚é
 	time->Stop();
 	time->SetTime(20.0f);
 
