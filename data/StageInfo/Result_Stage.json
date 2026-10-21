@@ -88,7 +88,7 @@
         "sign_textures": [
             {
                 "face": 1,
-                "texture": "data/TEXTURE/labo.png"
+                "texture": "data/TEXTURE/Add_10.png"
             }
         ],
         "type": 6
@@ -172,7 +172,7 @@
         "is_dynamic": false,
         "pos": [
             -440.0,
-            -452.0,
+            -451.986083984375,
             2209.0
         ],
         "rot": [
@@ -188,7 +188,7 @@
         "sign_textures": [
             {
                 "face": 1,
-                "texture": "data/TEXTURE/Add_4.png"
+                "texture": "data/TEXTURE/Add_10.png"
             }
         ],
         "type": 6
@@ -263,7 +263,7 @@
         "sign_textures": [
             {
                 "face": 1,
-                "texture": "data/TEXTURE/labo.png"
+                "texture": "data/TEXTURE/Add_10.png"
             }
         ],
         "type": 6
@@ -438,7 +438,7 @@
         "sign_textures": [
             {
                 "face": 1,
-                "texture": "data/TEXTURE/labo.png"
+                "texture": "data/TEXTURE/Add_10.png"
             }
         ],
         "type": 6
@@ -588,7 +588,7 @@
         "sign_textures": [
             {
                 "face": 1,
-                "texture": "data/TEXTURE/labo.png"
+                "texture": "data/TEXTURE/Add_10.png"
             }
         ],
         "type": 6
@@ -688,7 +688,7 @@
         "sign_textures": [
             {
                 "face": 1,
-                "texture": "data/TEXTURE/labo.png"
+                "texture": "data/TEXTURE/Add_10.png"
             }
         ],
         "type": 6
@@ -810,7 +810,12 @@
             1.0,
             1.0
         ],
-        "sign_textures": [],
+        "sign_textures": [
+            {
+                "face": 1,
+                "texture": "data/TEXTURE/Add_10.png"
+            }
+        ],
         "type": 6
     },
     {
@@ -983,7 +988,7 @@
         "sign_textures": [
             {
                 "face": 1,
-                "texture": "data/TEXTURE/labo.png"
+                "texture": "data/TEXTURE/Add_10.png"
             }
         ],
         "type": 6
@@ -1108,7 +1113,7 @@
         "sign_textures": [
             {
                 "face": 1,
-                "texture": "data/TEXTURE/labo.png"
+                "texture": "data/TEXTURE/Add_10.png"
             }
         ],
         "type": 6
@@ -1133,7 +1138,7 @@
         "sign_textures": [
             {
                 "face": 1,
-                "texture": "data/TEXTURE/dakuten.png"
+                "texture": "data/TEXTURE/Add_10.png"
             }
         ],
         "type": 6
@@ -1158,7 +1163,7 @@
         "sign_textures": [
             {
                 "face": 1,
-                "texture": "data/TEXTURE/Add_4.png"
+                "texture": "data/TEXTURE/Add_10.png"
             }
         ],
         "type": 6
@@ -1305,7 +1310,12 @@
             1.0,
             1.0
         ],
-        "sign_textures": [],
+        "sign_textures": [
+            {
+                "face": 1,
+                "texture": "data/TEXTURE/Add_10.png"
+            }
+        ],
         "type": 6
     },
     {
@@ -1403,7 +1413,7 @@
         "sign_textures": [
             {
                 "face": 1,
-                "texture": "data/TEXTURE/Add_4.png"
+                "texture": "data/TEXTURE/Add_10.png"
             }
         ],
         "type": 6
@@ -1450,7 +1460,12 @@
             1.0,
             1.0
         ],
-        "sign_textures": [],
+        "sign_textures": [
+            {
+                "face": 1,
+                "texture": "data/TEXTURE/Add_10.png"
+            }
+        ],
         "type": 6
     },
     {
@@ -1495,7 +1510,12 @@
             1.0,
             1.0
         ],
-        "sign_textures": [],
+        "sign_textures": [
+            {
+                "face": 1,
+                "texture": "data/TEXTURE/Add_10.png"
+            }
+        ],
         "type": 6
     },
     {
@@ -1593,7 +1613,7 @@
         "sign_textures": [
             {
                 "face": 1,
-                "texture": "data/TEXTURE/labo.png"
+                "texture": "data/TEXTURE/Add_10.png"
             }
         ],
         "type": 6
@@ -1626,9 +1646,9 @@
     {
         "is_dynamic": false,
         "pos": [
-            -380.3081970214844,
+            -378.5449523925781,
             -1225.0,
-            4369.0
+            4360.20654296875
         ],
         "rot": [
             0.0,
@@ -1643,7 +1663,7 @@
         "sign_textures": [
             {
                 "face": 1,
-                "texture": "data/TEXTURE/dakuten.png"
+                "texture": "data/TEXTURE/Add_10.png"
             }
         ],
         "type": 6
@@ -1743,7 +1763,7 @@
         "sign_textures": [
             {
                 "face": 1,
-                "texture": "data/TEXTURE/Add_4.png"
+                "texture": "data/TEXTURE/Add_10.png"
             }
         ],
         "type": 6
@@ -1793,7 +1813,7 @@
         "sign_textures": [
             {
                 "face": 1,
-                "texture": "data/TEXTURE/labo.png"
+                "texture": "data/TEXTURE/Add_10.png"
             }
         ],
         "type": 6
