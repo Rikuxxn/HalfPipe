@@ -345,10 +345,7 @@ HRESULT CTitle::Init(void)
 	CCamera* pCamera = CManager::Instance()->GetCamera();
 
 	// カメラの初期位置を設定しておく
-	pCamera->SetCamMode(CCamera::MODE_EDIT);
-
-	//// カメラの初期位置を設定しておく
-	//pCamera->SetCamMode(CCamera::MODE_THIRD_PERSON);
+	pCamera->SetCamMode(CCamera::MODE_FIXED);
 
 	// サウンドマネージャーの取得
 	auto sound = CManager::Instance()->GetSoundManager();
@@ -496,21 +493,19 @@ void CTitle::Update(void)
 //=============================================================================
 void CTitle::Draw(void)
 {
-	//// カメラの取得
-	//CCamera* pCamera = CManager::Instance()->GetCamera();
-
-	//if (!pCamera->GetMode() == CCamera::MODE_EDIT)
-	//{
-	//	// カメラの設定
-	//	pCamera->SetCamParameter(
-	//		TitleCamera::PARAM.eye,
-	//		TitleCamera::PARAM.at,
-	//		TitleCamera::PARAM.rot,
-	//		TitleCamera::PARAM.distance);
-	//}
-
 	// シーンの描画処理
 	CScene::Draw();
+
+	// カメラの取得
+	CCamera* pCamera = CManager::Instance()->GetCamera();
+
+	//if (!pCamera->GetMode() == CCamera::MODE_EDIT)
+	{
+		// カメラの設定
+		pCamera->SetPosV({ -605.0f, -835.0f, 4608.0f });
+		pCamera->SetPosR({ 7.0f, -835.0f, 4100.0f });
+		pCamera->SetRot({ 0.0f, -0.88f, 0.0f });
+	}
 }
 //=============================================================================
 // ライト設定処理

@@ -36,6 +36,7 @@ public:
 	typedef enum
 	{
 		MODE_EDIT = 0,		// エディターカメラ
+        MODE_FIXED,			// 固定カメラ
 		MODE_FIRST_PERSON,	// 一人称
 		MODE_THIRD_PERSON,	// 三人称
 		MODE_DIRECTION,		// 演出カメラ

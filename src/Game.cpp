@@ -36,6 +36,7 @@
 #include "UIComponent.h"
 #include "UIAnimationComponent.h"
 #include "JumpTiming.h"
+#include "Camera.h"
 
 
 
@@ -256,6 +257,12 @@ HRESULT CGame::Init(void)
 	//	// アニメーション再生
 	//	animation->Play();
 	//}
+
+		// カメラの取得
+	CCamera* pCamera = CManager::Instance()->GetCamera();
+
+	// カメラの初期位置を設定しておく
+	pCamera->SetCamMode(CCamera::MODE_EDIT);
 
 	return S_OK;
 }

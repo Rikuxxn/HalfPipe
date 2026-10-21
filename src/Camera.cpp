@@ -24,6 +24,7 @@
 #include "ThirdPersonCamera.h"
 #include "DirectionCamera.h"
 #include "MovieCamera.h"
+#include "FixedCamera.h"
 
 
 namespace CameraParam
@@ -214,6 +215,10 @@ void CCamera::SetCamMode(MODE mode)
 	{
 	case MODE_EDIT:
 		SetController(std::make_unique<CEditCamera>());
+		break;
+
+	case MODE_FIXED:
+		SetController(std::make_unique<CFixedCamera>());
 		break;
 
 	case MODE_FIRST_PERSON:
