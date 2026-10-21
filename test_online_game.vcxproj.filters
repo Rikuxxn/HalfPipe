@@ -630,6 +630,9 @@
     <ClInclude Include="include\FixedCamera.h">
       <Filter>ヘッダー ファイル\System\Camera</Filter>
     </ClInclude>
+    <ClInclude Include="include\3DSpriteRenderComponent.h">
+      <Filter>ヘッダー ファイル\Component\Render</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="imgui\imgui.cpp">
@@ -958,6 +961,9 @@
     </ClCompile>
     <ClCompile Include="src\FixedCamera.cpp">
       <Filter>ソース ファイル\System\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="src\3DSpriteRenderComponent.cpp">
+      <Filter>ソース ファイル\Component\Render</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
