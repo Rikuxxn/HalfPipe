@@ -162,6 +162,40 @@ HRESULT CTitle::Init(void)
 		}
 	}
 
+	////-----------------------------------------------------
+	//// JSONに保存したUIの使い方 (Timing UI)
+	////-----------------------------------------------------
+	//{
+	//	// UIアニメーションデータの読み込み
+	//	auto uiManager = CManager::Instance()->GetUIAnimationManager();
+
+	//	if (uiManager)
+	//	{
+	//		uiManager->Load("data/UIAnimation/Timing.json");
+	//	}
+
+	//	// 登録済みのUIデータを取得
+	//	UIAnimationData* data = uiManager->GetData("Timing");
+
+	//	// UI生成
+	//	auto timing = CUIFactory::Create(this, *data);
+
+	//	auto ui = timing->GetComponent<CUIComponent>();
+
+	//	if (timing)
+	//	{
+	//		ui->SetUVFrame(0, 4);
+	//	}
+
+	//	// 最初は非表示
+	//	auto sprite = timing->GetComponent<CSpriteRenderComponent>();
+
+	//	if (sprite)
+	//	{
+	//		sprite->SetIsVisible(true);
+	//	}
+	//}
+
 	//// プレイヤーの生成
 	//{
 	//	auto player = CreateObject<CPlayer>();

@@ -39,6 +39,12 @@ struct UIAnimationData
 
     // アニメーションクリップ一覧
     std::vector<UIAnimationClip> Animations;
+
+    // UV座標
+    D3DXVECTOR2 UVPosition = { 0.0f, 0.0f };
+
+    // UVサイズ
+    D3DXVECTOR2 UVSize = { 1.0f, 1.0f };
 };
 
 #endif

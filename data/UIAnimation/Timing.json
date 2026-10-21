@@ -1,0 +1,29 @@
+{
+    "animationName": "Timing",
+    "animations": [],
+    "objectTag": "Timing",
+    "size": {
+        "height": 0.5,
+        "width": 0.5
+    },
+    "texture": "data/TEXTURE/Timing.png",
+    "transform": {
+        "alpha": 1.0,
+        "position": [
+            0.5,
+            0.5
+        ],
+        "scale": [
+            0.6899999976158142,
+            0.5199999809265137
+        ],
+        "uvPosition": [
+            0.25999999046325684,
+            1.0
+        ],
+        "uvSize": [
+            0.4699999988079071,
+            0.25
+        ]
+    }
+}

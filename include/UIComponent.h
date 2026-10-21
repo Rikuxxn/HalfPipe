@@ -26,6 +26,12 @@ struct UITransform
 
     float Rotation = 0.0f;
     float Alpha = 1.0f;
+
+    // UV座標
+    D3DXVECTOR2 UVPosition = { 0.0f, 0.0f };
+
+    // UVサイズ
+    D3DXVECTOR2 UVSize = { 1.0f, 1.0f };
 };
 
 //*****************************************************************************
@@ -133,6 +139,24 @@ public:
 
     // 透明度
     void SetAlpha(float alpha) { m_Transform.Alpha = alpha; }
+
+    // UV座標
+    void SetUVPosition(const D3DXVECTOR2& pos) { m_Transform.UVPosition = pos; }
+
+    // UVサイズ
+    void SetUVSize(const D3DXVECTOR2& size) { m_Transform.UVSize = size; }
+
+    // UV座標とサイズをまとめて設定
+    void SetUV(const D3DXVECTOR2& pos, const D3DXVECTOR2& size)
+    {
+        m_Transform.UVPosition = pos;
+        m_Transform.UVSize = size;
+    }
+
+    // 指定したフレームを表示
+    // @param frameIndex : 何枚目を表示するか
+    // @param frameCount : そのテクスチャの枚数
+    void SetUVFrame(int frameIndex, int frameCount);
 };
 
 #endif

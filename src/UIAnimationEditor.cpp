@@ -18,6 +18,10 @@
 #include "Manager.h"
 #include "SceneManager.h"
 #include "Scene.h"
+#include "MathUtility.h"
+
+// 名前空間の使用
+using namespace MathUtil;
 
 
 //=============================================================================
@@ -326,6 +330,47 @@ bool CUIAnimationEditor::DrawAnimationSettings(UIAnimationData& data)
     }
 
     ImGui::Dummy(ImVec2(0.0f, 10.0f)); // 空白を空ける
+
+    //=============================================================================
+// UV設定
+//=============================================================================
+    ImGui::Dummy(ImVec2(0.0f, 5.0f));
+
+    if (ImGui::CollapsingHeader("UV Settings", ImGuiTreeNodeFlags_DefaultOpen))
+    {
+        // UV開始位置
+        ImGui::SetNextItemWidth(130.0f);
+        if (ImGui::DragFloat2(
+            "UV Position",
+            &data.UVPosition.x,
+            0.01f,
+            0.0f,
+            1.0f))
+        {
+            changed = true;
+        }
+
+        // UVサイズ
+        ImGui::SetNextItemWidth(130.0f);
+        if (ImGui::DragFloat2(
+            "UV Size",
+            &data.UVSize.x,
+            0.01f,
+            0.0f,
+            1.0f))
+        {
+            changed = true;
+        }
+
+        // 値の範囲を制限
+        data.UVPosition.x = Clamp(data.UVPosition.x, 0.0f, 1.0f);
+        data.UVPosition.y = Clamp(data.UVPosition.y, 0.0f, 1.0f);
+
+        data.UVSize.x = Clamp(data.UVSize.x, 0.0f, 1.0f);
+        data.UVSize.y = Clamp(data.UVSize.y, 0.0f, 1.0f);
+    }
+
+    ImGui::Dummy(ImVec2(0.0f, 10.0f));
 
     return changed;
 }

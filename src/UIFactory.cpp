@@ -97,6 +97,8 @@ void CUIFactory::ApplyTransform(CGameObject* object, const UIAnimationData& data
         transform.Position = data.Position;
         transform.Scale = data.Scale;
         transform.Alpha = data.Alpha;
+        transform.UVPosition = data.UVPosition;
+        transform.UVSize = data.UVSize;
     }
 
     if (sprite)

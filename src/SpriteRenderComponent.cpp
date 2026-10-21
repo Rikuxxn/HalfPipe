@@ -134,12 +134,19 @@ void CSpriteRenderComponent::Draw(void)
         vertex[i].col = color;
     }
 
-    float u0 = (float)m_UV.left;
-    float v0 = (float)m_UV.top;
+    //---------------------------------
+    // UV座標の設定
+    //---------------------------------
 
-    float u1 = (float)m_UV.right;
-    float v1 = (float)m_UV.bottom;
+    // UVの開始位置
+    float u0 = transform.UVPosition.x;
+    float v0 = transform.UVPosition.y;
 
+    // UVの終了位置
+    float u1 = u0 + transform.UVSize.x;
+    float v1 = v0 + transform.UVSize.y;
+
+    // 頂点UVの設定
     vertex[0].tex = { u0, v0 };
     vertex[1].tex = { u1, v0 };
     vertex[2].tex = { u0, v1 };

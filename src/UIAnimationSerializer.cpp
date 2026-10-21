@@ -147,7 +147,9 @@ bool CUIAnimationSerializer::Save(const std::string& filePath, const UIAnimation
         {
             {"position", { data.Position.x, data.Position.y }},
             {"scale", { data.Scale.x, data.Scale.y }},
-            {"alpha", data.Alpha}
+            {"alpha", data.Alpha},
+            {"uvPosition", { data.UVPosition.x, data.UVPosition.y }},
+            {"uvSize", { data.UVSize.x, data.UVSize.y }}
         };
 
         //=====================================================================
@@ -243,6 +245,33 @@ bool CUIAnimationSerializer::Load(const std::string& filePath, UIAnimationData& 
         loadedData.Scale.y = transform.at("scale").at(1).get<float>();
 
         loadedData.Alpha = transform.at("alpha").get<float>();
+
+        //=====================================================================
+        // UV設定
+        //=====================================================================
+
+        // UV情報が存在する場合のみ読み込む
+        if (transform.contains("uvPosition") &&
+            transform["uvPosition"].is_array() &&
+            transform["uvPosition"].size() >= 2)
+        {
+            loadedData.UVPosition.x =
+                transform["uvPosition"][0].get<float>();
+
+            loadedData.UVPosition.y =
+                transform["uvPosition"][1].get<float>();
+        }
+
+        if (transform.contains("uvSize") &&
+            transform["uvSize"].is_array() &&
+            transform["uvSize"].size() >= 2)
+        {
+            loadedData.UVSize.x =
+                transform["uvSize"][0].get<float>();
+
+            loadedData.UVSize.y =
+                transform["uvSize"][1].get<float>();
+        }
 
         //=====================================================================
         // アニメーション
