@@ -32,7 +32,6 @@
 #include "StageManager.h"
 #include "TriggerObjectManager.h"
 #include "Sky.h"
-#include "Water.h"
 #include "ModelManager.h"
 #include "GameTime.h"
 #include "EditCamera.h"
@@ -56,28 +55,6 @@ namespace TitleWorld
 {
 	const D3DXVECTOR3 PLAYER_POS{ 300.0f, 110.0f, 450.0f };
 	const D3DXVECTOR3 PLAYER_ROT{ 0.0f, 90.0f, 0.0f };
-}
-
-namespace TitleCamera
-{
-	const CameraParam PARAM =
-	{
-		{0.0f, 120.0f,  -200.0f},
-		{0.0f, 30.0f, 0.0f},
-		{0.0f, D3DX_PI, 0.0f},
-		0.0f
-	};
-}
-
-namespace TitleLight
-{
-	const LightParam LIGHTS[] =
-	{
-		{ D3DLIGHT_DIRECTIONAL, {1.0f,0.65f,0.4f,1.0f}, {-0.3f,-0.8f,0.2f}, {0,300,0} },
-		{ D3DLIGHT_DIRECTIONAL, {1.0f,0.65f,0.4f,1.0f}, {0,-0.8f,-0.2f},   {0,300,0} },
-		{ D3DLIGHT_DIRECTIONAL, {0.3f,0.35f,0.5f,1.0f}, {0,1,0},          {0,0,0}   },
-		{ D3DLIGHT_DIRECTIONAL, {0.5f,0.4f,0.4f,1.0f},  {0.3f,-0.2f,-0.3f},{0,0,0}  }
-	};
 }
 
 namespace Particle
@@ -442,13 +419,10 @@ void CTitle::Draw(void)
 	// カメラの取得
 	CCamera* pCamera = CManager::Instance()->GetCamera();
 
-	//if (!pCamera->GetMode() == CCamera::MODE_EDIT)
-	{
-		// カメラの設定
-		pCamera->SetPosV({ -605.0f, -835.0f, 4608.0f });
-		pCamera->SetPosR({ 7.0f, -835.0f, 4100.0f });
-		pCamera->SetRot({ 0.0f, -0.88f, 0.0f });
-	}
+	// カメラの設定
+	pCamera->SetPosV({ -605.0f, -835.0f, 4608.0f });
+	pCamera->SetPosR({ 7.0f, -835.0f, 4100.0f });
+	pCamera->SetRot({ 0.0f, -0.88f, 0.0f });
 }
 //=============================================================================
 // ライト設定処理
