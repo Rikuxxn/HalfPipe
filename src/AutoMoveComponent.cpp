@@ -208,19 +208,6 @@ void CAutoMoveComponent::UpdateAutoMove(float deltaTime)
 
 		// 判定結果から分岐先の種類を決定
 		MovePointType targetType = GetJumpTargetType(m_TimingResult);
-		//for (int nCount = 0; nCount < 11; nCount++)
-		//{
-		//	if (points[nCount].nIdx == m_currentPoint + 1 && points[nCount].nType == GetJumpTargetType(m_TimingResult))
-		//	{
-		//		points[nCount].pos;
-		//		m_CurrentTime = 0.0f;
-
-		//		// 判定結果を消費
-		//		m_HasTimingResult = false;
-		//		m_IsWaitingForJumpPoint = false;
-		//	}
-		//}
-
 
 		// ジャンプ開始ポイントより後ろから検索
 		for (size_t i = m_JumpStartPoint + 1; i < m_MovePoints.size(); ++i)
@@ -232,7 +219,7 @@ void CAutoMoveComponent::UpdateAutoMove(float deltaTime)
 				// 選択したルートに切り替える
 				//m_CurrentMovePoint = i;
 				m_CurrentMovePointPlus = i;
-				m_CurrentMovePointPlusPlus += 5;
+				m_CurrentMovePointPlusPlus += 3;
 
 				m_CurrentTime = 0.0f;
 
@@ -278,13 +265,13 @@ void CAutoMoveComponent::UpdateAutoMove(float deltaTime)
 		m_CurrentMovePointMinas = m_CurrentMovePoint;
 		m_CurrentMovePoint = m_CurrentMovePointPlus;
 		m_CurrentMovePointPlus = m_CurrentMovePointPlusPlus;
-		m_CurrentMovePointPlusPlus++;
+		++m_CurrentMovePointPlusPlus;
 		m_CurrentTime = 0.0f;
 		return;
 	}
 
 	// 時間を進める
-	m_CurrentTime += 0.008f;
+	m_CurrentTime += 0.01f;
 
 	// 正規化
 	D3DXVec3Normalize(&direction, &direction);
