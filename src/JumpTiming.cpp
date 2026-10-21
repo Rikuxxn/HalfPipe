@@ -214,7 +214,51 @@ void CJumpTiming::StartTiming(void)
 
 		if (animationB)
 		{
-			animationB->Play();
+			animationB->PlayAnimation("Scale_X");
+			animationB->PlayAnimation("Scale_Y");
+		}
+	}
+}
+
+//=============================================================================
+// タイミング判定終了処理
+//=============================================================================
+void CJumpTiming::EndTiming(void)
+{
+	// すでに完了中なら開始しない
+	if (m_TimingState == TimingState::Completed)
+	{
+		return;
+	}
+
+	// 判定結果を初期化
+	m_Timing = TIMING_MAX;
+
+	// 判定完了中にする
+	m_TimingState = TimingState::Completed;
+
+	//// カウントを初期化
+	//m_fTimingCount = 3.0f;
+
+	// ボタンAを表示
+	if (m_ButtonA)
+	{
+		auto spriteA = m_ButtonA->GetComponent<CSpriteRenderComponent>();
+
+		if (spriteA)
+		{
+			spriteA->SetIsVisible(false);
+		}
+	}
+
+	// ボタンBを表示してアニメーション再生
+	if (m_ButtonB)
+	{
+		auto spriteB = m_ButtonB->GetComponent<CSpriteRenderComponent>();
+
+		if (spriteB)
+		{
+			spriteB->SetIsVisible(false);
 		}
 	}
 }
