@@ -68,7 +68,7 @@ HRESULT CSky::Init(void)
     auto mesh = std::make_shared<CMeshResource>();
 
     mesh->CreateSphere(
-        3000.0f,   // ”¼Œa
+        5500.0f,   // ”¼Œa
         64,        // Slice
         32);       // Stack
 

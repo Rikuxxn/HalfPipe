@@ -127,13 +127,13 @@ HRESULT CTitle::Init(void)
 	// ゲーム時間をリセット
 	time->Reset();
 
+	// 時間を任意の時間で停止する
+	time->Stop();
+	time->SetTime(20.0f);
+
 	// 空の生成
 	m_pSky = std::make_unique<CSky>();
 	m_pSky->Init();
-
-	//// 水の生成
-	//m_pWater = std::make_unique<CWater>();
-	//m_pWater->Init();
 
 	//-----------------------------------------------------
 	// JSONに保存したUIの使い方 (Press UI)
