@@ -31,7 +31,7 @@ using namespace MathUtil;
 // コンストラクタ
 //=============================================================================
 CThirdPersonCamera::CThirdPersonCamera() :
-	m_fDistance(80.0f)
+	m_fDistance(300.0f)
 {
 
 }
