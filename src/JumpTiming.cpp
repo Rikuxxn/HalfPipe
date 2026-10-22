@@ -34,7 +34,7 @@ CJumpTiming::CJumpTiming():
 	m_fTimingCount	(0.0f),
 	m_Timing		(TIMING_MAX),
 	m_TimingState	(TimingState::Inactive),
-	m_String		("fuck")
+	m_String		("None")
 {
 
 }
@@ -234,8 +234,8 @@ void CJumpTiming::EndTiming(void)
 	// ”»’èŒ‹‰Ê‚ğ‰Šú‰»
 	m_Timing = TIMING_MAX;
 
-	// ”»’èŠ®—¹’†‚É‚·‚é
-	m_TimingState = TimingState::Completed;
+	//// ”»’èŠ®—¹’†‚É‚·‚é
+	//m_TimingState = TimingState::Completed;
 
 	//// ƒJƒEƒ“ƒg‚ğ‰Šú‰»
 	//m_fTimingCount = 3.0f;
@@ -304,7 +304,7 @@ void CJumpTiming::DrawDebugGUI(void)
 		m_String = "BAD";
 		break;
 	case TIMING_MAX:
-		m_String = "FUCK";
+		m_String = "NONE";
 		break;
 	}
 

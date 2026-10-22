@@ -68,6 +68,8 @@ public:
     }
 
     void SetIsVisible(bool visible) { m_isVisible = visible; }
+
+    bool IsVisible(void) { return m_isVisible; }
 };
 
 #endif

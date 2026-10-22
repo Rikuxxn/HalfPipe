@@ -37,6 +37,7 @@
 #include "UIAnimationComponent.h"
 #include "JumpTiming.h"
 #include "Camera.h"
+#include "JumpTimingRating.h"
 
 
 
@@ -59,21 +60,6 @@ CGame::~CGame()
 //=============================================================================
 HRESULT CGame::Init(void)
 {
-	//// ディレクショナルライトの生成
-	//CreateDirectionalLight({ 0.0f, -1.0f, 0.0f }, D3DXCOLOR(1, 1, 1, 1));
-
-	//// ディレクショナルライトの生成
-	//CreateDirectionalLight({ 1.0f, 0.0f, 0.0f }, D3DXCOLOR(1, 1, 1, 1));
-
-	//// ディレクショナルライトの生成
-	//CreateDirectionalLight({ -1.0f, 0.0f, 0.0f }, D3DXCOLOR(1, 1, 1, 1));
-
-	//// ディレクショナルライトの生成
-	//CreateDirectionalLight({ 0.0f, 0.0f, 1.0f }, D3DXCOLOR(1, 1, 1, 1));
-
-	//// ディレクショナルライトの生成
-	//CreateDirectionalLight({ 0.0f, 0.0f, -1.0f }, D3DXCOLOR(1, 1, 1, 1));
-
 	// ポーズマネージャーの生成
 	m_PauseManager = std::make_unique<CPauseManager>();
 
@@ -111,8 +97,13 @@ HRESULT CGame::Init(void)
 	m_pSky = std::make_unique<CSky>();
 	m_pSky->Init();
 
+	// ジャンプタイミングUIの生成
 	auto jump = CreateObject<CJumpTiming>();
 	jump->Init();
+
+	// ジャンプタイミングの評価UIの生成
+	auto jumpTimingUI = CreateObject<CJumpTimingRating>();
+	jumpTimingUI->Init();
 
 	//============================================================
 	// Player生成(クライアント)

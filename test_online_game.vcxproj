@@ -210,6 +210,7 @@
     <ClInclude Include="include\Input.h" />
     <ClInclude Include="include\InputManager.h" />
     <ClInclude Include="include\JumpTiming.h" />
+    <ClInclude Include="include\JumpTimingRating.h" />
     <ClInclude Include="include\LightComponent.h" />
     <ClInclude Include="include\LightManager.h" />
     <ClInclude Include="include\Main.h" />
@@ -330,6 +331,7 @@
     <ClCompile Include="src\Input.cpp" />
     <ClCompile Include="src\InputManager.cpp" />
     <ClCompile Include="src\JumpTiming.cpp" />
+    <ClCompile Include="src\JumpTimingRating.cpp" />
     <ClCompile Include="src\LightComponent.cpp" />
     <ClCompile Include="src\LightManager.cpp" />
     <ClCompile Include="src\Main.cpp" />
