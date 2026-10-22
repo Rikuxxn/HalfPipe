@@ -312,7 +312,7 @@ HRESULT CBasketBlock::Init(void)
 	auto thisTransform = this->GetComponent<CTransformComponent>();
 
 	// 位置設定
-	transform->Position = { thisTransform->Position.x,  thisTransform->Position.z, thisTransform->Position.z };
+	transform->Position = { thisTransform->Position.x,  thisTransform->Position.y, thisTransform->Position.z };
 
 	// モデルレンダーコンポーネントの追加
 	CXModelRenderComponent* model = nullptr;
