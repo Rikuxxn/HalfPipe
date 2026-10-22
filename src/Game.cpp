@@ -37,6 +37,7 @@
 #include "UIAnimationComponent.h"
 #include "JumpTiming.h"
 #include "Camera.h"
+#include "JumpTimingRating.h"
 
 
 
@@ -59,21 +60,6 @@ CGame::~CGame()
 //=============================================================================
 HRESULT CGame::Init(void)
 {
-	//// ディレクショナルライトの生成
-	//CreateDirectionalLight({ 0.0f, -1.0f, 0.0f }, D3DXCOLOR(1, 1, 1, 1));
-
-	//// ディレクショナルライトの生成
-	//CreateDirectionalLight({ 1.0f, 0.0f, 0.0f }, D3DXCOLOR(1, 1, 1, 1));
-
-	//// ディレクショナルライトの生成
-	//CreateDirectionalLight({ -1.0f, 0.0f, 0.0f }, D3DXCOLOR(1, 1, 1, 1));
-
-	//// ディレクショナルライトの生成
-	//CreateDirectionalLight({ 0.0f, 0.0f, 1.0f }, D3DXCOLOR(1, 1, 1, 1));
-
-	//// ディレクショナルライトの生成
-	//CreateDirectionalLight({ 0.0f, 0.0f, -1.0f }, D3DXCOLOR(1, 1, 1, 1));
-
 	// ポーズマネージャーの生成
 	m_PauseManager = std::make_unique<CPauseManager>();
 
@@ -83,12 +69,10 @@ HRESULT CGame::Init(void)
 	// ステージマネージャの初期化
 	auto stage = CManager::Instance()->GetStageManager();
 	stage->Init();
-	//stage->GetStageEditor()->Init();
 
 	// トリガーオブジェクトマネージャの初期化
 	auto trigger = CManager::Instance()->GetTriggerObjectManager();
 	trigger->Init();
-	//trigger->GetTriggerObjectEditor()->Init();
 
 	// ステージオブジェクトの読み込み
 	CManager::Instance()->GetStageManager()->LoadFromJson("data/StageInfo/Game_Stage.json");
@@ -105,14 +89,19 @@ HRESULT CGame::Init(void)
 	// 時間を任意の時間で停止する
 	time->Stop();
 	//time->Start();
-	//time->SetTime(30.0f);
+	time->SetTime(30.0f);
 
 	// 空の生成
 	m_pSky = std::make_unique<CSky>();
 	m_pSky->Init();
 
+	// ジャンプタイミングUIの生成
 	auto jump = CreateObject<CJumpTiming>();
 	jump->Init();
+
+	// ジャンプタイミングの評価UIの生成
+	auto jumpTimingUI = CreateObject<CJumpTimingRating>();
+	jumpTimingUI->Init();
 
 	//============================================================
 	// Player生成(クライアント)
@@ -263,7 +252,7 @@ HRESULT CGame::Init(void)
 	//	animation->Play();
 	//}
 
-		// カメラの取得
+	// カメラの取得
 	CCamera* pCamera = CManager::Instance()->GetCamera();
 
 	// カメラの初期位置を設定しておく

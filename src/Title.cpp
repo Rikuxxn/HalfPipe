@@ -85,34 +85,17 @@ HRESULT CTitle::Init(void)
 	// マウスカーソルを表示する
 	CManager::Instance()->GetInput()->GetMouse()->SetCursorVisibility(true);
 
-	//// ディレクショナルライトの生成
-	//CreateDirectionalLight({ 0.0f, -1.0f, 0.0f }, D3DXCOLOR(1, 1, 1, 1));
-
-	//// ディレクショナルライトの生成
-	//CreateDirectionalLight({ 1.0f, 0.0f, 0.0f }, D3DXCOLOR(1, 1, 1, 1));
-
-	//// ディレクショナルライトの生成
-	//CreateDirectionalLight({ -1.0f, 0.0f, 0.0f }, D3DXCOLOR(1, 1, 1, 1));
-
-	//// ディレクショナルライトの生成
-	//CreateDirectionalLight({ 0.0f, 0.0f, 1.0f }, D3DXCOLOR(1, 1, 1, 1));
-
-	//// ディレクショナルライトの生成
-	//CreateDirectionalLight({ 0.0f, 0.0f, -1.0f }, D3DXCOLOR(1, 1, 1, 1));
-
 	//-----------------------------------------------------
-	// 最初のシーンで初期化する(次のシーンからは呼ばない)
+	// マネージャーの初期化
 	//-----------------------------------------------------
 	{
 		// ステージマネージャの初期化
 		auto stage = CManager::Instance()->GetStageManager();
 		stage->Init();
-		//stage->GetStageEditor()->Init();
 
 		// トリガーオブジェクトマネージャの初期化
 		auto trigger = CManager::Instance()->GetTriggerObjectManager();
 		trigger->Init();
-		//trigger->GetTriggerObjectEditor()->Init();
 
 		// ステージオブジェクトの読み込み
 		CManager::Instance()->GetStageManager()->LoadFromJson("data/StageInfo/Title_Stage.json");
@@ -161,40 +144,6 @@ HRESULT CTitle::Init(void)
 			sprite->SetIsVisible(true);
 		}
 	}
-
-	////-----------------------------------------------------
-	//// JSONに保存したUIの使い方 (Timing UI)
-	////-----------------------------------------------------
-	//{
-	//	// UIアニメーションデータの読み込み
-	//	auto uiManager = CManager::Instance()->GetUIAnimationManager();
-
-	//	if (uiManager)
-	//	{
-	//		uiManager->Load("data/UIAnimation/Timing.json");
-	//	}
-
-	//	// 登録済みのUIデータを取得
-	//	UIAnimationData* data = uiManager->GetData("Timing");
-
-	//	// UI生成
-	//	auto timing = CUIFactory::Create(this, *data);
-
-	//	auto ui = timing->GetComponent<CUIComponent>();
-
-	//	if (timing)
-	//	{
-	//		ui->SetUVFrame(0, 4);
-	//	}
-
-	//	// 最初は非表示
-	//	auto sprite = timing->GetComponent<CSpriteRenderComponent>();
-
-	//	if (sprite)
-	//	{
-	//		sprite->SetIsVisible(true);
-	//	}
-	//}
 
 	//// プレイヤーの生成
 	//{

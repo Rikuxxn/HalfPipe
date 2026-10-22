@@ -21,6 +21,7 @@
 #include "XModelRenderComponent.h"
 #include "MathUtility.h"
 #include "TimeSystem.h"
+#include "JumpTimingRating.h"
 
 
 // –¼‘O‹óŠÔ‚ÌŽg—p
