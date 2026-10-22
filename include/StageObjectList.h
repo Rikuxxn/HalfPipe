@@ -243,4 +243,31 @@ private:
 
 };
 
+//*****************************************************************************
+// 得点サークルブロッククラス
+//*****************************************************************************
+class CPointCircleBlock : public CStageObject
+{
+public:
+    CPointCircleBlock();
+    ~CPointCircleBlock();
+
+    HRESULT Init(void) override;
+    void Update(void) override;
+
+    StageObjectType GetType(void) const override
+    {
+        return StageObjectType::PointCircle;
+    }
+
+    ColliderShape GetColliderShape(void) const override
+    {
+        return ColliderShape::TriangleMesh;
+    }
+
+    void OnCollisionEnter(CGameObject* other)override;
+
+private:
+};
+
 #endif

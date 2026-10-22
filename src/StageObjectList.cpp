@@ -17,6 +17,9 @@
 #include "MatrixUtility.h"
 #include <XModelRenderComponent.h>
 #include "imguimaneger.h"
+#include "RigidBodyComponent.h"
+#include <CollisionGroup.h>
+#include "XModelResource.h"
 
 // 名前空間の使用
 using namespace MatrixUtil;
@@ -266,22 +269,123 @@ void CHalfPipeBlock::Update(void)
 
 }
 
+//=============================================================================
+// コンストラクタ
+//=============================================================================
 CBasketBlock::CBasketBlock()
 {
 
 }
 
+//=============================================================================
+// デストラクタ
+//=============================================================================
 CBasketBlock::~CBasketBlock()
 {
 
 }
 
+//=============================================================================
+// 初期化処理
+//=============================================================================
 HRESULT CBasketBlock::Init(void)
 {
+	// シーンの取得
+	auto scene = CManager::Instance()->GetSceneManager()->GetScene();
+
+	if (!scene)
+	{
+		return E_FAIL;
+	}
+
+	// オブジェクトの生成
+	auto obj = scene->CreateObject<CPointCircleBlock>();
+
+	if (!obj)
+	{
+		return E_FAIL;
+	}
+
+	// トランスフォームコンポーネントの追加
+	auto transform = obj->AddComponent<CTransformComponent>();
+
+	auto thisTransform = this->GetComponent<CTransformComponent>();
+
+	// 位置設定
+	transform->Position = { thisTransform->Position.x,  thisTransform->Position.z, thisTransform->Position.z };
+
+	// モデルレンダーコンポーネントの追加
+	CXModelRenderComponent* model = nullptr;
+
+	// タグの設定
+	obj->SetTag("PointCircle");
+
+	//-----------------------------------------
+	// モデル描画
+	//-----------------------------------------
+
+	// モデルレンダーコンポーネントの追加
+	model = obj->AddComponent<CXModelRenderComponent>();
+
+	// 描画順の設定
+	model->SetLayer(RenderLayer::Model);
+
+	// モデルのロード
+	model->Load("data/MODELS/PointCircle.x");
+
+	//-----------------------------------------
+	// 剛体生成
+	//-----------------------------------------
+
+	obj->SetGroupName("PointCircles");
+
+	// リジッドボディコンポーネントの追加
+	auto rigid = obj->AddComponent<CRigidBodyComponent>();
+
+	// Stage用のCollision設定
+	rigid->SetCollisionFilter(
+		COLLISION_GROUP_STAGE,
+		COLLISION_GROUP_STAGE |
+		COLLISION_GROUP_PLAYER |
+		COLLISION_GROUP_GHOST |
+		COLLISION_GROUP_ENEMY |
+		COLLISION_GROUP_CAMERA
+	);
+
+	rigid->SetDynamic(false);
+
+	auto size = VEC3_DEFAULT;
+
+	if (model)
+	{
+		size = model->GetModelSize();
+	}
+	else
+	{
+		size = obj->GetColliderSize();
+	}
+
+	// コライダーの生成
+	if (!model)
+	{
+		return E_FAIL;
+	}
+
+	auto resource = model->GetModel();
+
+	if (resource)
+	{
+		auto triangleMesh = resource->CreateBulletTriangleMesh();
+
+		rigid->CreateTriangleMesh(triangleMesh);
+	}
 
 	return S_OK;
 }
 
+//=============================================================================
+// 更新処理
+//=============================================================================
 void CBasketBlock::Update(void)
 {
 	// ステージオブジェクトの更新
@@ -523,4 +627,50 @@ void CRiftPoleBlock::Update(void)
 {
 	// ステージオブジェクトの更新
 	CStageObject::Update();
+}
+
+
+//=============================================================================
+// 得点サークルのコンストラクタ
+//=============================================================================
+CPointCircleBlock::CPointCircleBlock()
+{
+
+}
+
+//=============================================================================
+// 得点サークルのデストラクタ
+//=============================================================================
+CPointCircleBlock::~CPointCircleBlock()
+{
+
+}
+
+//=============================================================================
+// 得点サークルの初期化処理
+//=============================================================================
+HRESULT CPointCircleBlock::Init(void)
+{
+	return S_OK;
+}
+
+//=============================================================================
+// 得点サークルの更新処理
+//=============================================================================
+void CPointCircleBlock::Update(void)
+{
+	// ステージオブジェクトの更新
+	CStageObject::Update();
+
+}
+
+//=============================================================================
+// コリジョンエンター
+//=============================================================================
+void CPointCircleBlock::OnCollisionEnter(CGameObject* other)
+{
+	if (other->CompareTag("Ball"))
+	{
+
+	}
 }

@@ -39,6 +39,7 @@ public:
         Right,      // 照明
         SignBoard,  // 広告看板
         RiftPole,   // リフトのポール
+        PointCircle,// 得点サークル
 
         Max
     };
