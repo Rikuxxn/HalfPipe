@@ -291,7 +291,7 @@ void CAutoMoveComponent::UpdateAutoMove(float deltaTime)
 	}
 
 	// ŠÔ‚ği‚ß‚é
-	m_CurrentTime += 0.01f;
+	m_CurrentTime += 0.02f;
 
 	// ³‹K‰»
 	D3DXVec3Normalize(&direction, &direction);
