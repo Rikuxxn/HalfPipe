@@ -46,5 +46,17 @@
     "category": "Model",
     "name": "RiftPole",
     "filepath": "data/MODELS/riftpole.x"
+  },
+  {
+    "type": 8,
+    "category": "Model",
+    "name": "PointCircle",
+    "filepath": "data/MODELS/PointCircle.x"
+  },
+  {
+    "type": 9,
+    "category": "Model",
+    "name": "GateBanner",
+    "filepath": "data/MODELS/gate_banner.x"
   }
 ]

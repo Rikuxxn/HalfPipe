@@ -51,9 +51,11 @@ void CStageFactory::InitFactory(void)
     m_Factory[CStageObject::StageObjectType::Wall]  = [](CScene* scene) { return scene->CreateObject<CWallBlock>(); };
     m_Factory[CStageObject::StageObjectType::Torch] = [](CScene* scene) { return scene->CreateObject<CTorchBlock>(); };
 
-    m_Factory[CStageObject::StageObjectType::HalfPipe]  = [](CScene* scene) { return scene->CreateObject<CHalfPipeBlock>(); };
-    m_Factory[CStageObject::StageObjectType::Basket]    = [](CScene* scene) { return scene->CreateObject<CBasketBlock>(); };
-    m_Factory[CStageObject::StageObjectType::Right]     = [](CScene* scene) { return scene->CreateObject<CRightBlock>(); };
-    m_Factory[CStageObject::StageObjectType::SignBoard] = [](CScene* scene) { return scene->CreateObject<CSignBoardBlock>(); };
-    m_Factory[CStageObject::StageObjectType::RiftPole]  = [](CScene* scene) { return scene->CreateObject<CRiftPoleBlock>(); };
+    m_Factory[CStageObject::StageObjectType::HalfPipe]      = [](CScene* scene) { return scene->CreateObject<CHalfPipeBlock>(); };
+    m_Factory[CStageObject::StageObjectType::Basket]        = [](CScene* scene) { return scene->CreateObject<CBasketBlock>(); };
+    m_Factory[CStageObject::StageObjectType::Right]         = [](CScene* scene) { return scene->CreateObject<CRightBlock>(); };
+    m_Factory[CStageObject::StageObjectType::SignBoard]     = [](CScene* scene) { return scene->CreateObject<CSignBoardBlock>(); };
+    m_Factory[CStageObject::StageObjectType::RiftPole]      = [](CScene* scene) { return scene->CreateObject<CRiftPoleBlock>(); };
+    m_Factory[CStageObject::StageObjectType::PointCircle]   = [](CScene* scene) { return scene->CreateObject<CPointCircleBlock>(); };
+    m_Factory[CStageObject::StageObjectType::GateBanner]    = [](CScene* scene) { return scene->CreateObject<CGateBannerBlock>(); };
 }

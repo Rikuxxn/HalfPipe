@@ -40,6 +40,7 @@ public:
         SignBoard,  // 広告看板
         RiftPole,   // リフトのポール
         PointCircle,// 得点サークル
+        GateBanner, // ゲートバナー
 
         Max
     };

@@ -674,3 +674,187 @@ void CPointCircleBlock::OnCollisionEnter(CGameObject* other)
 
 	}
 }
+
+//=============================================================================
+// ゲートバナーのコンストラクタ
+//=============================================================================
+CGateBannerBlock::CGateBannerBlock()
+{
+
+}
+
+//=============================================================================
+// ゲートバナーのデストラクタ
+//=============================================================================
+CGateBannerBlock::~CGateBannerBlock()
+{
+
+}
+
+//=============================================================================
+// ゲートバナーの初期化処理
+//=============================================================================
+HRESULT CGateBannerBlock::Init(void)
+{
+	return S_OK;
+}
+
+//=============================================================================
+// ゲートバナーの更新処理
+//=============================================================================
+void CGateBannerBlock::Update(void)
+{
+	// ステージオブジェクトの更新
+	CStageObject::Update();
+
+}
+
+//=============================================================================
+// 保存
+//=============================================================================
+void CGateBannerBlock::SaveToJson(json& j)
+{
+	CStageObject::SaveToJson(j);
+
+	j["sign_textures"] = json::array();
+
+	for (const auto& info : m_SignTextures)
+	{
+		j["sign_textures"].push_back(
+			{
+				{"face", info.FaceIndex},
+				{"texture", info.TexturePath}
+			}
+		);
+	}
+}
+
+//=============================================================================
+// 読み込み
+//=============================================================================
+void CGateBannerBlock::LoadFromJson(const json& j)
+{
+	CStageObject::LoadFromJson(j);
+
+	m_SignTextures.clear();
+
+	if (!j.contains("sign_textures") ||
+		!j["sign_textures"].is_array())
+	{
+		return;
+	}
+
+	for (const auto& item : j["sign_textures"])
+	{
+		SignTextureInfo info;
+
+		info.FaceIndex = item.value("face", 0);
+		info.TexturePath = item.value("texture", "");
+
+		m_SignTextures.push_back(info);
+	}
+
+	ApplySignTextures();
+}
+
+//=============================================================================
+// カスタムGUI
+//=============================================================================
+void CGateBannerBlock::DrawCustomUI(void)
+{
+	if (!ImGui::CollapsingHeader("SignBoardTexture"))
+	{
+		return;
+	}
+
+	if (ImGui::Button("Add Settings"))
+	{
+		m_SignTextures.emplace_back();
+	}
+
+	ImGui::Separator();
+
+	for (int i = 0; i < static_cast<int>(m_SignTextures.size()); )
+	{
+		auto& info = m_SignTextures[i];
+
+		ImGui::PushID(i);
+
+		ImGui::Text("Set Texture %d", i + 1);
+
+		ImGui::InputInt("Subset Num", &info.FaceIndex);
+
+		char path[256] = {};
+
+		strncpy_s(
+			path,
+			sizeof(path),
+			info.TexturePath.c_str(),
+			_TRUNCATE
+		);
+
+		if (ImGui::InputText("TexturePath", path, sizeof(path)))
+		{
+			info.TexturePath = path;
+		}
+
+		if (ImGui::Button("Apply"))
+		{
+			ApplySignTextures();
+		}
+
+		ImGui::SameLine();
+
+		if (ImGui::Button("Delete"))
+		{
+			m_SignTextures.erase(
+				m_SignTextures.begin() + i
+			);
+
+			ApplySignTextures();
+
+			ImGui::PopID();
+			continue;
+		}
+
+		ImGui::Separator();
+
+		ImGui::PopID();
+
+		++i;
+	}
+}
+
+//=============================================================================
+// テクスチャ設定を適用
+//=============================================================================
+void CGateBannerBlock::ApplySignTextures(void)
+{
+	auto renderer = GetComponent<CXModelRenderComponent>();
+
+	if (!renderer)
+	{
+		return;
+	}
+
+	renderer->ClearFaceTextures();
+
+	for (const auto& info : m_SignTextures)
+	{
+		if (info.FaceIndex < 0)
+		{
+			continue;
+		}
+
+		if (info.TexturePath.empty())
+		{
+			continue;
+		}
+
+		renderer->SetFaceTexture(
+			info.FaceIndex,
+			info.TexturePath
+		);
+	}
+}
+

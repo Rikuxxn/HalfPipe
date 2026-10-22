@@ -270,4 +270,45 @@ public:
 private:
 };
 
+//*****************************************************************************
+// ゲートバナーブロッククラス
+//*****************************************************************************
+class CGateBannerBlock : public CStageObject
+{
+public:
+    CGateBannerBlock();
+    ~CGateBannerBlock();
+
+    struct SignTextureInfo
+    {
+        int FaceIndex = 0;
+        std::string TexturePath;
+    };
+
+    HRESULT Init(void) override;
+    void Update(void) override;
+
+    StageObjectType GetType(void) const override
+    {
+        return StageObjectType::GateBanner;
+    }
+
+    ColliderShape GetColliderShape(void) const override
+    {
+        return ColliderShape::TriangleMesh;
+    }
+
+    void SaveToJson(json& j) override;
+    void LoadFromJson(const json& j) override;
+
+    void DrawCustomUI(void) override;
+
+private:
+
+    std::vector<SignTextureInfo> m_SignTextures;
+
+    void ApplySignTextures(void);
+
+};
+
 #endif
