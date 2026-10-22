@@ -232,14 +232,15 @@ void CAutoMoveComponent::UpdateAutoMove(float deltaTime)
 		// ジャンプ開始ポイントより後ろから検索
 		for (size_t i = m_JumpStartPoint + 1; i < m_MovePoints.size(); ++i)
 		{
-			if (m_MovePoints[i].Type == targetType)
+			if (m_MovePoints[i].Type == MovePointType::JumpSmall)
 			{
 				m_JumpTargetPoint = i;
 
 				// 選択したルートに切り替える
 				//m_CurrentMovePoint = i;
 				m_CurrentMovePointPlus = i;
-				m_CurrentMovePointPlusPlus += 3;
+				m_MovePoints[i].Position= Jumppoint(i);
+				m_CurrentMovePointPlusPlus += 2;
 
 				m_CurrentTime = 0.0f;
 
@@ -530,6 +531,18 @@ void CAutoMoveComponent::UpdateMovePointModel(size_t index)
 		break;
 	}
 	}
+}
+
+//=============================================================================
+// ジャンプの高さ決定
+//=============================================================================
+D3DXVECTOR3 CAutoMoveComponent::Jumppoint(int nCount)
+{
+	D3DXVECTOR3 dir = m_MovePoints[nCount + 1].Position - m_MovePoints[nCount].Position;
+
+	D3DXVECTOR3 pos = m_MovePoints[nCount].Position + dir * 0.5f;
+
+	return pos;
 }
 
 //=============================================================================
