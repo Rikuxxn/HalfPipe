@@ -100,8 +100,8 @@ HRESULT CTitle::Init(void)
 		// ステージオブジェクトの読み込み
 		CManager::Instance()->GetStageManager()->LoadFromJson("data/StageInfo/Title_Stage.json");
 
-		// トリガーオブジェクトの読み込み
-		CManager::Instance()->GetTriggerObjectManager()->LoadFromJson("data/TriggerInfo/test_trigger.json");
+		//// トリガーオブジェクトの読み込み
+		//CManager::Instance()->GetTriggerObjectManager()->LoadFromJson("data/TriggerInfo/test_trigger.json");
 	}
 
 	// ゲーム時間の取得
