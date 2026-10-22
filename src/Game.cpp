@@ -69,12 +69,10 @@ HRESULT CGame::Init(void)
 	// ステージマネージャの初期化
 	auto stage = CManager::Instance()->GetStageManager();
 	stage->Init();
-	//stage->GetStageEditor()->Init();
 
 	// トリガーオブジェクトマネージャの初期化
 	auto trigger = CManager::Instance()->GetTriggerObjectManager();
 	trigger->Init();
-	//trigger->GetTriggerObjectEditor()->Init();
 
 	// ステージオブジェクトの読み込み
 	CManager::Instance()->GetStageManager()->LoadFromJson("data/StageInfo/Game_Stage.json");
@@ -254,7 +252,7 @@ HRESULT CGame::Init(void)
 	//	animation->Play();
 	//}
 
-		// カメラの取得
+	// カメラの取得
 	CCamera* pCamera = CManager::Instance()->GetCamera();
 
 	// カメラの初期位置を設定しておく
