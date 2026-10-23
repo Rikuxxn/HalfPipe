@@ -352,26 +352,26 @@ void CAutoMoveComponent::UpdateJump(float deltaTime)
 		return;
 	}
 
-	// ジャンプタイミングオブジェクトの取得
-	auto jumpTiming = scene->FindGameObject<CJumpTiming>("jumpTiming");
+	//// ジャンプタイミングオブジェクトの取得
+	//auto jumpTiming = scene->FindGameObject<CJumpTiming>("jumpTiming");
 
-	if (!jumpTiming)
-	{
-		return;
-	}
+	//if (!jumpTiming)
+	//{
+	//	return;
+	//}
 
-	// 判定結果を取得
-	CJumpTiming::TIMING timing;
+	//// 判定結果を取得
+	//CJumpTiming::TIMING timing;
 
-	if (jumpTiming->ConsumeTimingResult(timing))
-	{
-		// 判定結果を保存
-		m_TimingResult = timing;
-		m_HasTimingResult = true;
+	//if (jumpTiming->ConsumeTimingResult(timing))
+	//{
+	//	// 判定結果を保存
+	//	m_TimingResult = timing;
+	//	m_HasTimingResult = true;
 
 		// タイミング判定終了
 		//m_IsTimingActive = false;
-	}
+	//}
 
 	//// BAD判定
 	//OnTimingResult(CJumpTiming::TIMING_BAD);
@@ -584,7 +584,10 @@ void CAutoMoveComponent::JumpTiming(void)
 
 	// 押されていなかったら処理しない
 	if (!m_Press)return;
-	m_fPressCount += 0.02f;
+	//=======================
+	// 数字調整
+	//=======================
+	m_fPressCount += 0.005f;
 
 	float fPoint = 0.0f;
 	float nPressCount = m_fPressCount;
