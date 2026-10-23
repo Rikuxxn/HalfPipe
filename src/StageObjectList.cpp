@@ -402,14 +402,11 @@ CPointCircleBlock* CBasketBlock::CreatePointCircle(
 
 	rigid->SetDynamic(false);
 
-	auto resource = model->GetModel();
-
-	if (resource)
-	{
-		auto triangleMesh = resource->CreateBulletTriangleMesh();
-
-		rigid->CreateTriangleMesh(triangleMesh);
-	}
+	// モデルサイズ取得
+	D3DXVECTOR3 modelSize = model->GetModelSize();
+	
+	// シリンダーコライダーの生成
+	rigid->CreateCylinder(modelSize, 1.0f);
 
 	return obj;
 }
