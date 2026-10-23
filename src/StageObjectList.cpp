@@ -300,17 +300,28 @@ HRESULT CBasketBlock::Init(void)
 		return E_FAIL;
 	}
 
+	//// かごの先端位置
+	//D3DXVECTOR3 localTipPosition = { 0.0f, 500.0f, 0.0f };
+
+	//// ローカルからワールドへ
+	//particle3DTransform->Position = LocalToWorld(
+	//	localTipPosition,
+	//	transform->Position,
+	//	transform->Rotation,
+	//	transform->Scale
+	//);
+
 	// バスケットの中心位置
 	m_CenterPosition = transform->Position;
 
 	// 50点：中心
-	CreatePointCircle(m_CenterPosition, 1.0f/*, 50*/);
+	CreatePointCircle(m_CenterPosition, 3.0f/*, 50*/);
 
 	// 30点：中間
-	CreatePointCircle(m_CenterPosition, 2.0f/*, 30*/);
+	CreatePointCircle(m_CenterPosition, 5.0f/*, 30*/);
 
 	// 10点：外側
-	CreatePointCircle(m_CenterPosition, 3.0f/*, 10*/);
+	CreatePointCircle(m_CenterPosition, 8.0f/*, 10*/);
 
 	return S_OK;
 }
