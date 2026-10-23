@@ -95,6 +95,9 @@ public:
         return m_IsAutoMove;
     }
 
+    // 進行方向の取得
+    D3DXVECTOR3 GetMoveDirection(void) const { return m_MoveDirection; }
+
     // タイミング結果から移動先の種類を取得
     MovePointType GetJumpTargetType(CJumpTiming::TIMING timing);
 
@@ -115,6 +118,9 @@ private:
 
     // 自動移動ポイントデバッグ表示用
     std::vector<CGameObject*> m_pPointObj;
+
+    // 進行方向
+    D3DXVECTOR3 m_MoveDirection;
 
     // 現在の移動ポイント
     size_t m_CurrentMovePoint;

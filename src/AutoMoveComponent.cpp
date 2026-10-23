@@ -32,6 +32,7 @@ using namespace MathUtil;
 // コンストラクタ
 //=============================================================================
 CAutoMoveComponent::CAutoMoveComponent() :
+	m_MoveDirection			(INIT_VEC3),				// 進行方向
     m_IsAutoMove			(false),					// 自動移動中か
 	m_JumpStartHandled		(false),					// ジャンプ中か
 	m_IsTimingActive		(false),					// タイミング判定中か
@@ -278,6 +279,15 @@ void CAutoMoveComponent::UpdateAutoMove(float deltaTime)
 
 	// 目標への方向
 	D3DXVECTOR3 direction = target - position;
+
+	// 方向ベクトルが有効な場合
+	if (D3DXVec3LengthSq(&direction) > 0.0001f)
+	{
+		D3DXVec3Normalize(&direction, &direction);
+
+		// 進行方向を保存
+		m_MoveDirection = direction;
+	}
 
 	// スプラインの区間が終了した
 	if (m_CurrentTime >= 1.0f)
