@@ -331,7 +331,7 @@ void CPlayer::UpdateSurfaceAlignment(float deltaTime)
 	}
 
 	// 実際の進行方向を取得
-	D3DXVECTOR3 forward = autoMove->GetMoveDirection();
+	D3DXVECTOR3 forward = -autoMove->GetMoveDirection();
 
 	// 方向ベクトルが有効か確認
 	if (D3DXVec3LengthSq(&forward) < 0.0001f)
