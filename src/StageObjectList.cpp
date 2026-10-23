@@ -314,14 +314,14 @@ HRESULT CBasketBlock::Init(void)
 	// バスケットの中心位置
 	m_CenterPosition = transform->Position;
 
-	// 50点：中心
-	CreatePointCircle(m_CenterPosition, 3.0f/*, 50*/);
+	//// 50点：中心
+	//CreatePointCircle(m_CenterPosition, 3.0f/*, 50*/);
 
-	// 30点：中間
-	CreatePointCircle(m_CenterPosition, 5.0f/*, 30*/);
+	//// 30点：中間
+	//CreatePointCircle(m_CenterPosition, 5.0f/*, 30*/);
 
-	// 10点：外側
-	CreatePointCircle(m_CenterPosition, 8.0f/*, 10*/);
+	//// 10点：外側
+	//CreatePointCircle(m_CenterPosition, 8.0f/*, 10*/);
 
 	return S_OK;
 }
