@@ -102,116 +102,6 @@ HRESULT CConnect::Init(void)
 	m_pSky = std::make_unique<CSky>();
 	m_pSky->Init();
 
-
-
-	//// タイトルロゴオブジェクトの生成
-	//auto logo = CreateObject();
-
-	//logo->SetTag("TitleLogo");
-
-	//// トランスフォームコンポーネントに追加
-	//auto transform = logo->AddComponent<CTransformComponent>();
-
-	//// 位置を設定(0.0～1.0の比率)
-	//transform->Position = { 0.5f,0.5f,0.0f };
-
-	//// スプライトレンダーコンポーネントに追加
-	//auto sprite = logo->AddComponent<CSpriteRenderComponent>();
-
-	//// 描画順の設定
-	//sprite->SetLayer(RenderLayer::UI);
-
-	//// テクスチャの設定
-	//sprite->SetTexture("data/TEXTURE/title.png");
-
-	//// サイズの設定
-	//sprite->SetSize(500.0f, 300.0f);
-
-	//// プレイヤーの生成
-	//{
-	//	auto player = CreateObject<CPlayer>();
-
-	//	// タグの設定
-	//	player->SetTag("Player");
-
-	//	auto playerTransform = player->AddComponent<CTransformComponent>();
-
-	//	playerTransform->Position = { 0.0f, 0.0f, 0.0f };
-
-	//	auto character = player->AddComponent<CCharacterComponent>();
-	//	character->Load("data/MOTION/motion_player.txt");
-
-	//	// 初期化処理
-	//	player->Init();
-
-	//	// リジッドボディコンポーネントの追加
-	//	auto rigid = player->AddComponent<CRigidBodyComponent>();
-
-	//	if (rigid)
-	//	{
-	//		// Stage用のCollision設定
-	//		rigid->SetCollisionFilter(
-	//			COLLISION_GROUP_PLAYER,
-	//			COLLISION_GROUP_STAGE |
-	//			COLLISION_GROUP_GHOST |
-	//			COLLISION_GROUP_ENEMY |
-	//			COLLISION_GROUP_CAMERA
-	//		);
-
-	//		// オフセット
-	//		rigid->SetColliderOffset({ 0.0f, 50.0f, 0.0f });
-
-	//		// カプセルコライダーの生成
-	//		rigid->CreateCapsule(15.5f, 45.5f, 1.0f);
-
-	//		// 動的
-	//		rigid->SetDynamic(true);
-
-	//		// 回転同期しない
-	//		rigid->SetSyncRotation(false);
-
-	//		// 回転因子の設定
-	//		rigid->SetAngularFactor(btVector3(0.0f, 0.0f, 0.0f));
-	//	}
-
-	//	// レイキャストコンポーネントの追加
-	//	player->AddComponent<CRaycastComponent>();
-	//}
-
-
-	//for (int n = 0; n < 1; n++)
-	//{
-	//	// ボールの生成
-	//	auto ball = CreateObject<CBall>();
-
-	//	ball->SetTag("Ball");
-
-	//	auto ballTransform = ball->AddComponent<CTransformComponent>();
-
-	//	ballTransform->Position = { 0.0f, -170.0f, 0.0f };
-	//	ballTransform->Scale = { 1.0f, 1.0f, 1.0f };
-
-	//	auto modelBall = ball->AddComponent<CXModelRenderComponent>();
-
-	//	// モデルの読み込み
-	//	modelBall->Load("data/MODELS/ball.x");
-
-	//	// リジッドボディコンポーネントの追加
-	//	auto rigidball = ball->AddComponent<CRigidBodyComponent>();
-	//	rigidball->SetDynamic(false);
-
-	//	auto modelSize = modelBall->GetModelSize();
-
-	//	// モデルサイズから一番大きい辺を使う
-	//	float radius = std::max({ modelSize.x, modelSize.y, modelSize.z }) * 0.5f;
-
-	//	// スフィアコライダーの生成
-	//	rigidball->CreateSphere(radius, 1.0f);
-
-	//	// コライダーコンポーネントの追加
-	//	auto colliderball = ball->AddComponent<CColliderComponent>();
-	//}
-
 	//// 2Dパーティクルオブジェクトの生成
 	//auto particle2D = CreateObject();
 
@@ -326,9 +216,6 @@ HRESULT CConnect::Init(void)
 	// カメラの初期位置を設定しておく
 	pCamera->SetCamMode(CCamera::MODE_FIXED);
 
-	//// カメラの初期位置を設定しておく
-	//pCamera->SetCamMode(CCamera::MODE_THIRD_PERSON);
-
 	// サウンドマネージャーの取得
 	auto sound = CManager::Instance()->GetSoundManager();
 
@@ -371,12 +258,14 @@ void CConnect::Update(void)
 	CInputKeyboard* pKeyboard = CManager::Instance()->GetInput()->GetKeyboard();
 	CInputJoypad* pJoypad = CManager::Instance()->GetInput()->GetJoypad();
 
-	if (pFade->GetFade() == CFade::FADE_NONE && 
+#ifdef _DEBUG
+	if (pFade->GetFade() == CFade::FADE_NONE &&
 		pKeyboard->GetTrigger(DIK_T))
 	{
 		// ゲーム画面に移行
 		pFade->StartFadeOut(Mode::Game);
 	}
+#endif
 
 	// シーンの更新処理
 	CScene::Update();
@@ -516,14 +405,10 @@ void CConnect::Draw(void)
 	// カメラの取得
 	CCamera* pCamera = CManager::Instance()->GetCamera();
 
-	//if (!pCamera->GetMode() == CCamera::MODE_EDIT)
-	{
-		// カメラの設定
-		pCamera->SetPosV({ 0.0f, 680.0f, -2050.0f });
-		pCamera->SetPosR({ 0.0f, 680.0f, -2350.0f });
-		pCamera->SetRot({ 0.0f, 0.0f, 0.0f });
-		//pCamera->SetDistance(100.0f);
-	}
+	// カメラの設定
+	pCamera->SetPosV({ 0.0f, 680.0f, -2050.0f });
+	pCamera->SetPosR({ 0.0f, 680.0f, -2350.0f });
+	pCamera->SetRot({ 0.0f, 0.0f, 0.0f });
 
 	// シーンの描画処理
 	CScene::Draw();
