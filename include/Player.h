@@ -27,6 +27,9 @@ public:
     HRESULT Init            (void) override;
     void    Update          (void) override;
 
+    // ボール投擲処理
+    void ThrowBall(void);
+
 #ifdef _DEBUG
     // Imguiのデバッグ描画
     void DrawDebugGUI(void) override;
@@ -77,9 +80,11 @@ private:
 
 private:
 
-    D3DXVECTOR3 m_rotDest;      // 目標の向き
-    bool        m_bIsMoving;	// 移動入力フラグ
-    bool        m_bControlFlag; // 移動許可フラグ
+    D3DXVECTOR3 m_rotDest;          // 目標の向き
+    D3DXVECTOR3 m_BallThrowOffset;  // ボールのオフセット
+    float       m_BallThrowSpeed;   // ボールの速度
+    bool        m_bIsMoving;	    // 移動入力フラグ
+    bool        m_bControlFlag;     // 移動許可フラグ
 
     // ステートを管理するクラスのインスタンス
     StateMachine<CPlayer> m_stateMachine;

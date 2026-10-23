@@ -272,7 +272,9 @@ void CHalfPipeBlock::Update(void)
 //=============================================================================
 // コンストラクタ
 //=============================================================================
-CBasketBlock::CBasketBlock()
+CBasketBlock::CBasketBlock() :
+	m_CenterPosition	(INIT_VEC3),	// バスケットの中心位置
+	m_AimRadius			(1.8f)			// エイム可能な半径
 {
 
 }
@@ -290,95 +292,25 @@ CBasketBlock::~CBasketBlock()
 //=============================================================================
 HRESULT CBasketBlock::Init(void)
 {
-	// シーンの取得
-	auto scene = CManager::Instance()->GetSceneManager()->GetScene();
+	// トランスフォームコンポーネントの取得
+	auto transform = GetComponent<CTransformComponent>();
 
-	if (!scene)
+	if (!transform)
 	{
 		return E_FAIL;
 	}
 
-	// オブジェクトの生成
-	auto obj = scene->CreateObject<CPointCircleBlock>();
+	// バスケットの中心位置
+	m_CenterPosition = transform->Position;
 
-	if (!obj)
-	{
-		return E_FAIL;
-	}
+	// 50点：中心
+	CreatePointCircle(m_CenterPosition, 1.0f/*, 50*/);
 
-	// トランスフォームコンポーネントの追加
-	auto transform = obj->AddComponent<CTransformComponent>();
+	// 30点：中間
+	CreatePointCircle(m_CenterPosition, 2.0f/*, 30*/);
 
-	auto thisTransform = this->GetComponent<CTransformComponent>();
-
-	// 位置設定
-	transform->Position = { thisTransform->Position.x,  thisTransform->Position.y, thisTransform->Position.z };
-
-	// モデルレンダーコンポーネントの追加
-	CXModelRenderComponent* model = nullptr;
-
-	// タグの設定
-	obj->SetTag("PointCircle");
-
-	//-----------------------------------------
-	// モデル描画
-	//-----------------------------------------
-
-	// モデルレンダーコンポーネントの追加
-	model = obj->AddComponent<CXModelRenderComponent>();
-
-	// 描画順の設定
-	model->SetLayer(RenderLayer::Model);
-
-	// モデルのロード
-	model->Load("data/MODELS/PointCircle.x");
-
-	//-----------------------------------------
-	// 剛体生成
-	//-----------------------------------------
-
-	obj->SetGroupName("PointCircles");
-
-	// リジッドボディコンポーネントの追加
-	auto rigid = obj->AddComponent<CRigidBodyComponent>();
-
-	// Stage用のCollision設定
-	rigid->SetCollisionFilter(
-		COLLISION_GROUP_STAGE,
-		COLLISION_GROUP_STAGE |
-		COLLISION_GROUP_PLAYER |
-		COLLISION_GROUP_GHOST |
-		COLLISION_GROUP_ENEMY |
-		COLLISION_GROUP_CAMERA
-	);
-
-	rigid->SetDynamic(false);
-
-	auto size = VEC3_DEFAULT;
-
-	if (model)
-	{
-		size = model->GetModelSize();
-	}
-	else
-	{
-		size = obj->GetColliderSize();
-	}
-
-	// コライダーの生成
-	if (!model)
-	{
-		return E_FAIL;
-	}
-
-	auto resource = model->GetModel();
-
-	if (resource)
-	{
-		auto triangleMesh = resource->CreateBulletTriangleMesh();
-
-		rigid->CreateTriangleMesh(triangleMesh);
-	}
+	// 10点：外側
+	CreatePointCircle(m_CenterPosition, 3.0f/*, 10*/);
 
 	return S_OK;
 }
@@ -391,6 +323,84 @@ void CBasketBlock::Update(void)
 	// ステージオブジェクトの更新
 	CStageObject::Update();
 
+}
+
+//=============================================================================
+// 得点サークル生成処理
+//=============================================================================
+CPointCircleBlock* CBasketBlock::CreatePointCircle(
+	const D3DXVECTOR3& position, float scale)
+{
+	// シーン取得
+	auto scene = CManager::Instance()->GetSceneManager()->GetScene();
+
+	if (!scene)
+	{
+		return nullptr;
+	}
+
+	// 得点サークルオブジェクトの生成
+	auto obj = scene->CreateObject<CPointCircleBlock>();
+
+	if (!obj)
+	{
+		return nullptr;
+	}
+
+	// トランスフォームコンポーネントの取得
+	auto transform = obj->AddComponent<CTransformComponent>();
+
+	if (!transform)
+	{
+		return nullptr;
+	}
+
+	transform->Position = position;
+	transform->Scale = D3DXVECTOR3(scale, scale, scale);
+
+	obj->SetTag("PointCircle");
+	obj->SetGroupName("PointCircles");
+
+	// モデル描画
+	auto model = obj->AddComponent<CXModelRenderComponent>();
+
+	if (!model)
+	{
+		return nullptr;
+	}
+
+	model->SetLayer(RenderLayer::Model);
+	model->Load("data/MODELS/PointCircle.x");
+
+	// 剛体
+	auto rigid = obj->AddComponent<CRigidBodyComponent>();
+
+	if (!rigid)
+	{
+		return nullptr;
+	}
+
+	rigid->SetCollisionFilter(
+		COLLISION_GROUP_STAGE,
+		COLLISION_GROUP_STAGE |
+		COLLISION_GROUP_PLAYER |
+		COLLISION_GROUP_GHOST |
+		COLLISION_GROUP_ENEMY |
+		COLLISION_GROUP_CAMERA
+	);
+
+	rigid->SetDynamic(false);
+
+	auto resource = model->GetModel();
+
+	if (resource)
+	{
+		auto triangleMesh = resource->CreateBulletTriangleMesh();
+
+		rigid->CreateTriangleMesh(triangleMesh);
+	}
+
+	return obj;
 }
 
 CRightBlock::CRightBlock()

@@ -13,6 +13,9 @@
 #include "StageObject.h"
 #include "SoundManager.h"
 
+// 前方宣言
+class CPointCircleBlock;
+
 
 //*****************************************************************************
 // 床ブロッククラス
@@ -138,6 +141,16 @@ public:
     HRESULT Init(void) override;
     void Update(void) override;
 
+    CPointCircleBlock* CreatePointCircle(
+        const D3DXVECTOR3& position,
+        float scale);
+
+    // 中心位置取得
+    const D3DXVECTOR3& GetCenterPosition(void) const { return m_CenterPosition; }
+
+    // エイム範囲取得
+    float GetAimRadius(void) const { return m_AimRadius; }
+
     StageObjectType GetType(void) const override
     {
         return StageObjectType::Basket;
@@ -149,6 +162,12 @@ public:
     }
 
 private:
+
+    // バスケットの中心位置
+    D3DXVECTOR3 m_CenterPosition;
+
+    // エイム可能な半径
+    float m_AimRadius;
 };
 
 //*****************************************************************************

@@ -19,7 +19,6 @@
 #include "TransformComponent.h"
 #include "Camera.h"
 #include "TimeSystem.h"
-#include "HpGaugeComponent.h"
 #include "RigidBodyComponent.h"
 #include "ColorConstants.h"
 #include "MathUtility.h"
@@ -28,6 +27,9 @@
 #include "MatrixUtility.h"
 #include "NetWorkManager.h"
 #include "AutoMoveComponent.h"
+#include "Ball.h"
+#include "SceneManager.h"
+#include "Scene.h"
 //#include "FBXManager.h"
 //#include "FBXModelComponent.h"
 
@@ -43,14 +45,16 @@ using namespace MatrixUtil;
 // コンストラクタ
 //=============================================================================
 CPlayer::CPlayer() :
-	m_rotDest			(INIT_VEC3),	// 目標の向き
-	m_bIsMoving			(false),		// 移動しているか
-	m_bControlFlag		(true),			// 移動許可フラグ
-	m_SurfaceNormal		({ 0, 1, 0 }),	// 面の法線
-    m_SurfaceForward	({ -1, 0, 0 }),	// 面に沿う進行方向
-    m_IsGrounded		(false),		// 接地中か
-    m_WasGrounded		(false),		// 前フレームの接地状態
-    m_AlignToSurface	(true)			// 面に姿勢を合わせるか
+	m_rotDest			(INIT_VEC3),			// 目標の向き
+	m_BallThrowOffset	({ 0.0f, 1.0f, 0.5f }),	// ボールのオフセット
+	m_bIsMoving			(false),				// 移動しているか
+	m_bControlFlag		(true),					// 移動許可フラグ
+	m_SurfaceNormal		({ 0, 1, 0 }),			// 面の法線
+    m_SurfaceForward	({ 0, 0, 1 }),			// 面に沿う進行方向
+    m_IsGrounded		(false),				// 接地中か
+    m_WasGrounded		(false),				// 前フレームの接地状態
+    m_AlignToSurface	(true),					// 面に姿勢を合わせるか
+    m_BallThrowSpeed	(1000.0f)				// ボールの投擲スピード
 {
 
 }
@@ -68,46 +72,6 @@ CPlayer::~CPlayer()
 //=============================================================================
 HRESULT CPlayer::Init(void)
 {
-	//CFBXManager::ArgumentLoad arg;
-	//arg.FBXFilePath = "data/MODELS/Fbx/test.fbx";
-	//arg.FBXMotionFilePath.push_back({ "data/MODELS/Fbx/test_anim1.fbx", true });
-
-	//// FBXモデルコンポーネントの追加
-	//auto c = AddComponent<CFBXModelComponent>(arg);
-
-	//// 初期モーションを設定しておく
-	//c->SetMotion(CFBXModelComponent::MOTION_TYPE_00, 30);
-
-	////=========================================================================
-	//// HPゲージ
-	////=========================================================================
-
-	//auto hpGauge = AddComponent<CHpGaugeComponent>();
-
-	//if (!hpGauge)
-	//{
-	//	return E_FAIL;
-	//}
-
-	//// 位置(オフセット)
-	//hpGauge->SetOffset({ 0.0f, 100.0f, 0.0f });
-
-	//// 背景
-	//hpGauge->SetBackgroundSize(103.0f, 13.0f);
-	//hpGauge->SetBackgroundColor(ColorConst::DX::LIGHT_GRAY);
-
-	//// ゲージのサイズ
-	//hpGauge->SetGaugeSize(100.0f, 10.0f);
-
-	//// ゲージの色
-	//hpGauge->SetGaugeColor(ColorConst::DX::RED);
-
-	//// 初期HP
-	//hpGauge->SetRate(1.0f);
-
-	//// テクスチャの設定
-	//hpGauge->SetTexture("data/TEXTURE/ball.png");
-
 	// 自動移動コンポーネントの追加
 	auto autoMove = AddComponent<CAutoMoveComponent>();
 
@@ -216,31 +180,86 @@ void CPlayer::Update(void)
 	// ハーフパイプの面に合わせた姿勢制御
 	UpdateSurfaceAlignment(dt);
 
-	//// フレームレート非依存補間係数
-	//float t = 1.0f - expf(-3.5f * dt);
+	// テスト : 投擲
+	if (pKeyboard->GetTrigger(DIK_F))
+	{
+		ThrowBall();
+	}
+}
 
-	//// 補間
-	//transform->Rotation.y += diff * t;
+//=============================================================================
+// ボール投擲処理
+//=============================================================================
+void CPlayer::ThrowBall(void)
+{
+	// シーン取得
+	auto scene = CManager::Instance()->GetSceneManager()->GetScene();
 
+	if (!scene)
+	{
+		return;
+	}
 
-	//// レイキャストコンポーネントの取得
-	//auto raycast = GetComponent<CRaycastComponent>();
+	// プレイヤーのトランスフォームコンポーネント
+	auto transform = GetComponent<CTransformComponent>();
 
-	//D3DXVECTOR3 origin(transform->Position.x, transform->Position.y + 50.0f, transform->Position.z);
+	if (!transform)
+	{
+		return;
+	}
 
-	//// 方向
-	//D3DXVECTOR3 direction = MatrixUtil::GetForward(transform->GetWorldMatrix());
+	// ボール生成
+	auto ball = scene->CreateObject<CBall>();
 
-	//if (raycast->Raycast(origin, direction, 100.0f))
-	//{
-	//	CGameObject* hitObject = raycast->GetHitObject();
+	if (!ball)
+	{
+		return;
+	}
 
-	//	if (hitObject)
-	//	{
-	//		// 当たったオブジェクト
-	//		int n = 0;
-	//	}
-	//}
+	// ボールの初期化処理
+	ball->Init();
+
+	// 前方方向の取得
+	D3DXVECTOR3 forward = GetForward(transform->GetWorldMatrix());
+
+	// 投擲方向
+	D3DXVECTOR3 direction = forward;
+
+	// 正規化
+	if (D3DXVec3LengthSq(&direction) < 0.0001f)
+	{
+		return;
+	}
+
+	// 正規化
+	D3DXVec3Normalize(&direction, &direction);
+
+	// 生成位置
+	D3DXVECTOR3 spawnPosition = transform->Position + m_BallThrowOffset;
+
+	auto ballTransform = ball->GetComponent<CTransformComponent>();
+
+	if (!ballTransform)
+	{
+		return;
+	}
+
+	ballTransform->Position = spawnPosition;
+
+	auto rigid = ball->GetComponent<CRigidBodyComponent>();
+
+	if (!rigid)
+	{
+		return;
+	}
+
+	rigid->Transform();
+
+	// 初速
+	D3DXVECTOR3 velocity = direction * m_BallThrowSpeed;
+
+	// 投擲
+	ball->Throw(velocity);
 }
 
 //=============================================================================
@@ -303,8 +322,22 @@ void CPlayer::UpdateSurfaceAlignment(float deltaTime)
 	// 面の法線をUp方向として使用する
 	D3DXVECTOR3 up = m_SurfaceNormal;
 
-	// プレイヤーの進行方向を取得する
-	D3DXVECTOR3 forward = m_SurfaceForward;
+	// 自動移動コンポーネントを取得
+	auto autoMove = GetComponent<CAutoMoveComponent>();
+
+	if (!autoMove)
+	{
+		return;
+	}
+
+	// 実際の進行方向を取得
+	D3DXVECTOR3 forward = autoMove->GetMoveDirection();
+
+	// 方向ベクトルが有効か確認
+	if (D3DXVec3LengthSq(&forward) < 0.0001f)
+	{
+		return;
+	}
 
 	// 進行方向から、面の法線方向の成分を取り除く
 	// これによって進行方向を面に沿わせる
