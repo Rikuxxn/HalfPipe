@@ -15,6 +15,21 @@
 //*****************************************************************************
 // 投擲コンポーネントクラス
 //*****************************************************************************
+class CThrowComponent : public CComponent
+{
+public:
+	CThrowComponent();
+	~CThrowComponent() = default;
 
+	HRESULT Init	(void) override;
+	void	Update	(void) override;
+
+	// 投擲
+	void Throw(void);
+
+private:
+	D3DXVECTOR3 m_BallThrowOffset;  // ボールのオフセット
+	float       m_BallThrowSpeed;   // ボールの速度
+};
 
 #endif

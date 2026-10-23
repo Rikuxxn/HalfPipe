@@ -75,7 +75,7 @@ void CAimComponent::ClampAimPosition(void)
     D3DXVec3TransformNormal(&localOffset, &offset, &inverseRotationMatrix);
 
     // ターゲットののローカル平面上で距離を計算
-    // ここではローカルXY平面を想定
+    // ローカルXY平面を想定
     localOffset.z = 0.0f;
 
     float distance = D3DXVec3Length(&localOffset);
