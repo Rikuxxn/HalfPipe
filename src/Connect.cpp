@@ -68,24 +68,22 @@ HRESULT CConnect::Init(void)
 	CManager::Instance()->GetInput()->GetMouse()->SetCursorVisibility(true);
 
 	//-----------------------------------------------------
-	// 最初のシーンで初期化する(次のシーンからは呼ばない)
+	// マネージャーの初期化
 	//-----------------------------------------------------
 	{
 		// ステージマネージャの初期化
 		auto stage = CManager::Instance()->GetStageManager();
 		stage->Init();
-		//stage->GetStageEditor()->Init();
 
 		// トリガーオブジェクトマネージャの初期化
 		auto trigger = CManager::Instance()->GetTriggerObjectManager();
 		trigger->Init();
-		//trigger->GetTriggerObjectEditor()->Init();
 
 		// ステージオブジェクトの読み込み
 		CManager::Instance()->GetStageManager()->LoadFromJson("data/StageInfo/Connect_Stage.json");
 
-		// トリガーオブジェクトの読み込み
-		CManager::Instance()->GetTriggerObjectManager()->LoadFromJson("data/TriggerInfo/test_trigger.json");
+		//// トリガーオブジェクトの読み込み
+		//CManager::Instance()->GetTriggerObjectManager()->LoadFromJson("data/TriggerInfo/test_trigger.json");
 	}
 
 	// ゲーム時間の取得
