@@ -53,7 +53,7 @@ using Microsoft::WRL::ComPtr;
 // マクロ定義
 //*****************************************************************************
 #define CLASS_NAME	  "WindowClass"								// ウィンドウクラスの名前
-#define WINDOW_NAME	  "HalfPipe"								// ウィンドウの名前(キャプションに表示)
+#define WINDOW_NAME	  "Ball Bowl Boarders"						// ウィンドウの名前(キャプションに表示)
 #define SCREEN_WIDTH  (1280)									// ウィンドウの幅
 #define SCREEN_HEIGHT (720)										// ウィンドウの高さ
 #define FVF_VERTEX_2D (D3DFVF_XYZRHW|D3DFVF_DIFFUSE|D3DFVF_TEX1)
