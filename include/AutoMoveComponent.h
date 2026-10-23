@@ -106,6 +106,8 @@ private:
     // ポイントの種類に応じてモデルを変更
     void UpdateMovePointModel(size_t index);
 
+    D3DXVECTOR3 Jumppoint(int nCount);
+
 private:
 
     // 移動ポイント

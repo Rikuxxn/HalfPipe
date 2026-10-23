@@ -76,7 +76,7 @@ HRESULT CPlayer::Init(void)
 	auto autoMove = AddComponent<CAutoMoveComponent>();
 
 	// 自動移動ポイントの読み込み
-	autoMove->LoadMovePoint("data/MovePointInfo.json");
+	autoMove->LoadMovePoint("data/MovePointInfo01.json");
 
 	// 自動移動開始
 	autoMove->StartAutoMove();
