@@ -111,6 +111,8 @@ private:
 
     D3DXVECTOR3 Jumppoint(int nCount);
 
+    void JumpTiming(void);
+
 private:
 
     // 移動ポイント
@@ -149,6 +151,12 @@ private:
     // スプライン補間時間
     float m_CurrentTime;
 
+    // 長押し時間
+    float m_fPressCount;
+
+    // ジャンプの最終的な高さ
+    float m_fJumpHeight;
+
     // 自動移動中か
     bool m_IsAutoMove;
 
@@ -166,6 +174,12 @@ private:
 
     // タイミング結果が確定しているか
     bool m_HasTimingResult;
+
+    // 長押し中か
+    bool m_Press;
+
+    // 長押しを放すゾーンにいるか
+    bool m_ReleaseZone;
 
     // 確定したタイミング結果
     CJumpTiming::TIMING m_TimingResult;

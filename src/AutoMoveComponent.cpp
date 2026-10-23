@@ -22,6 +22,8 @@
 #include "MathUtility.h"
 #include "TimeSystem.h"
 #include "JumpTimingRating.h"
+#include "Input.h"
+#include "InputManager.h"
 
 
 // 名前空間の使用
@@ -38,6 +40,8 @@ CAutoMoveComponent::CAutoMoveComponent() :
 	m_IsTimingActive		(false),					// タイミング判定中か
 	m_IsWaitingForJumpPoint	(false),					// ジャンプポイントへの分岐待ちか
 	m_HasTimingResult		(false),					// タイミング結果が確定しているか
+	m_Press					(false),					// 長押ししているか
+	m_ReleaseZone			(false),					// 長押しを放すゾーンにいるか
     m_CurrentMovePoint		(1),						// 現在目指しているポイント
 	m_CurrentMovePointMinas	(0),						// 現在目指しているポイント
 	m_CurrentMovePointPlus	(2),						// 現在目指しているポイント
@@ -47,7 +51,9 @@ CAutoMoveComponent::CAutoMoveComponent() :
 	m_currentPoint			(0),						// 現在の移動ポイント(エディタ用)
     m_CurrentTime			(0.0f),						// 現在の移動時間(0.0f～1.0f)
     m_AutoMoveSpeed			(250.0f),					// 移動スピード
-    m_TimingResult			(CJumpTiming::TIMING_MAX)   // 確定したタイミング結果
+	m_fPressCount			(0.0f),						// 長押しカウント
+	m_fJumpHeight			(0.0f),						// ジャンプの最終的な高さ
+    m_TimingResult			(CJumpTiming::TIMING_MAX)  // 確定したタイミング結果
 {
 
 }
@@ -148,6 +154,11 @@ void CAutoMoveComponent::UpdateAutoMove(float deltaTime)
 
 	// 現在の移動ポイント
 	MovePoint& currentPoint = m_MovePoints[m_CurrentMovePoint];
+	MovePoint& NextPoint = m_MovePoints[m_CurrentMovePoint+1];
+	if (NextPoint.Type == MovePointType::JumpBranch)
+	{
+		m_ReleaseZone = true;
+	}
 
 	//=========================================================
 	// ジャンプ開始ポイントの判定
@@ -196,11 +207,15 @@ void CAutoMoveComponent::UpdateAutoMove(float deltaTime)
 		m_JumpStartHandled = false;
 	}
 
+	// ジャンプの長押し判定
+	JumpTiming();
+
 	//=========================================================
 	// ジャンプ分岐地点の判定
 	//=========================================================
 	if (currentPoint.Type == MovePointType::JumpBranch&& m_IsWaitingForJumpPoint==true)
 	{
+		m_ReleaseZone = false;
 		// タイミング判定結果がなければBADにする
 		if (!m_HasTimingResult)
 		{
@@ -355,7 +370,7 @@ void CAutoMoveComponent::UpdateJump(float deltaTime)
 		m_HasTimingResult = true;
 
 		// タイミング判定終了
-		m_IsTimingActive = false;
+		//m_IsTimingActive = false;
 	}
 
 	//// BAD判定
@@ -550,9 +565,43 @@ D3DXVECTOR3 CAutoMoveComponent::Jumppoint(int nCount)
 {
 	D3DXVECTOR3 dir = m_MovePoints[nCount + 1].Position - m_MovePoints[nCount].Position;
 
-	D3DXVECTOR3 pos = m_MovePoints[nCount].Position + dir * 0.5f;
+	D3DXVECTOR3 pos = m_MovePoints[nCount].Position + dir * m_fJumpHeight;
 
 	return pos;
+}
+
+//=============================================================================
+// ジャンプタイミングを決める処理
+//=============================================================================
+void CAutoMoveComponent::JumpTiming(void)
+{
+	// 判定中じゃなければ処理しない
+	if (!m_IsTimingActive)return;
+
+	CInputKeyboard* pKeyboard = CManager::Instance()->GetInput()->GetKeyboard();
+	// スペースを押す(トリガー)
+	if (pKeyboard->GetTrigger(DIK_SPACE))m_Press = true;
+
+	// 押されていなかったら処理しない
+	if (!m_Press)return;
+	m_fPressCount += 0.02f;
+
+	float fPoint = 0.0f;
+	float nPressCount = m_fPressCount;
+	// 放したタイミングでカウントリセット
+	if (pKeyboard->GetRelease(DIK_SPACE))
+	{
+		m_Press = false;
+		if (m_ReleaseZone)
+		{
+			fPoint = m_CurrentTime;
+			nPressCount = m_fPressCount;
+		}
+			m_fPressCount = 0.0f;
+	}
+
+	m_fJumpHeight = fPoint * (nPressCount + 1.0f);
+	m_HasTimingResult = true;
 }
 
 //=============================================================================
