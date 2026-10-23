@@ -30,6 +30,9 @@
 #include "SceneManager.h"
 #include "Scene.h"
 #include "ThrowComponent.h"
+#include "AimComponent.h"
+#include "StageObject.h"
+#include "StageObjectList.h"
 //#include "FBXManager.h"
 //#include "FBXModelComponent.h"
 
@@ -82,9 +85,38 @@ HRESULT CPlayer::Init(void)
 	// 自動移動開始
 	autoMove->StartAutoMove();
 
+	//// エイムコンポーネントの追加
+	//auto aim = AddComponent<CAimComponent>();
+	//
+	//// シーンの取得
+	//auto scene = CManager::Instance()->GetSceneManager()->GetScene();
+
+	//// ターゲットの設定
+	//if (scene)
+	//{
+	//	auto pointCircles = scene->FindGameObject<CBasketBlock>();
+
+	//	if (!pointCircles)
+	//	{
+	//		return E_FAIL;
+	//	}
+	//	//for (auto pointCircle : pointCircles)
+	//	//{
+	//	//	// 得点サークルのトランスフォームコンポーネント取得
+	//	//	auto pointCircleTransform = pointCircle->GetComponent<CTransformComponent>();
+
+	//	//	if (pointCircleTransform)
+	//	//	{
+	//	//		aim->SetTarget(
+	//	//			pointCircleTransform->Position,
+	//	//			pointCircleTransform->Quaternion,
+	//	//			300.0f);
+	//	//	}
+	//	//}
+	//}
+
 	// レイキャストコンポーネントの追加
 	AddComponent<CRaycastComponent>();
-
 
     // インスタンスのポインタを渡す
     m_stateMachine.Start(this);
@@ -128,6 +160,17 @@ void CPlayer::Update(void)
 
 	// 入力判定の取得
 	InputData input = GatherInput();
+
+	// デルタタイムの取得
+	float dt = CManager::Instance()->GetTimeSystem()->GetDeltaTime();
+
+	//// エイムコンポーネント取得
+	//auto aim = GetComponent<CAimComponent>();
+
+	//if (aim)
+	//{
+	//	aim->MoveAim(input.moveDir, dt);
+	//}
 
 	//============================================================
 	// LocalPlayerなら入力をサーバーへ送信
@@ -174,9 +217,6 @@ void CPlayer::Update(void)
 	//{
 	//	diff += D3DX_PI * F_DOUBLE;
 	//}
-
-	// デルタタイムの取得
-	float dt = CManager::Instance()->GetTimeSystem()->GetDeltaTime();
 
 	// ハーフパイプの面に合わせた姿勢制御
 	UpdateSurfaceAlignment(dt);
