@@ -31,6 +31,7 @@ public:
         SHAPE_BOX,
         SHAPE_SPHERE,
         SHAPE_CAPSULE,
+        SHAPE_CYLINDER,
         SHAPE_TRIANGLE_MESH,
     };
 
@@ -49,6 +50,7 @@ public:
     void CreateSphere       (float radius, float mass);                 // 球の当たり判定生成
     void CreateBox          (const D3DXVECTOR3& size, float mass);      // ボックスの当たり判定生成
     void CreateCapsule      (float radius, float height, float mass);   // カプセルの当たり判定生成
+    void CreateCylinder     (const D3DXVECTOR3& size, float mass);      // シリンダーの当たり判定生成
     void CreateTriangleMesh (btTriangleMesh* triangleMesh);             // メッシュの当たり判定生成
 
     // 設定の適用

@@ -51,6 +51,7 @@ public:
         Box,
         Sphere,
         Capsule,
+        Cylinder,
         TriangleMesh
     };
 

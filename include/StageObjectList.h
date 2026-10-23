@@ -281,7 +281,7 @@ public:
 
     ColliderShape GetColliderShape(void) const override
     {
-        return ColliderShape::TriangleMesh;
+        return ColliderShape::Cylinder;
     }
 
     void OnCollisionEnter(CGameObject* other)override;
