@@ -157,22 +157,22 @@ void CPlayer::Update(void)
 		//SetRotDest(rotDest);
 	}
 
-	// トランスフォームコンポーネントの取得
-	auto transform = GetComponent<CTransformComponent>();
+	//// トランスフォームコンポーネントの取得
+	//auto transform = GetComponent<CTransformComponent>();
 
-	// 角度差
-	float diff = m_rotDest.y - transform->Rotation.y;
+	//// 角度差
+	//float diff = m_rotDest.y - transform->Rotation.y;
 
-	// -π～π に正規化
-	while (diff > D3DX_PI)
-	{
-		diff -= D3DX_PI * F_DOUBLE;
-	}
+	//// -π～π に正規化
+	//while (diff > D3DX_PI)
+	//{
+	//	diff -= D3DX_PI * F_DOUBLE;
+	//}
 
-	while (diff < -D3DX_PI)
-	{
-		diff += D3DX_PI * F_DOUBLE;
-	}
+	//while (diff < -D3DX_PI)
+	//{
+	//	diff += D3DX_PI * F_DOUBLE;
+	//}
 
 	// デルタタイムの取得
 	float dt = CManager::Instance()->GetTimeSystem()->GetDeltaTime();
