@@ -28,7 +28,7 @@ using namespace MatrixUtil;
 //=============================================================================
 CThrowComponent::CThrowComponent() :
 	m_BallThrowOffset	({ 0.0f, 1.0f, 0.5f }),	// ボールのオフセット
-	m_BallThrowSpeed	(1000.0f)				// ボールの投擲スピード
+	m_BallThrowSpeed	(1500.0f)				// ボールの投擲スピード
 {
 
 }
