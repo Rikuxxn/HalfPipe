@@ -374,8 +374,8 @@ void CTitle::Draw(void)
 	//CCamera* pCamera = CManager::Instance()->GetCamera();
 
 	//// ƒJƒƒ‰‚ÌÝ’è
-	//pCamera->SetPosV({ -605.0f, -835.0f, 4608.0f });
-	//pCamera->SetPosR({ 7.0f, -835.0f, 4100.0f });
+	//pCamera->SetPosV({ -505.0f, -1035.0f, 4408.0f });
+	//pCamera->SetPosR({ -7.0f, -835.0f, 4000.0f });
 	//pCamera->SetRot({ 0.0f, -0.88f, 0.0f });
 }
 //=============================================================================
