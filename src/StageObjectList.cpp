@@ -316,13 +316,13 @@ HRESULT CBasketBlock::Init(void)
 	);
 
 	// 50点：中心
-	CreatePointCircle(m_CenterPosition, 3.0f/*, 50*/);
+	CreatePointCircle(m_CenterPosition, 4.0f/*, 50*/);
 
 	// 30点：中間
-	CreatePointCircle(m_CenterPosition, 5.0f/*, 30*/);
+	CreatePointCircle(m_CenterPosition, 6.0f/*, 30*/);
 
 	// 10点：外側
-	CreatePointCircle(m_CenterPosition, 8.0f/*, 10*/);
+	CreatePointCircle(m_CenterPosition, 9.0f/*, 10*/);
 
 	//=============================================================================
 	// エイム対象の設定
