@@ -277,8 +277,13 @@ HRESULT CTitle::Init(void)
 	// カメラの取得
 	CCamera* pCamera = CManager::Instance()->GetCamera();
 
+#ifdef _DEBUG
+	// カメラの初期位置を設定しておく
+	pCamera->SetCamMode(CCamera::MODE_EDIT);
+#else
 	// カメラの初期位置を設定しておく
 	pCamera->SetCamMode(CCamera::MODE_FIXED);
+#endif
 
 	// サウンドマネージャーの取得
 	auto sound = CManager::Instance()->GetSoundManager();
@@ -341,13 +346,20 @@ void CTitle::Update(void)
 //	}
 //#endif
 
-	if (pFade->GetFade() == CFade::FADE_NONE &&
-		(/*pKeyboard->GetAnyKeyTrigger() || */pJoypad->GetAnyTrigger() ||
-			pKeyboard->GetAnyKeyTrigger()))
+#ifdef _DEBUG
+	if (pFade->GetFade() == CFade::FADE_NONE && pKeyboard->GetTrigger(DIK_RETURN))
 	{
 		// 接続画面に移行
 		pFade->StartFadeOut(Mode::Connect);
 	}
+#else
+	if (pFade->GetFade() == CFade::FADE_NONE &&
+		(pJoypad->GetAnyTrigger() || pKeyboard->GetAnyKeyTrigger()))
+	{
+		// 接続画面に移行
+		pFade->StartFadeOut(Mode::Connect);
+	}
+#endif
 }
 
 //=============================================================================
@@ -358,13 +370,13 @@ void CTitle::Draw(void)
 	// シーンの描画処理
 	CScene::Draw();
 
-	// カメラの取得
-	CCamera* pCamera = CManager::Instance()->GetCamera();
+	//// カメラの取得
+	//CCamera* pCamera = CManager::Instance()->GetCamera();
 
-	// カメラの設定
-	pCamera->SetPosV({ -605.0f, -835.0f, 4608.0f });
-	pCamera->SetPosR({ 7.0f, -835.0f, 4100.0f });
-	pCamera->SetRot({ 0.0f, -0.88f, 0.0f });
+	//// カメラの設定
+	//pCamera->SetPosV({ -605.0f, -835.0f, 4608.0f });
+	//pCamera->SetPosR({ 7.0f, -835.0f, 4100.0f });
+	//pCamera->SetRot({ 0.0f, -0.88f, 0.0f });
 }
 //=============================================================================
 // ライト設定処理
