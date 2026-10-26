@@ -38,6 +38,7 @@
 #include "JumpTiming.h"
 #include "Camera.h"
 #include "JumpTimingRating.h"
+#include "ScoreRenderComponent.h"
 
 
 
@@ -78,7 +79,7 @@ HRESULT CGame::Init(void)
 	CManager::Instance()->GetStageManager()->LoadFromJson("data/StageInfo/Game_Stage.json");
 
 	// トリガーオブジェクトの読み込み
-	CManager::Instance()->GetTriggerObjectManager()->LoadFromJson("data/TriggerInfo/test_trigger.json");
+	CManager::Instance()->GetTriggerObjectManager()->LoadFromJson("data/TriggerInfo/Game_Trigger.json");
 
 	// ゲーム時間の取得
 	auto time = CManager::Instance()->GetGameTime();
@@ -175,82 +176,30 @@ HRESULT CGame::Init(void)
 		}
 	}
 
-	////---------------------------------------------------
-	//// アニメーション付きUIの生成
-	////---------------------------------------------------
-	//{
-	//	// タイトルロゴオブジェクトの生成
-	//	auto logo = CreateObject();
+	// スコアの生成
+	{
+		auto scoreObject = CreateObject<CGameObject>();
 
-	//	logo->SetTag("TitleLogo");
+		scoreObject->SetTag("Score");
 
-	//	// UIコンポーネント
-	//	auto ui = logo->AddComponent<CUIComponent>();
+		// UIコンポーネント
+		auto ui = scoreObject->AddComponent<CUIComponent>();
 
-	//	auto& uiTransform = ui->GetTransform();
-	//	uiTransform.Position = { 0.5f, 0.5f };
-	//	uiTransform.Alpha = 1.0f;
-	//	uiTransform.Scale = { 1.0f, 1.0f };
+		// 表示位置
+		UITransform transform = ui->GetTransform();
 
-	//	// スプライトコンポーネントに追加
-	//	auto sprite = logo->AddComponent<CSpriteRenderComponent>();
+		transform.Position = { 0.8f, 0.15f };
+		transform.Scale = { 0.2f, 0.2f };
 
-	//	// 描画順の設定
-	//	sprite->SetLayer(RenderLayer::UI);
+		// スコア描画コンポーネント
+		auto score = scoreObject->AddComponent<CScoreRenderComponent>();
 
-	//	// テクスチャの設定
-	//	sprite->SetTexture("data/TEXTURE/ui_complete.png");
-
-	//	// サイズの設定
-	//	sprite->SetSize(500.0f, 300.0f);
-
-	//	// UIアニメーションコンポーネント
-	//	auto animation = logo->AddComponent<CUIAnimationComponent>();
-
-	//	// フェードイン
-	//	UIAnimationClip fadeIn;
-	//	fadeIn.Property = UIProperty::Alpha;
-	//	fadeIn.From = 0.0f;
-	//	fadeIn.To = 1.0f;
-	//	fadeIn.Duration = 1.0f;
-	//	fadeIn.Easing = CEasing::Linear;
-	//	fadeIn.LoopCount = 0;
-	//	fadeIn.PlaybackMode = UIPlaybackMode::PingPong;
-
-	//	// アニメーションの追加
-	//	animation->AddAnimation(fadeIn);
-
-	//	// 下から移動
-	//	UIAnimationClip moveUp;
-	//	moveUp.Property = UIProperty::PositionY;
-	//	moveUp.From = 0.65f;
-	//	moveUp.To = 0.5f;
-	//	moveUp.Duration = 1.0f;
-	//	moveUp.Delay = 0.5f;
-	//	moveUp.LoopCount = 0;
-	//	moveUp.Easing = CEasing::EaseOutCubic;
-	//	moveUp.PlaybackMode = UIPlaybackMode::PingPong;
-
-	//	// アニメーションの追加
-	//	animation->AddAnimation(moveUp);
-
-	//	// 拡大アニメーション
-	//	UIAnimationClip scaleUp;
-	//	scaleUp.Property = UIProperty::ScaleX;
-	//	scaleUp.From = 0.5f;
-	//	scaleUp.To = 1.0f;
-	//	scaleUp.Duration = 2.0f;
-	//	scaleUp.Delay = 0.5f;
-	//	scaleUp.LoopCount = 0;
-	//	scaleUp.Easing = CEasing::EaseOutCubic;
-	//	scaleUp.PlaybackMode = UIPlaybackMode::PingPong;
-
-	//	// アニメーションの追加
-	//	animation->AddAnimation(scaleUp);
-
-	//	// アニメーション再生
-	//	animation->Play();
-	//}
+		score->SetLayer(RenderLayer::UI);
+		score->SetTexture("data/TEXTURE/num_01.png");
+		score->SetDigitSize(40.0f, 60.0f);
+		score->SetCountSpeed(100.0f);
+		score->SetScore(123);
+	}
 
 	// カメラの取得
 	CCamera* pCamera = CManager::Instance()->GetCamera();
@@ -324,6 +273,22 @@ void CGame::Update(void)
 
 		return;
 	}
+
+#ifdef _DEBUG
+	// テスト : スコア加算
+	if (pKeyboard->GetTrigger(DIK_I))
+	{
+		auto score = FindGameObject("Score");
+
+		if (score)
+		{
+			auto scoreRender = score->GetComponent<CScoreRenderComponent>();
+
+			// スコアを加算する
+			scoreRender->AddScore(100);
+		}
+	}
+#endif
 
 	auto network = CManager::Instance()->GetNetworkManager();
 

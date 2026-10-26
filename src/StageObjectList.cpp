@@ -20,6 +20,9 @@
 #include "RigidBodyComponent.h"
 #include <CollisionGroup.h>
 #include "XModelResource.h"
+#include "Player.h"
+#include "AimComponent.h"
+#include "AimTargetComponent.h"
 
 // 名前空間の使用
 using namespace MatrixUtil;
@@ -274,7 +277,8 @@ void CHalfPipeBlock::Update(void)
 //=============================================================================
 CBasketBlock::CBasketBlock() :
 	m_CenterPosition	(INIT_VEC3),	// バスケットの中心位置
-	m_AimRadius			(1.8f)			// エイム可能な半径
+	m_CenterRotation	(INIT_VEC3),	// 回転
+	m_AimRadius			(400.0f)		// エイム可能な半径
 {
 
 }
@@ -284,7 +288,7 @@ CBasketBlock::CBasketBlock() :
 //=============================================================================
 CBasketBlock::~CBasketBlock()
 {
-
+	m_PointCircles.clear();
 }
 
 //=============================================================================
@@ -300,28 +304,41 @@ HRESULT CBasketBlock::Init(void)
 		return E_FAIL;
 	}
 
-	//// かごの先端位置
-	//D3DXVECTOR3 localTipPosition = { 0.0f, 500.0f, 0.0f };
+	// かごの中心となるローカル座標
+	D3DXVECTOR3 localCenter(0.0f, CIRCLE_OFFSET_Y, 0.0f);
 
-	//// ローカルからワールドへ
-	//particle3DTransform->Position = LocalToWorld(
-	//	localTipPosition,
-	//	transform->Position,
-	//	transform->Rotation,
-	//	transform->Scale
-	//);
-
-	// バスケットの中心位置
-	m_CenterPosition = transform->Position;
+	// ワールド座標に変換
+	m_CenterPosition = MatrixUtil::LocalToWorld(
+		localCenter,
+		transform->Position,
+		transform->Rotation,
+		transform->Scale
+	);
 
 	// 50点：中心
-	CreatePointCircle(m_CenterPosition, 3.0f/*, 50*/);
+	CreatePointCircle(m_CenterPosition, 4.0f/*, 50*/);
 
 	// 30点：中間
-	CreatePointCircle(m_CenterPosition, 5.0f/*, 30*/);
+	CreatePointCircle(m_CenterPosition, 6.0f/*, 30*/);
 
 	// 10点：外側
-	CreatePointCircle(m_CenterPosition, 8.0f/*, 10*/);
+	CreatePointCircle(m_CenterPosition, 9.0f/*, 10*/);
+
+	//=============================================================================
+	// エイム対象の設定
+	//=============================================================================
+	auto aimTarget = AddComponent<CAimTargetComponent>();
+
+	if (!aimTarget)
+	{
+		return E_FAIL;
+	}
+
+	// 得点サークルの中心位置をローカル座標で指定
+	aimTarget->SetLocalCenter(D3DXVECTOR3(0.0f, CIRCLE_OFFSET_Y, 0.0f));
+
+	// エイム可能な半径
+	aimTarget->SetAimRadius(m_AimRadius);
 
 	return S_OK;
 }
@@ -334,6 +351,53 @@ void CBasketBlock::Update(void)
 	// ステージオブジェクトの更新
 	CStageObject::Update();
 
+	// 得点サークルをかごに追従させる
+	UpdatePointCircles();
+}
+
+//=============================================================================
+// 得点サークル更新処理
+//=============================================================================
+void CBasketBlock::UpdatePointCircles(void)
+{
+	auto transform = GetComponent<CTransformComponent>();
+
+	if (!transform)
+	{
+		return;
+	}
+
+	// かごの中心となるローカル座標
+	D3DXVECTOR3 localCenter(0.0f, CIRCLE_OFFSET_Y, 0.0f);
+
+	// 現在の位置・回転・拡縮からワールド座標を計算
+	m_CenterPosition = MatrixUtil::LocalToWorld(
+		localCenter,
+		transform->Position,
+		transform->Rotation,
+		transform->Scale
+	);
+
+	m_CenterRotation = transform->Rotation;
+
+	// 得点サークルを更新
+	for (auto* circle : m_PointCircles)
+	{
+		if (!circle)
+		{
+			continue;
+		}
+
+		auto circleTransform = circle->GetComponent<CTransformComponent>();
+
+		if (!circleTransform)
+		{
+			continue;
+		}
+
+		circleTransform->Position = m_CenterPosition;
+		circleTransform->Rotation = m_CenterRotation;
+	}
 }
 
 //=============================================================================
@@ -402,14 +466,14 @@ CPointCircleBlock* CBasketBlock::CreatePointCircle(
 
 	rigid->SetDynamic(false);
 
-	auto resource = model->GetModel();
+	// モデルサイズ取得
+	D3DXVECTOR3 modelSize = model->GetModelSize();
+	
+	// シリンダーコライダーの生成
+	rigid->CreateCylinder(modelSize, 1.0f);
 
-	if (resource)
-	{
-		auto triangleMesh = resource->CreateBulletTriangleMesh();
-
-		rigid->CreateTriangleMesh(triangleMesh);
-	}
+	// 得点サークルを保存
+	m_PointCircles.push_back(obj);
 
 	return obj;
 }

@@ -45,7 +45,6 @@
 #include "UIFactory.h"
 #include "UIAnimationComponent.h"
 #include "TimeSystem.h"
-#include "ScoreRenderComponent.h"
 
 
 //*****************************************************************************
@@ -275,32 +274,6 @@ HRESULT CTitle::Init(void)
 	snow3D->SizeMax = 10;
 
 
-
-	// スコアの生成
-	auto scoreObject = CreateObject<CGameObject>();
-
-	scoreObject->SetTag("Score");
-
-	// UIコンポーネント
-	auto ui = scoreObject->AddComponent<CUIComponent>();
-
-	// 表示位置
-	UITransform transform = ui->GetTransform();
-
-	transform.Position = { 0.8f, 0.15f };
-	transform.Scale = { 0.2f, 0.2f };
-
-	// スコア描画コンポーネント
-	auto score = scoreObject->AddComponent<CScoreRenderComponent>();
-
-	score->SetLayer(RenderLayer::UI);
-	score->SetTexture("data/TEXTURE/num_01.png");
-	score->SetDigitSize(40.0f, 60.0f);
-	score->SetCountSpeed(100.0f);
-	score->SetScore(123);
-
-
-
 	// カメラの取得
 	CCamera* pCamera = CManager::Instance()->GetCamera();
 
@@ -368,23 +341,9 @@ void CTitle::Update(void)
 //	}
 //#endif
 
-	// テスト : スコア加算
-	if (pKeyboard->GetTrigger(DIK_I))
-	{
-		auto score = FindGameObject("Score");
-
-		if (score)
-		{
-			auto scoreRender = score->GetComponent<CScoreRenderComponent>();
-
-			// スコアを加算する
-			scoreRender->AddScore(100);
-		}
-	}
-
 	if (pFade->GetFade() == CFade::FADE_NONE &&
-		(/*pKeyboard->GetAnyKeyTrigger() || */pJoypad->GetTrigger(CInputJoypad::JOYKEY_A) ||
-			pKeyboard->GetTrigger(DIK_RETURN)))
+		(/*pKeyboard->GetAnyKeyTrigger() || */pJoypad->GetAnyTrigger() ||
+			pKeyboard->GetAnyKeyTrigger()))
 	{
 		// 接続画面に移行
 		pFade->StartFadeOut(Mode::Connect);

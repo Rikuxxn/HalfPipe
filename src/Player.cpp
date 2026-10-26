@@ -27,9 +27,10 @@
 #include "MatrixUtility.h"
 #include "NetWorkManager.h"
 #include "AutoMoveComponent.h"
-#include "Ball.h"
 #include "SceneManager.h"
 #include "Scene.h"
+#include "ThrowComponent.h"
+#include "AimComponent.h"
 //#include "FBXManager.h"
 //#include "FBXModelComponent.h"
 
@@ -46,15 +47,13 @@ using namespace MatrixUtil;
 //=============================================================================
 CPlayer::CPlayer() :
 	m_rotDest			(INIT_VEC3),			// 目標の向き
-	m_BallThrowOffset	({ 0.0f, 1.0f, 0.5f }),	// ボールのオフセット
 	m_bIsMoving			(false),				// 移動しているか
 	m_bControlFlag		(true),					// 移動許可フラグ
 	m_SurfaceNormal		({ 0, 1, 0 }),			// 面の法線
     m_SurfaceForward	({ 0, 0, 1 }),			// 面に沿う進行方向
     m_IsGrounded		(false),				// 接地中か
     m_WasGrounded		(false),				// 前フレームの接地状態
-    m_AlignToSurface	(true),					// 面に姿勢を合わせるか
-    m_BallThrowSpeed	(1000.0f)				// ボールの投擲スピード
+    m_AlignToSurface	(true)					// 面に姿勢を合わせるか
 {
 
 }
@@ -75,15 +74,25 @@ HRESULT CPlayer::Init(void)
 	// 自動移動コンポーネントの追加
 	auto autoMove = AddComponent<CAutoMoveComponent>();
 
+	// 投擲コンポーネントの追加
+	AddComponent<CThrowComponent>();
+
 	// 自動移動ポイントの読み込み
 	autoMove->LoadMovePoint("data/MovePointInfo01.json");
 
 	// 自動移動開始
 	autoMove->StartAutoMove();
 
+	// エイムコンポーネントの追加
+	auto aim = AddComponent<CAimComponent>();
+
+	if (!aim)
+	{
+		return E_FAIL;
+	}
+
 	// レイキャストコンポーネントの追加
 	AddComponent<CRaycastComponent>();
-
 
     // インスタンスのポインタを渡す
     m_stateMachine.Start(this);
@@ -128,6 +137,17 @@ void CPlayer::Update(void)
 	// 入力判定の取得
 	InputData input = GatherInput();
 
+	// デルタタイムの取得
+	float dt = CManager::Instance()->GetTimeSystem()->GetDeltaTime();
+
+	// エイムコンポーネント取得
+	auto aim = GetComponent<CAimComponent>();
+
+	if (aim)
+	{
+		aim->MoveAim(input.moveDir, dt);
+	}
+
 	//============================================================
 	// LocalPlayerなら入力をサーバーへ送信
 	//============================================================
@@ -144,122 +164,20 @@ void CPlayer::Update(void)
 		}
 	}
 
-	// 移動入力があればプレイヤー向きを入力方向に
-	if (input.moveDir.x != 0.0f || input.moveDir.z != 0.0f)
-	{
-		//// Y成分だけを使いたいので目標の向きを取得
-		//D3DXVECTOR3 rotDest = m_rotDest;
-
-		// Yを入力方向に向ける
-		m_rotDest.y = atan2f(-input.moveDir.x, -input.moveDir.z);
-
-		//// 目標の向きに設定する
-		//SetRotDest(rotDest);
-	}
-
-	//// トランスフォームコンポーネントの取得
-	//auto transform = GetComponent<CTransformComponent>();
-
-	//// 角度差
-	//float diff = m_rotDest.y - transform->Rotation.y;
-
-	//// -π～π に正規化
-	//while (diff > D3DX_PI)
-	//{
-	//	diff -= D3DX_PI * F_DOUBLE;
-	//}
-
-	//while (diff < -D3DX_PI)
-	//{
-	//	diff += D3DX_PI * F_DOUBLE;
-	//}
-
-	// デルタタイムの取得
-	float dt = CManager::Instance()->GetTimeSystem()->GetDeltaTime();
-
 	// ハーフパイプの面に合わせた姿勢制御
 	UpdateSurfaceAlignment(dt);
 
 	// テスト : 投擲
 	if (pKeyboard->GetTrigger(DIK_F))
 	{
-		ThrowBall();
+		// 投擲コンポーネントの取得
+		auto ballThrow = GetComponent<CThrowComponent>();
+
+		if (ballThrow)
+		{
+			ballThrow->Throw();
+		}
 	}
-}
-
-//=============================================================================
-// ボール投擲処理
-//=============================================================================
-void CPlayer::ThrowBall(void)
-{
-	// シーン取得
-	auto scene = CManager::Instance()->GetSceneManager()->GetScene();
-
-	if (!scene)
-	{
-		return;
-	}
-
-	// プレイヤーのトランスフォームコンポーネント
-	auto transform = GetComponent<CTransformComponent>();
-
-	if (!transform)
-	{
-		return;
-	}
-
-	// ボール生成
-	auto ball = scene->CreateObject<CBall>();
-
-	if (!ball)
-	{
-		return;
-	}
-
-	// ボールの初期化処理
-	ball->Init();
-
-	// 前方方向の取得
-	D3DXVECTOR3 forward = GetForward(transform->GetWorldMatrix());
-
-	// 投擲方向
-	D3DXVECTOR3 direction = forward;
-
-	// 正規化
-	if (D3DXVec3LengthSq(&direction) < 0.0001f)
-	{
-		return;
-	}
-
-	// 正規化
-	D3DXVec3Normalize(&direction, &direction);
-
-	// 生成位置
-	D3DXVECTOR3 spawnPosition = transform->Position + m_BallThrowOffset;
-
-	auto ballTransform = ball->GetComponent<CTransformComponent>();
-
-	if (!ballTransform)
-	{
-		return;
-	}
-
-	ballTransform->Position = spawnPosition;
-
-	auto rigid = ball->GetComponent<CRigidBodyComponent>();
-
-	if (!rigid)
-	{
-		return;
-	}
-
-	rigid->Transform();
-
-	// 初速
-	D3DXVECTOR3 velocity = direction * m_BallThrowSpeed;
-
-	// 投擲
-	ball->Throw(velocity);
 }
 
 //=============================================================================
@@ -701,31 +619,4 @@ CPlayer::InputData CPlayer::GatherInput(void)
 void CPlayer::UpdateMovementFlags(const D3DXVECTOR3& moveDir)
 {
 	m_bIsMoving = (moveDir.x != 0.0f || moveDir.z != 0.0f);
-}
-
-//=============================================================================
-// 衝突判定
-//=============================================================================
-void CPlayer::OnCollisionEnter(CGameObject* other)
-{
-	if (other->CompareTag("Wall"))
-	{
-		//int n = 0;
-	}
-}
-
-void CPlayer::OnCollisionStay(CGameObject* other)
-{
-	if (other->CompareTag("Floor"))
-	{
-
-	}
-}
-
-void CPlayer::OnCollisionExit(CGameObject* other)
-{
-	if (other->CompareTag("Florr"))
-	{
-
-	}
 }

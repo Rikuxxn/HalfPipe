@@ -279,6 +279,21 @@ void CRigidBodyComponent::CreateCapsule(float radius, float height, float mass)
 }
 
 //=============================================================================
+// シリンダーコライダー生成
+//=============================================================================
+void CRigidBodyComponent::CreateCylinder(const D3DXVECTOR3& size, float mass)
+{
+	m_ShapeType = SHAPE_CYLINDER;
+
+	// half extents（半径と高さの半分）
+	btVector3 halfExtents(size.x * 0.5f, size.y * 0.5f, size.x * 0.5f);
+
+	// Y軸方向の円柱
+	// シリンダーコライダーの生成
+	CreateShape(new btCylinderShape(halfExtents), mass);
+}
+
+//=============================================================================
 // メッシュコライダー生成
 //=============================================================================
 void CRigidBodyComponent::CreateTriangleMesh(btTriangleMesh* triangleMesh)

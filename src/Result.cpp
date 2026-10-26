@@ -146,6 +146,13 @@ void CResult::Update(void)
 	//	CManager::Instance()->GetSceneManager()->SetMode(Mode::Title);
 	//}
 
+	if (pFade->GetFade() == CFade::FADE_NONE && 
+		(pKeyboard->GetTrigger(DIK_RETURN) || pJoypad->GetTrigger(CInputJoypad::JOYKEY_A)))
+	{
+		// タイトル画面に移行
+		pFade->StartFadeOut(Mode::Title);
+	}
+
 #ifdef _DEBUG
 	if (pFade->GetFade() == CFade::FADE_NONE && pKeyboard->GetTrigger(DIK_RETURN))
 	{

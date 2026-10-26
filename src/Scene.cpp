@@ -253,6 +253,24 @@ const std::vector<std::unique_ptr<CGameObject>>& CScene::GetObjects(void) const
 }
 
 //=============================================================================
+// シーン内の全オブジェクトを取得
+//=============================================================================
+std::vector<CGameObject*> CScene::GetAllObjects(void)
+{
+    std::vector<CGameObject*> result;
+
+    for (auto& obj : m_Objects)
+    {
+        if (obj)
+        {
+            result.push_back(obj.get());
+        }
+    }
+
+    return result;
+}
+
+//=============================================================================
 // ディレクショナルライトの生成
 //=============================================================================
 CGameObject* CScene::CreateDirectionalLight(

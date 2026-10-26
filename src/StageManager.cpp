@@ -201,7 +201,6 @@ CStageObject* CStageManager::CreateObject(CStageObject::StageObjectType type, co
             rigid->CreateSphere(radius, 1.0f);
         }
         break;
-
         case CStageObject::ColliderShape::Capsule:
         {
             float radius = std::max(size.x, size.z) * 0.5f;
@@ -213,6 +212,11 @@ CStageObject* CStageManager::CreateObject(CStageObject::StageObjectType type, co
             }
 
             rigid->CreateCapsule(radius, height, 1.0f);
+        }
+        break;
+        case CStageObject::ColliderShape::Cylinder:
+        {
+            rigid->CreateCylinder(size, 1.0f);
         }
         break;
         case CStageObject::ColliderShape::TriangleMesh:

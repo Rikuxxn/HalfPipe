@@ -134,6 +134,9 @@ public:
     // ゲームオブジェクトの取得関数
     const std::vector<std::unique_ptr<CGameObject>>& GetObjects(void) const;
 
+    // シーン内の全オブジェクトを取得
+    std::vector<CGameObject*> GetAllObjects(void);
+
     virtual HRESULT Init    (void) { return S_OK; }
     virtual void    Uninit (void);
     virtual void    Update (void);
