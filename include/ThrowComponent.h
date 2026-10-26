@@ -27,6 +27,9 @@ public:
 	// “Š±”‚Ìİ’è
 	void SetThrowNum(int num) { m_ThrowCount = num; }
 
+	// Œ»İ‚Ì“Š±”‚Ìæ“¾
+	int GetCurrentThrowCount(void) { return m_ThrowCount; }
+
 	// “Š±
 	void Throw(void);
 
