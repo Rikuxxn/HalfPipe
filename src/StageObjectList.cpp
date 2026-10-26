@@ -76,7 +76,6 @@ void CFloorBlock::OnCollisionEnter(CGameObject* other)
 }
 
 
-
 CWallBlock::CWallBlock()
 {
 
