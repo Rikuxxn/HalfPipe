@@ -111,7 +111,7 @@ HRESULT CTitle::Init(void)
 
 	// ”CˆÓ‚ÌŠÔ‚Å’â~‚·‚é
 	time->Stop();
-	time->SetTime(20.0f);
+	time->SetTime(23.0f);
 
 	// ‹ó‚Ì¶¬
 	m_pSky = std::make_unique<CSky>();
