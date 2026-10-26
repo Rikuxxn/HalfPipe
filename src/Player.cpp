@@ -85,35 +85,13 @@ HRESULT CPlayer::Init(void)
 	// 自動移動開始
 	autoMove->StartAutoMove();
 
-	//// エイムコンポーネントの追加
-	//auto aim = AddComponent<CAimComponent>();
-	//
-	//// シーンの取得
-	//auto scene = CManager::Instance()->GetSceneManager()->GetScene();
+	// エイムコンポーネントの追加
+	auto aim = AddComponent<CAimComponent>();
 
-	//// ターゲットの設定
-	//if (scene)
-	//{
-	//	auto pointCircles = scene->FindGameObject<CBasketBlock>();
-
-	//	if (!pointCircles)
-	//	{
-	//		return E_FAIL;
-	//	}
-	//	//for (auto pointCircle : pointCircles)
-	//	//{
-	//	//	// 得点サークルのトランスフォームコンポーネント取得
-	//	//	auto pointCircleTransform = pointCircle->GetComponent<CTransformComponent>();
-
-	//	//	if (pointCircleTransform)
-	//	//	{
-	//	//		aim->SetTarget(
-	//	//			pointCircleTransform->Position,
-	//	//			pointCircleTransform->Quaternion,
-	//	//			300.0f);
-	//	//	}
-	//	//}
-	//}
+	if (!aim)
+	{
+		return E_FAIL;
+	}
 
 	// レイキャストコンポーネントの追加
 	AddComponent<CRaycastComponent>();
@@ -164,13 +142,13 @@ void CPlayer::Update(void)
 	// デルタタイムの取得
 	float dt = CManager::Instance()->GetTimeSystem()->GetDeltaTime();
 
-	//// エイムコンポーネント取得
-	//auto aim = GetComponent<CAimComponent>();
+	// エイムコンポーネント取得
+	auto aim = GetComponent<CAimComponent>();
 
-	//if (aim)
-	//{
-	//	aim->MoveAim(input.moveDir, dt);
-	//}
+	if (aim)
+	{
+		aim->MoveAim(input.moveDir, dt);
+	}
 
 	//============================================================
 	// LocalPlayerなら入力をサーバーへ送信

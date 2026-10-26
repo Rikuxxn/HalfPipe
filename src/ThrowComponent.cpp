@@ -17,6 +17,7 @@
 #include "RigidBodyComponent.h"
 #include "Ball.h"
 #include "MatrixUtility.h"
+#include "AimComponent.h"
 
 // 名前空間の使用
 using namespace MatrixUtil;
@@ -69,6 +70,14 @@ void CThrowComponent::Throw(void)
 		return;
 	}
 
+	// エイムコンポーネント取得
+	auto aim = m_pOwner->GetComponent<CAimComponent>();
+
+	if (!aim)
+	{
+		return;
+	}
+
 	// ボール生成
 	auto ball = scene->CreateObject<CBall>();
 
@@ -79,21 +88,6 @@ void CThrowComponent::Throw(void)
 
 	// ボールの初期化処理
 	ball->Init();
-
-	// 前方方向の取得
-	D3DXVECTOR3 forward = GetForward(transform->GetWorldMatrix());
-
-	// 投擲方向
-	D3DXVECTOR3 direction = forward;
-
-	// 正規化
-	if (D3DXVec3LengthSq(&direction) < 0.0001f)
-	{
-		return;
-	}
-
-	// 正規化
-	D3DXVec3Normalize(&direction, &direction);
 
 	// 生成位置
 	D3DXVECTOR3 spawnPosition = transform->Position + m_BallThrowOffset;
@@ -114,9 +108,25 @@ void CThrowComponent::Throw(void)
 		return;
 	}
 
+	// 物理位置の更新
 	rigid->Transform();
 
-	// 初速
+	// エイム位置を取得
+	D3DXVECTOR3 targetPosition = aim->GetAimPosition();
+
+	// エイム位置に向かう方向を計算
+	D3DXVECTOR3 direction = targetPosition - spawnPosition;
+
+	// 距離がほぼゼロなら投げない
+	if (D3DXVec3LengthSq(&direction) < 0.0001f)
+	{
+		return;
+	}
+
+	// 正規化
+	D3DXVec3Normalize(&direction, &direction);
+
+	// 初速を計算
 	D3DXVECTOR3 velocity = direction * m_BallThrowSpeed;
 
 	// 投擲

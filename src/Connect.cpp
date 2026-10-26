@@ -256,6 +256,13 @@ void CConnect::Update(void)
 	CInputKeyboard* pKeyboard = CManager::Instance()->GetInput()->GetKeyboard();
 	CInputJoypad* pJoypad = CManager::Instance()->GetInput()->GetJoypad();
 
+	if (pFade->GetFade() == CFade::FADE_NONE &&
+		(pKeyboard->GetTrigger(DIK_RETURN) || pJoypad->GetTrigger(CInputJoypad::JOYKEY_A)))
+	{
+		// ƒQ[ƒ€‰æ–Ê‚ÉˆÚs
+		pFade->StartFadeOut(Mode::Game);
+	}
+
 #ifdef _DEBUG
 	if (pFade->GetFade() == CFade::FADE_NONE &&
 		pKeyboard->GetTrigger(DIK_T))

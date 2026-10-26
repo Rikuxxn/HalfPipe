@@ -148,6 +148,9 @@ public:
     // 中心位置取得
     const D3DXVECTOR3& GetCenterPosition(void) const { return m_CenterPosition; }
 
+    // かごの回転取得
+    const D3DXVECTOR3& GetCenterRotation(void) const { return m_CenterRotation; }
+
     // エイム範囲取得
     float GetAimRadius(void) const { return m_AimRadius; }
 
@@ -163,8 +166,18 @@ public:
 
 private:
 
+    // 得点サークルの位置・回転を更新
+    void UpdatePointCircles(void);
+
+private:
+    static constexpr float CIRCLE_OFFSET_Y = 55.0f;
+
     // バスケットの中心位置
     D3DXVECTOR3 m_CenterPosition;
+    D3DXVECTOR3 m_CenterRotation;
+
+    // 得点サークル
+    std::vector<CPointCircleBlock*> m_PointCircles;
 
     // エイム可能な半径
     float m_AimRadius;
