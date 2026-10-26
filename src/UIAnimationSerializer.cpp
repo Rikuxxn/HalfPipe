@@ -94,9 +94,139 @@ namespace
             return "Linear";
         }
 
+        if (easing == CEasing::EaseInSine)
+        {
+            return "EaseInSine";
+        }
+
+        if (easing == CEasing::EaseOutSine)
+        {
+            return "EaseOutSine";
+        }
+
+        if (easing == CEasing::EaseInOutSine)
+        {
+            return "EaseInOutSine";
+        }
+
+        if (easing == CEasing::EaseInQuad)
+        {
+            return "EaseInQuad";
+        }
+
+        if (easing == CEasing::EaseOutQuad)
+        {
+            return "EaseOutQuad";
+        }
+
+        if (easing == CEasing::EaseInOutQuad)
+        {
+            return "EaseInOutQuad";
+        }
+
+        if (easing == CEasing::EaseInCubic)
+        {
+            return "EaseInCubic";
+        }
+
         if (easing == CEasing::EaseOutCubic)
         {
             return "EaseOutCubic";
+        }
+
+        if (easing == CEasing::EaseInOutCubic)
+        {
+            return "EaseInOutCubic";
+        }
+
+        if (easing == CEasing::EaseInQuart)
+        {
+            return "EaseInQuart";
+        }
+
+        if (easing == CEasing::EaseOutQuart)
+        {
+            return "EaseOutQuart";
+        }
+
+        if (easing == CEasing::EaseInOutQuart)
+        {
+            return "EaseInOutQuart";
+        }
+
+        if (easing == CEasing::EaseInQuint)
+        {
+            return "EaseInQuint";
+        }
+
+        if (easing == CEasing::EaseOutQuint)
+        {
+            return "EaseOutQuint";
+        }
+
+        if (easing == CEasing::EaseInOutQuint)
+        {
+            return "EaseInOutQuint";
+        }
+
+        if (easing == CEasing::EaseInExpo)
+        {
+            return "EaseInExpo";
+        }
+
+        if (easing == CEasing::EaseOutExpo)
+        {
+            return "EaseOutExpo";
+        }
+
+        if (easing == CEasing::EaseInOutExpo)
+        {
+            return "EaseInOutExpo";
+        }
+
+        if (easing == CEasing::EaseInCirc)
+        {
+            return "EaseInCirc";
+        }
+
+        if (easing == CEasing::EaseOutCirc)
+        {
+            return "EaseOutCirc";
+        }
+
+        if (easing == CEasing::EaseInOutCirc)
+        {
+            return "EaseInOutCirc";
+        }
+
+        if (easing == CEasing::EaseInElastic)
+        {
+            return "EaseInElastic";
+        }
+
+        if (easing == CEasing::EaseOutElastic)
+        {
+            return "EaseOutElastic";
+        }
+
+        if (easing == CEasing::EaseInOutElastic)
+        {
+            return "EaseInOutElastic";
+        }
+
+        if (easing == CEasing::EaseOutBounce)
+        {
+            return "EaseOutBounce";
+        }
+
+        if (easing == CEasing::EaseInBounce)
+        {
+            return "EaseInBounce";
+        }
+
+        if (easing == CEasing::EaseInOutBounce)
+        {
+            return "EaseInOutBounce";
         }
 
         throw std::runtime_error("Unknown Easing");
@@ -112,9 +242,139 @@ namespace
             return CEasing::Linear;
         }
 
+        if (name == "EaseInSine")
+        {
+            return CEasing::EaseInSine;
+        }
+
+        if (name == "EaseOutSine")
+        {
+            return CEasing::EaseOutSine;
+        }
+
+        if (name == "EaseInOutSine")
+        {
+            return CEasing::EaseInOutSine;
+        }
+
+        if (name == "EaseInQuad")
+        {
+            return CEasing::EaseInQuad;
+        }
+
+        if (name == "EaseOutQuad")
+        {
+            return CEasing::EaseOutQuad;
+        }
+
+        if (name == "EaseInOutQuad")
+        {
+            return CEasing::EaseInOutQuad;
+        }
+
+        if (name == "EaseInCubic")
+        {
+            return CEasing::EaseInCubic;
+        }
+
         if (name == "EaseOutCubic")
         {
             return CEasing::EaseOutCubic;
+        }
+
+        if (name == "EaseInOutCubic")
+        {
+            return CEasing::EaseInOutCubic;
+        }
+
+        if (name == "EaseInQuart")
+        {
+            return CEasing::EaseInQuart;
+        }
+
+        if (name == "EaseOutQuart")
+        {
+            return CEasing::EaseOutQuart;
+        }
+
+        if (name == "EaseInOutQuart")
+        {
+            return CEasing::EaseInOutQuart;
+        }
+
+        if (name == "EaseInQuint")
+        {
+            return CEasing::EaseInQuint;
+        }
+
+        if (name == "EaseOutQuint")
+        {
+            return CEasing::EaseOutQuint;
+        }
+
+        if (name == "EaseInOutQuint")
+        {
+            return CEasing::EaseInOutQuint;
+        }
+
+        if (name == "EaseInExpo")
+        {
+            return CEasing::EaseInExpo;
+        }
+
+        if (name == "EaseOutExpo")
+        {
+            return CEasing::EaseOutExpo;
+        }
+
+        if (name == "EaseInOutExpo")
+        {
+            return CEasing::EaseInOutExpo;
+        }
+
+        if (name == "EaseInCirc")
+        {
+            return CEasing::EaseInCirc;
+        }
+
+        if (name == "EaseOutCirc")
+        {
+            return CEasing::EaseOutCirc;
+        }
+
+        if (name == "EaseInOutCirc")
+        {
+            return CEasing::EaseInOutCirc;
+        }
+
+        if (name == "EaseInElastic")
+        {
+            return CEasing::EaseInElastic;
+        }
+
+        if (name == "EaseOutElastic")
+        {
+            return CEasing::EaseOutElastic;
+        }
+
+        if (name == "EaseInOutElastic")
+        {
+            return CEasing::EaseInOutElastic;
+        }
+
+        if (name == "EaseOutBounce")
+        {
+            return CEasing::EaseOutBounce;
+        }
+
+        if (name == "EaseInBounce")
+        {
+            return CEasing::EaseInBounce;
+        }
+
+        if (name == "EaseInOutBounce")
+        {
+            return CEasing::EaseInOutBounce;
         }
 
         throw std::runtime_error("Unknown Easing: " + name);

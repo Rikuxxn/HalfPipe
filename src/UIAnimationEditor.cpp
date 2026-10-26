@@ -605,7 +605,33 @@ bool CUIAnimationEditor::DrawClipSettings(UIAnimationClip& clip)
     const char* easingNames[] =
     {
         "Linear",
-        "EaseOutCubic"
+        "EaseInSine",
+        "EaseOutSine",
+        "EaseInOutSine",
+        "EaseInQuad",
+        "EaseOutQuad",
+        "EaseInOutQuad",
+        "EaseInCubic",
+        "EaseOutCubic",
+        "EaseInOutCubic",
+        "EaseInQuart",
+        "EaseOutQuart",
+        "EaseInOutQuart",
+        "EaseInQuint",
+        "EaseOutQuint",
+        "EaseInOutQuint",
+        "EaseInExpo",
+        "EaseOutExpo",
+        "EaseInOutExpo",
+        "EaseInCirc",
+        "EaseOutCirc",
+        "EaseInOutCirc",
+        "EaseInElastic",
+        "EaseOutElastic",
+        "EaseInOutElastic",
+        "EaseOutBounce",
+        "EaseInBounce",
+        "EaseInOutBounce",
     };
 
     int easingIndex = 0;

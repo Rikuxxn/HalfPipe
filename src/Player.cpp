@@ -109,6 +109,7 @@ HRESULT CPlayer::Init(void)
 void CPlayer::Update(void)
 {
 	CInputKeyboard* pKeyboard = CManager::Instance()->GetInput()->GetKeyboard();
+	CInputJoypad* pJoypad = CManager::Instance()->GetInput()->GetJoypad();
 
 	// カメラの取得
 	CCamera* pCamera = CManager::Instance()->GetCamera();
@@ -168,7 +169,7 @@ void CPlayer::Update(void)
 	UpdateSurfaceAlignment(dt);
 
 	// テスト : 投擲
-	if (pKeyboard->GetTrigger(DIK_F))
+	if (pKeyboard->GetTrigger(DIK_F) || pJoypad->GetTriggerR2())
 	{
 		// 投擲コンポーネントの取得
 		auto ballThrow = GetComponent<CThrowComponent>();
