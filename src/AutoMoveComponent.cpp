@@ -53,6 +53,7 @@ CAutoMoveComponent::CAutoMoveComponent() :
     m_AutoMoveSpeed			(250.0f),					// 移動スピード
 	m_fPressCount			(0.0f),						// 長押しカウント
 	m_fJumpHeight			(0.0f),						// ジャンプの最終的な高さ
+	m_fDeltaSpeed			(0.005f),					// スプラインの早さ
     m_TimingResult			(CJumpTiming::TIMING_MAX)  // 確定したタイミング結果
 {
 
@@ -316,8 +317,10 @@ void CAutoMoveComponent::UpdateAutoMove(float deltaTime)
 		return;
 	}
 
+	m_fDeltaSpeed = m_IsWaitingForJumpPoint ? 0.02f : 0.008f;
+
 	// 時間を進める
-	m_CurrentTime += 0.02f;
+	m_CurrentTime += m_fDeltaSpeed;
 
 	// 正規化
 	D3DXVec3Normalize(&direction, &direction);
@@ -587,7 +590,7 @@ void CAutoMoveComponent::JumpTiming(void)
 	//=======================
 	// 数字調整
 	//=======================
-	m_fPressCount += 0.005f;
+	m_fPressCount += 0.0001f;
 
 	float fPoint = 0.0f;
 	float nPressCount = m_fPressCount;

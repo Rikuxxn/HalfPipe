@@ -157,6 +157,8 @@ private:
     // ジャンプの最終的な高さ
     float m_fJumpHeight;
 
+    float m_fDeltaSpeed;
+
     // 自動移動中か
     bool m_IsAutoMove;
 
