@@ -24,12 +24,18 @@ public:
 	HRESULT Init	(void) override;
 	void	Update	(void) override;
 
+	// 投擲数の設定
+	void SetThrowNum(int num) { m_ThrowCount = num; }
+
 	// 投擲
 	void Throw(void);
 
 private:
-	D3DXVECTOR3 m_BallThrowOffset;  // ボールのオフセット
-	float       m_BallThrowSpeed;   // ボールの速度
+	static constexpr int MAX_DEF_THROW_NUM = 50;// 投げれる最大数
+
+	D3DXVECTOR3 m_BallThrowOffset;				// ボールのオフセット
+	int			m_ThrowCount;					// 投擲数
+	float       m_BallThrowSpeed;				// ボールの速度
 };
 
 #endif
