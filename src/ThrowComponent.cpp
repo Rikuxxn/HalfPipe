@@ -27,8 +27,9 @@ using namespace MatrixUtil;
 // コンストラクタ
 //=============================================================================
 CThrowComponent::CThrowComponent() :
-	m_BallThrowOffset	({ 0.0f, 1.0f, 0.5f }),	// ボールのオフセット
-	m_BallThrowSpeed	(1000.0f)				// ボールの投擲スピード
+	m_BallThrowOffset	({ 0.0f, 50.0f, 0.0f }),// ボールのオフセット
+	m_ThrowCount		(MAX_DEF_THROW_NUM),	// 投擲数
+	m_BallThrowSpeed	(1500.0f)				// ボールの投擲スピード
 {
 
 }
@@ -54,6 +55,15 @@ void CThrowComponent::Update(void)
 //=============================================================================
 void CThrowComponent::Throw(void)
 {
+	// 投擲数が無くなったら
+	if (m_ThrowCount <= 0)
+	{
+		return;
+	}
+
+	// 投擲数を減らす
+	m_ThrowCount--;
+
 	// シーン取得
 	auto scene = CManager::Instance()->GetSceneManager()->GetScene();
 

@@ -31,8 +31,6 @@
 #include "Scene.h"
 #include "ThrowComponent.h"
 #include "AimComponent.h"
-#include "StageObject.h"
-#include "StageObjectList.h"
 //#include "FBXManager.h"
 //#include "FBXModelComponent.h"
 
@@ -165,36 +163,6 @@ void CPlayer::Update(void)
 				input.moveDir.z);
 		}
 	}
-
-	// 移動入力があればプレイヤー向きを入力方向に
-	if (input.moveDir.x != 0.0f || input.moveDir.z != 0.0f)
-	{
-		//// Y成分だけを使いたいので目標の向きを取得
-		//D3DXVECTOR3 rotDest = m_rotDest;
-
-		// Yを入力方向に向ける
-		m_rotDest.y = atan2f(-input.moveDir.x, -input.moveDir.z);
-
-		//// 目標の向きに設定する
-		//SetRotDest(rotDest);
-	}
-
-	//// トランスフォームコンポーネントの取得
-	//auto transform = GetComponent<CTransformComponent>();
-
-	//// 角度差
-	//float diff = m_rotDest.y - transform->Rotation.y;
-
-	//// -π～π に正規化
-	//while (diff > D3DX_PI)
-	//{
-	//	diff -= D3DX_PI * F_DOUBLE;
-	//}
-
-	//while (diff < -D3DX_PI)
-	//{
-	//	diff += D3DX_PI * F_DOUBLE;
-	//}
 
 	// ハーフパイプの面に合わせた姿勢制御
 	UpdateSurfaceAlignment(dt);
@@ -651,31 +619,4 @@ CPlayer::InputData CPlayer::GatherInput(void)
 void CPlayer::UpdateMovementFlags(const D3DXVECTOR3& moveDir)
 {
 	m_bIsMoving = (moveDir.x != 0.0f || moveDir.z != 0.0f);
-}
-
-//=============================================================================
-// 衝突判定
-//=============================================================================
-void CPlayer::OnCollisionEnter(CGameObject* other)
-{
-	if (other->CompareTag("Wall"))
-	{
-		//int n = 0;
-	}
-}
-
-void CPlayer::OnCollisionStay(CGameObject* other)
-{
-	if (other->CompareTag("Floor"))
-	{
-
-	}
-}
-
-void CPlayer::OnCollisionExit(CGameObject* other)
-{
-	if (other->CompareTag("Florr"))
-	{
-
-	}
 }

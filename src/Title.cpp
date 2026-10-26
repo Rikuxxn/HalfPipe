@@ -342,8 +342,8 @@ void CTitle::Update(void)
 //#endif
 
 	if (pFade->GetFade() == CFade::FADE_NONE &&
-		(/*pKeyboard->GetAnyKeyTrigger() || */pJoypad->GetTrigger(CInputJoypad::JOYKEY_A) ||
-			pKeyboard->GetTrigger(DIK_RETURN)))
+		(/*pKeyboard->GetAnyKeyTrigger() || */pJoypad->GetAnyTrigger() ||
+			pKeyboard->GetAnyKeyTrigger()))
 	{
 		// Ú‘±‰æ–Ê‚ÉˆÚs
 		pFade->StartFadeOut(Mode::Connect);
