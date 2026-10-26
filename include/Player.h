@@ -13,11 +13,6 @@
 #include "GameObject.h"
 #include "State.h"
 
-
-// 前方宣言
-class CBasketBlock;
-
-
 //*****************************************************************************
 // プレイヤークラス
 //*****************************************************************************
@@ -52,11 +47,6 @@ public:
 
     // ステート用のフラグ更新処理
     void UpdateMovementFlags(const D3DXVECTOR3& moveDir);
-
-    // 当たり判定
-    void OnCollisionEnter(CGameObject* other) override;
-    void OnCollisionStay(CGameObject* other) override;
-    void OnCollisionExit(CGameObject* other) override;
 
 public:
 
