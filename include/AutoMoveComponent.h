@@ -157,7 +157,10 @@ private:
     // ジャンプの最終的な高さ
     float m_fJumpHeight;
 
+    // スプラインの補間スピード
     float m_fDeltaSpeed;
+
+    float m_fBasicSpeed;
 
     // 自動移動中か
     bool m_IsAutoMove;
