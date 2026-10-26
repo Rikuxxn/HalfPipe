@@ -14,6 +14,7 @@
 
 
 
+
 //*****************************************************************************
 // イベントエリアトリガークラス
 //*****************************************************************************
@@ -50,6 +51,9 @@ class CGoalTrigger : public CTriggerObject
 {
 public:
 
+    HRESULT Init    (void) override;
+    void    Update  (void) override;
+
     // トリガーの種類
     TriggerObjectType GetType(void) const override
     {
@@ -67,6 +71,8 @@ public:
     {
         return { 500.0f, 100.0f, 500.0f };
     }
+
+    void OnTriggerEnter(CGameObject* other) override;
 
 private:
 

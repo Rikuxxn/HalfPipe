@@ -79,7 +79,7 @@ HRESULT CGame::Init(void)
 	CManager::Instance()->GetStageManager()->LoadFromJson("data/StageInfo/Game_Stage.json");
 
 	// トリガーオブジェクトの読み込み
-	CManager::Instance()->GetTriggerObjectManager()->LoadFromJson("data/TriggerInfo/test_trigger.json");
+	CManager::Instance()->GetTriggerObjectManager()->LoadFromJson("data/TriggerInfo/Game_Trigger.json");
 
 	// ゲーム時間の取得
 	auto time = CManager::Instance()->GetGameTime();
