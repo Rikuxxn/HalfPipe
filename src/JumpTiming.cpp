@@ -189,35 +189,35 @@ void CJumpTiming::StartTiming(void)
 	// カウントを初期化
 	m_fTimingCount = 3.0f;
 
-	// ボタンAを表示
-	if (m_ButtonA)
-	{
-		auto spriteA = m_ButtonA->GetComponent<CSpriteRenderComponent>();
+	//// ボタンAを表示
+	//if (m_ButtonA)
+	//{
+	//	auto spriteA = m_ButtonA->GetComponent<CSpriteRenderComponent>();
 
-		if (spriteA)
-		{
-			spriteA->SetIsVisible(true);
-		}
-	}
+	//	if (spriteA)
+	//	{
+	//		spriteA->SetIsVisible(true);
+	//	}
+	//}
 
-	// ボタンBを表示してアニメーション再生
-	if (m_ButtonB)
-	{
-		auto spriteB = m_ButtonB->GetComponent<CSpriteRenderComponent>();
+	//// ボタンBを表示してアニメーション再生
+	//if (m_ButtonB)
+	//{
+	//	auto spriteB = m_ButtonB->GetComponent<CSpriteRenderComponent>();
 
-		auto animationB = m_ButtonB->GetComponent<CUIAnimationComponent>();
+	//	auto animationB = m_ButtonB->GetComponent<CUIAnimationComponent>();
 
-		if (spriteB)
-		{
-			spriteB->SetIsVisible(true);
-		}
+	//	if (spriteB)
+	//	{
+	//		spriteB->SetIsVisible(true);
+	//	}
 
-		if (animationB)
-		{
-			animationB->PlayAnimation("Scale_X");
-			animationB->PlayAnimation("Scale_Y");
-		}
-	}
+	//	if (animationB)
+	//	{
+	//		animationB->PlayAnimation("Scale_X");
+	//		animationB->PlayAnimation("Scale_Y");
+	//	}
+	//}
 }
 
 //=============================================================================
