@@ -947,10 +947,11 @@ void CGateBannerBlock::ApplySignTextures(void)
 // コンストラクタ
 //=============================================================================
 CRiftBlock::CRiftBlock() :
-	m_currentPoint		(0),	// 現在のポイント(エディタ用)
-	m_CurrentMovePoint	(0),	// 現在の移動ポイント
-	m_StartMovePoint	(0),	// 移動開始ポイント
-	m_AutoMoveSpeed		(200.0f)// 移動スピード
+	m_MoveDirection		(INIT_VEC3),	// 進行方向
+	m_currentPoint		(0),			// 現在のポイント(エディタ用)
+	m_CurrentMovePoint	(0),			// 現在の移動ポイント
+	m_StartMovePoint	(0),			// 移動開始ポイント
+	m_AutoMoveSpeed		(50.0f)		// 移動スピード
 {
 
 }
@@ -1000,6 +1001,15 @@ void CRiftBlock::Update(void)
 
 	D3DXVECTOR3 dir = target - pos;
 
+	// 方向ベクトルが有効な場合
+	if (D3DXVec3LengthSq(&dir) > 0.0001f)
+	{
+		D3DXVec3Normalize(&dir, &dir);
+
+		// 進行方向を保存
+		m_MoveDirection = dir;
+	}
+
 	// 距離を求める
 	float dist = D3DXVec3Length(&dir);
 
@@ -1014,8 +1024,8 @@ void CRiftBlock::Update(void)
 		}
 	}
 
-	// 目標速度
-	D3DXVECTOR3 velocity = dir * m_AutoMoveSpeed;
+	// 正規化
+	D3DXVec3Normalize(&dir, &dir);
 
 	// リジッドボディコンポーネントの取得
 	auto rigid = GetComponent<CRigidBodyComponent>();
@@ -1025,8 +1035,9 @@ void CRiftBlock::Update(void)
 		return;
 	}
 
-	// 物理速度を設定
-	rigid->SetPhysicsVelocity(velocity);
+	transform->Position = target;
+
+	rigid->Transform();
 }
 
 //=============================================================================

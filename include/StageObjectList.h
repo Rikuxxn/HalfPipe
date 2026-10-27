@@ -385,6 +385,9 @@ private:
     // 自動移動ポイントデバッグ表示用
     std::vector<CGameObject*> m_pPointObj;
 
+    // 進行方向
+    D3DXVECTOR3 m_MoveDirection;
+
     // 現在のポイント(エディタ用)
     int m_currentPoint;
 
