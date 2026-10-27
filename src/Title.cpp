@@ -285,10 +285,10 @@ HRESULT CTitle::Init(void)
 	pCamera->SetCamMode(CCamera::MODE_FIXED);
 #endif
 
-	// サウンドマネージャーの取得
-	auto sound = CManager::Instance()->GetSoundManager();
+	//// サウンドマネージャーの取得
+	//auto sound = CManager::Instance()->GetSoundManager();
 
-	sound->PlayBGM(CSoundManager::SOUND_LABEL_TITLEBGM);
+	//sound->PlayBGM(CSoundManager::SOUND_LABEL_TITLEBGM);
 
 	return S_OK;
 }
