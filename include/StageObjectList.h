@@ -391,9 +391,6 @@ private:
     // 現在のポイント(エディタ用)
     int m_currentPoint;
 
-    // 現在の移動ポイント
-    int m_CurrentMovePoint;
-
     // 移動開始ポイント
     int m_StartMovePoint;
 
