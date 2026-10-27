@@ -108,18 +108,18 @@ CTorchBlock::CTorchBlock() :
 
 CTorchBlock::~CTorchBlock()
 {
-	//=====================================================================
-	// サウンド破棄
-	//=====================================================================
-	auto soundManager = CManager::Instance()->GetSoundManager();
+	////=====================================================================
+	//// サウンド破棄
+	////=====================================================================
+	//auto soundManager = CManager::Instance()->GetSoundManager();
 
-	if (soundManager &&
-		m_SoundHandle != CSoundManager::INVALID_HANDLE)
-	{
-		soundManager->Stop(m_SoundHandle);
+	//if (soundManager &&
+	//	m_SoundHandle != CSoundManager::INVALID_HANDLE)
+	//{
+	//	soundManager->Stop(m_SoundHandle);
 
-		m_SoundHandle = CSoundManager::INVALID_HANDLE;
-	}
+	//	m_SoundHandle = CSoundManager::INVALID_HANDLE;
+	//}
 
 	//=====================================================================
 	// パーティクルオブジェクト削除
@@ -133,23 +133,23 @@ CTorchBlock::~CTorchBlock()
 
 HRESULT CTorchBlock::Init(void)
 {
-	//=========================================================================
-	// 3DループSE再生
-	//=========================================================================
+	////=========================================================================
+	//// 3DループSE再生
+	////=========================================================================
 
-	// サウンドマネージャー取得
-	auto soundManager = CManager::Instance()->GetSoundManager();
+	//// サウンドマネージャー取得
+	//auto soundManager = CManager::Instance()->GetSoundManager();
 
-	if (soundManager)
-	{
-		auto transform = GetComponent<CTransformComponent>();
+	//if (soundManager)
+	//{
+	//	auto transform = GetComponent<CTransformComponent>();
 
-		if (transform)
-		{
-			// 3Dサウンド再生
-			m_SoundHandle = soundManager->Play3D(CSoundManager::SOUND_LABEL_FIRE, transform->Position);
-		}
-	}
+	//	if (transform)
+	//	{
+	//		// 3Dサウンド再生
+	//		m_SoundHandle = soundManager->Play3D(CSoundManager::SOUND_LABEL_FIRE, transform->Position);
+	//	}
+	//}
 
 	// シーンの取得
 	auto scene = CManager::Instance()->GetSceneManager()->GetScene();
@@ -215,15 +215,15 @@ void CTorchBlock::Update(void)
 	// ステージオブジェクトの更新
 	CStageObject::Update();
 
-	auto soundManager = CManager::Instance()->GetSoundManager();
+	//auto soundManager = CManager::Instance()->GetSoundManager();
 
 	auto transform = GetComponent<CTransformComponent>();
 
-	if (soundManager && transform &&
-		m_SoundHandle != CSoundManager::INVALID_HANDLE)
-	{
-		soundManager->UpdateSoundPosition(m_SoundHandle, transform->Position);
-	}
+	//if (soundManager && transform &&
+	//	m_SoundHandle != CSoundManager::INVALID_HANDLE)
+	//{
+	//	soundManager->UpdateSoundPosition(m_SoundHandle, transform->Position);
+	//}
 
 	if (!transform || !m_ParticleObject)
 	{
