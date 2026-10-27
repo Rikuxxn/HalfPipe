@@ -58,6 +58,9 @@ public:
         int faceIndex,
         const std::string& path);
 
+    // 面全てにテクスチャを設定
+    void SetAllFaceTexture(const std::string& path);
+
     // 面のテクスチャを削除
     void ClearFaceTexture(int faceIndex);
 

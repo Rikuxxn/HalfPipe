@@ -126,6 +126,26 @@ void CXModelRenderComponent::SetFaceTexture(int faceIndex, const std::string& pa
 }
 
 //=============================================================================
+// 面全てにテクスチャを設定
+//=============================================================================
+void CXModelRenderComponent::SetAllFaceTexture(const std::string& path)
+{
+    // テクスチャをロード
+    auto texture = CManager::Instance()->GetTextureManager()->Load(path);
+
+    if (!texture)
+    {
+        return;
+    }
+
+    for (int i = 0; i < m_FaceTextures.size(); i++)
+    {
+        // すべての面のテクスチャとして登録
+        m_FaceTextures[i] = texture;
+    }
+}
+
+//=============================================================================
 // 面のテクスチャを削除
 //=============================================================================
 void CXModelRenderComponent::ClearFaceTexture(int faceIndex)

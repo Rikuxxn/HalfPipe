@@ -143,7 +143,8 @@ public:
 
     CPointCircleBlock* CreatePointCircle(
         const D3DXVECTOR3& position,
-        float scale);
+        float scale, 
+        const std::string texPath);
 
     // ’†SˆÊ’uæ“¾
     const D3DXVECTOR3& GetCenterPosition(void) const { return m_CenterPosition; }

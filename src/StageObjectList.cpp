@@ -316,13 +316,13 @@ HRESULT CBasketBlock::Init(void)
 	);
 
 	// 50点：中心
-	CreatePointCircle(m_CenterPosition, 4.0f/*, 50*/);
+	CreatePointCircle(m_CenterPosition, 4.0f, "data/TEXTURE/Target_50.png");
 
 	// 30点：中間
-	CreatePointCircle(m_CenterPosition, 6.0f/*, 30*/);
+	CreatePointCircle(m_CenterPosition, 6.0f, "data/TEXTURE/Target_30.png");
 
 	// 10点：外側
-	CreatePointCircle(m_CenterPosition, 9.0f/*, 10*/);
+	CreatePointCircle(m_CenterPosition, 9.0f, "data/TEXTURE/Target_10.png");
 
 	//=============================================================================
 	// エイム対象の設定
@@ -404,7 +404,7 @@ void CBasketBlock::UpdatePointCircles(void)
 // 得点サークル生成処理
 //=============================================================================
 CPointCircleBlock* CBasketBlock::CreatePointCircle(
-	const D3DXVECTOR3& position, float scale)
+	const D3DXVECTOR3& position, float scale, const std::string texPath)
 {
 	// シーン取得
 	auto scene = CManager::Instance()->GetSceneManager()->GetScene();
@@ -445,6 +445,8 @@ CPointCircleBlock* CBasketBlock::CreatePointCircle(
 	}
 
 	model->SetLayer(RenderLayer::Model);
+	//model->SetFaceTexture(0, texPath);
+	//model->SetAllFaceTexture(texPath);
 	model->Load("data/MODELS/PointCircle.x");
 
 	// 剛体
