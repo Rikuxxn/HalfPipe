@@ -949,9 +949,8 @@ void CGateBannerBlock::ApplySignTextures(void)
 CRiftBlock::CRiftBlock() :
 	m_MoveDirection		(INIT_VEC3),	// 進行方向
 	m_currentPoint		(0),			// 現在のポイント(エディタ用)
-	m_CurrentMovePoint	(0),			// 現在の移動ポイント
 	m_StartMovePoint	(0),			// 移動開始ポイント
-	m_AutoMoveSpeed		(50.0f)		// 移動スピード
+	m_AutoMoveSpeed		(50.0f)			// 移動スピード
 {
 
 }
