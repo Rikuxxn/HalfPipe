@@ -949,7 +949,8 @@ void CGateBannerBlock::ApplySignTextures(void)
 CRiftBlock::CRiftBlock() :
 	m_currentPoint		(0),	// 現在のポイント(エディタ用)
 	m_CurrentMovePoint	(0),	// 現在の移動ポイント
-	m_StartMovePoint	(0)		// 移動開始ポイント
+	m_StartMovePoint	(0),	// 移動開始ポイント
+	m_AutoMoveSpeed		(200.0f)// 移動スピード
 {
 
 }
@@ -978,6 +979,54 @@ void CRiftBlock::Update(void)
 {
 	// ステージオブジェクトの更新
 	CStageObject::Update();
+
+	// ポイントが無い場合は飛ばす
+	if (m_MovePoints.empty())
+	{
+		return;
+	}
+
+	// トランスフォームコンポーネントの取得
+	auto transform = GetComponent<CTransformComponent>();
+
+	if (!transform)
+	{
+		return;
+	}
+
+	D3DXVECTOR3 target = m_MovePoints[m_StartMovePoint];
+
+	D3DXVECTOR3 pos = transform->Position;
+
+	D3DXVECTOR3 dir = target - pos;
+
+	// 距離を求める
+	float dist = D3DXVec3Length(&dir);
+
+	// 到着
+	if (dist < REACH_DIST)
+	{
+		m_StartMovePoint++;
+
+		if (m_StartMovePoint >= (int)m_MovePoints.size())
+		{
+			m_StartMovePoint = 0;
+		}
+	}
+
+	// 目標速度
+	D3DXVECTOR3 velocity = dir * m_AutoMoveSpeed;
+
+	// リジッドボディコンポーネントの取得
+	auto rigid = GetComponent<CRigidBodyComponent>();
+
+	if (!rigid)
+	{
+		return;
+	}
+
+	// 物理速度を設定
+	rigid->SetPhysicsVelocity(velocity);
 }
 
 //=============================================================================

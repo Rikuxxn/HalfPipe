@@ -377,6 +377,7 @@ private:
     void SetStartPoint(int nPoint) { m_StartMovePoint = nPoint; }
 
 private:
+    static constexpr float REACH_DIST = 5.0f;   // 到達判定距離
 
     // 移動ポイント
     std::vector<D3DXVECTOR3> m_MovePoints;
@@ -392,6 +393,9 @@ private:
 
     // 移動開始ポイント
     int m_StartMovePoint;
+
+    // 移動速度
+    float m_AutoMoveSpeed;
 };
 
 #endif
