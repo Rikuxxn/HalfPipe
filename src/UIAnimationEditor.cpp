@@ -629,14 +629,14 @@ bool CUIAnimationEditor::DrawClipSettings(UIAnimationClip& clip)
         "EaseInElastic",
         "EaseOutElastic",
         "EaseInOutElastic",
-        "EaseOutBounce",
         "EaseInBounce",
+        "EaseOutBounce",
         "EaseInOutBounce",
     };
 
     int easingIndex = 0;
 
-    if (clip.Easing == CEasing::EaseOutCubic)
+    if (clip.Easing == CEasing::EaseInSine)
     {
         easingIndex = 1;
     }
@@ -653,9 +653,86 @@ bool CUIAnimationEditor::DrawClipSettings(UIAnimationClip& clip)
         case 0:
             clip.Easing = CEasing::Linear;
             break;
-
         case 1:
+            clip.Easing = CEasing::EaseInSine;
+            break;
+        case 2:
+            clip.Easing = CEasing::EaseOutSine;
+            break;
+        case 3:
+            clip.Easing = CEasing::EaseInOutSine;
+            break;
+        case 4:
+            clip.Easing = CEasing::EaseInQuad;
+            break;
+        case 5:
+            clip.Easing = CEasing::EaseOutQuad;
+            break;
+        case 6:
+            clip.Easing = CEasing::EaseInOutQuad;
+            break;
+        case 7:
+            clip.Easing = CEasing::EaseInCubic;
+            break;
+        case 8:
             clip.Easing = CEasing::EaseOutCubic;
+            break;
+        case 9:
+            clip.Easing = CEasing::EaseInOutCubic;
+            break;
+        case 10:
+            clip.Easing = CEasing::EaseInQuart;
+            break;
+        case 11:
+            clip.Easing = CEasing::EaseOutQuart;
+            break;
+        case 12:
+            clip.Easing = CEasing::EaseInOutQuart;
+            break;
+        case 13:
+            clip.Easing = CEasing::EaseInQuint;
+            break;
+        case 14:
+            clip.Easing = CEasing::EaseOutQuint;
+            break;
+        case 15:
+            clip.Easing = CEasing::EaseInOutQuint;
+            break;
+        case 16:
+            clip.Easing = CEasing::EaseInExpo;
+            break;
+        case 17:
+            clip.Easing = CEasing::EaseOutExpo;
+            break;
+        case 18:
+            clip.Easing = CEasing::EaseInOutExpo;
+            break;
+        case 19:
+            clip.Easing = CEasing::EaseInCirc;
+            break;
+        case 20:
+            clip.Easing = CEasing::EaseOutCirc;
+            break;
+        case 21:
+            clip.Easing = CEasing::EaseInOutCirc;
+            break;
+        case 22:
+            clip.Easing = CEasing::EaseInElastic;
+            break;
+        case 23:
+            clip.Easing = CEasing::EaseOutElastic;
+            break;
+        case 24:
+            clip.Easing = CEasing::EaseInOutElastic;
+            break;
+        case 25:
+            clip.Easing = CEasing::EaseInBounce;
+            break;
+        case 26:
+            clip.Easing = CEasing::EaseOutBounce;
+            break;
+        case 27:
+            clip.Easing = CEasing::EaseInOutBounce;
             break;
         }
 

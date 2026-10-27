@@ -50,6 +50,8 @@ private:
 class CGoalTrigger : public CTriggerObject
 {
 public:
+    CGoalTrigger();
+    ~CGoalTrigger();
 
     HRESULT Init    (void) override;
     void    Update  (void) override;
@@ -75,7 +77,7 @@ public:
     void OnTriggerEnter(CGameObject* other) override;
 
 private:
-
+    CGameObject* m_FinishUI;          // FInishUIオブジェクト
 };
 
 #endif

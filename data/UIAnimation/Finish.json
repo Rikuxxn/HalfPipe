@@ -1,0 +1,52 @@
+{
+    "animationName": "Finish",
+    "animations": [
+        {
+            "delay": 0.0,
+            "duration": 0.30000001192092896,
+            "easing": "EaseOutCubic",
+            "from": 0.20000000298023224,
+            "loopCount": 1,
+            "name": "Scale_Up_X",
+            "playbackMode": "Once",
+            "property": "ScaleX",
+            "to": 0.800000011920929
+        },
+        {
+            "delay": 0.0,
+            "duration": 0.30000001192092896,
+            "easing": "EaseOutCubic",
+            "from": 0.20000000298023224,
+            "loopCount": 1,
+            "name": "Scale_Up_Y",
+            "playbackMode": "Once",
+            "property": "ScaleY",
+            "to": 0.44999998807907104
+        }
+    ],
+    "objectTag": "Finish",
+    "size": {
+        "height": 0.5,
+        "width": 0.5
+    },
+    "texture": "data/TEXTURE/Finish.png",
+    "transform": {
+        "alpha": 1.0,
+        "position": [
+            0.5,
+            0.5
+        ],
+        "scale": [
+            0.800000011920929,
+            0.44999998807907104
+        ],
+        "uvPosition": [
+            0.0,
+            0.0
+        ],
+        "uvSize": [
+            1.0,
+            1.0
+        ]
+    }
+}

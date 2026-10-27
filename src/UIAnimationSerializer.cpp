@@ -214,14 +214,14 @@ namespace
             return "EaseInOutElastic";
         }
 
-        if (easing == CEasing::EaseOutBounce)
-        {
-            return "EaseOutBounce";
-        }
-
         if (easing == CEasing::EaseInBounce)
         {
             return "EaseInBounce";
+        }
+
+        if (easing == CEasing::EaseOutBounce)
+        {
+            return "EaseOutBounce";
         }
 
         if (easing == CEasing::EaseInOutBounce)
@@ -362,14 +362,14 @@ namespace
             return CEasing::EaseInOutElastic;
         }
 
-        if (name == "EaseOutBounce")
-        {
-            return CEasing::EaseOutBounce;
-        }
-
         if (name == "EaseInBounce")
         {
             return CEasing::EaseInBounce;
+        }
+
+        if (name == "EaseOutBounce")
+        {
+            return CEasing::EaseOutBounce;
         }
 
         if (name == "EaseInOutBounce")

@@ -243,6 +243,9 @@ void CTriggerObjectManager::LoadFromJson(const char* filename)
         {
             // トリガーオブジェクト側の読み込み処理
             obj->LoadFromJson(data);
+
+            // 初期化処理
+            obj->Init();
         }
     }
 }
