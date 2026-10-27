@@ -374,6 +374,8 @@ private:
     // ポイントデバッグモデル生成
     void CreateMovePointObject(const D3DXVECTOR3& pos);
 
+    void SetStartPoint(int nPoint) { m_StartMovePoint = nPoint; }
+
 private:
 
     // 移動ポイント
@@ -384,6 +386,12 @@ private:
 
     // 現在のポイント(エディタ用)
     int m_currentPoint;
+
+    // 現在の移動ポイント
+    int m_CurrentMovePoint;
+
+    // 移動開始ポイント
+    int m_StartMovePoint;
 };
 
 #endif
