@@ -947,7 +947,9 @@ void CGateBannerBlock::ApplySignTextures(void)
 // コンストラクタ
 //=============================================================================
 CRiftBlock::CRiftBlock() :
-	m_currentPoint(0)
+	m_currentPoint		(0),	// 現在のポイント(エディタ用)
+	m_CurrentMovePoint	(0),	// 現在の移動ポイント
+	m_StartMovePoint	(0)		// 移動開始ポイント
 {
 
 }
@@ -983,7 +985,20 @@ void CRiftBlock::Update(void)
 //=============================================================================
 void CRiftBlock::DrawCustomUI(void)
 {
-	// プレイヤー自動移動ポイント設置エディター
+	ImGui::Dummy(ImVec2(0.0f, 5.0f));
+
+	//=========================================================
+	// 開始ポイントの設定
+	//=========================================================
+
+	if (ImGui::InputInt("Start Point", &m_StartMovePoint))
+	{
+		SetStartPoint(m_StartMovePoint);
+	}
+
+	ImGui::Dummy(ImVec2(0.0f, 5.0f));
+
+	// 自動移動ポイント設置エディター
 	if (ImGui::TreeNode("MovePoint Editor"))
 	{
 		ImGui::Dummy(ImVec2(0.0f, 5.0f));
@@ -1150,6 +1165,8 @@ void CRiftBlock::SaveToJson(json& b)
 	}
 
 	b["points"] = pointArray;
+
+	b["start_point"] = m_StartMovePoint;
 }
 
 //=============================================================================
@@ -1183,5 +1200,10 @@ void CRiftBlock::LoadFromJson(const json& b)
 			CreateMovePointObject(point);
 #endif
 		}
+	}
+
+	if (b.contains("start_point"))
+	{
+		m_StartMovePoint = b.value("start_point", 0);
 	}
 }
