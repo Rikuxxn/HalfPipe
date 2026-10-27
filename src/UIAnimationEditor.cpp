@@ -640,8 +640,112 @@ bool CUIAnimationEditor::DrawClipSettings(UIAnimationClip& clip)
     {
         easingIndex = 1;
     }
+    if (clip.Easing == CEasing::EaseOutSine)
+    {
+        easingIndex = 2;
+    }
+    if (clip.Easing == CEasing::EaseInOutSine)
+    {
+        easingIndex = 3;
+    }
+    if (clip.Easing == CEasing::EaseInQuad)
+    {
+        easingIndex = 4;
+    }
+    if (clip.Easing == CEasing::EaseOutQuad)
+    {
+        easingIndex = 5;
+    }
+    if (clip.Easing == CEasing::EaseInOutQuad)
+    {
+        easingIndex = 6;
+    }
+    if (clip.Easing == CEasing::EaseInCubic)
+    {
+        easingIndex = 7;
+    }
+    if (clip.Easing == CEasing::EaseOutCubic)
+    {
+        easingIndex = 8;
+    }
+    if (clip.Easing == CEasing::EaseInOutCubic)
+    {
+        easingIndex = 9;
+    }
+    if (clip.Easing == CEasing::EaseInQuart)
+    {
+        easingIndex = 10;
+    }
+    if (clip.Easing == CEasing::EaseOutQuart)
+    {
+        easingIndex = 11;
+    }
+    if (clip.Easing == CEasing::EaseInOutQuart)
+    {
+        easingIndex = 12;
+    }
+    if (clip.Easing == CEasing::EaseInQuint)
+    {
+        easingIndex = 13;
+    }
+    if (clip.Easing == CEasing::EaseOutQuint)
+    {
+        easingIndex = 14;
+    }
+    if (clip.Easing == CEasing::EaseInOutQuint)
+    {
+        easingIndex = 15;
+    }
+    if (clip.Easing == CEasing::EaseInExpo)
+    {
+        easingIndex = 16;
+    }
+    if (clip.Easing == CEasing::EaseOutExpo)
+    {
+        easingIndex = 17;
+    }
+    if (clip.Easing == CEasing::EaseInOutExpo)
+    {
+        easingIndex = 18;
+    }
+    if (clip.Easing == CEasing::EaseInCirc)
+    {
+        easingIndex = 19;
+    }
+    if (clip.Easing == CEasing::EaseOutCirc)
+    {
+        easingIndex = 20;
+    }
+    if (clip.Easing == CEasing::EaseInOutCirc)
+    {
+        easingIndex = 21;
+    }
+    if (clip.Easing == CEasing::EaseInElastic)
+    {
+        easingIndex = 22;
+    }
+    if (clip.Easing == CEasing::EaseOutElastic)
+    {
+        easingIndex = 23;
+    }
+    if (clip.Easing == CEasing::EaseInOutElastic)
+    {
+        easingIndex = 24;
+    }
+    if (clip.Easing == CEasing::EaseInBounce)
+    {
+        easingIndex = 25;
+    }
+    if (clip.Easing == CEasing::EaseOutBounce)
+    {
+        easingIndex = 26;
+    }
+    if (clip.Easing == CEasing::EaseInOutBounce)
+    {
+        easingIndex = 27;
+    }
 
-    ImGui::SetNextItemWidth(130.0f);
+    ImGui::SetNextItemWidth(170.0f);
     if (ImGui::Combo(
         "Easing",
         &easingIndex,
