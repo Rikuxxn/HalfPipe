@@ -58,5 +58,11 @@
     "category": "Model",
     "name": "GateBanner",
     "filepath": "data/MODELS/gate_banner.x"
+  },
+  {
+    "type": 10,
+    "category": "Model",
+    "name": "Rift",
+    "filepath": "data/MODELS/rift.x"
   }
 ]

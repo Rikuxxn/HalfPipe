@@ -58,4 +58,5 @@ void CStageFactory::InitFactory(void)
     m_Factory[CStageObject::StageObjectType::RiftPole]      = [](CScene* scene) { return scene->CreateObject<CRiftPoleBlock>(); };
     m_Factory[CStageObject::StageObjectType::PointCircle]   = [](CScene* scene) { return scene->CreateObject<CPointCircleBlock>(); };
     m_Factory[CStageObject::StageObjectType::GateBanner]    = [](CScene* scene) { return scene->CreateObject<CGateBannerBlock>(); };
+    m_Factory[CStageObject::StageObjectType::Rift]          = [](CScene* scene) { return scene->CreateObject<CRiftBlock>(); };
 }

@@ -683,8 +683,8 @@ void CSignBoardBlock::ApplySignTextures(void)
 //=============================================================================
 // コンストラクタ
 //=============================================================================
-CRiftPoleBlock::CRiftPoleBlock() :
-	m_currentPoint (0)
+CRiftPoleBlock::CRiftPoleBlock()
+	//m_currentPoint (0)
 {
 
 }
@@ -715,213 +715,213 @@ void CRiftPoleBlock::Update(void)
 	CStageObject::Update();
 }
 
-//=============================================================================
-// リフトポールの自動移動ポイントエディターの描画
-//=============================================================================
-void CRiftPoleBlock::DrawCustomUI(void)
-{
-	// プレイヤー自動移動ポイント設置エディター
-	if (ImGui::TreeNode("MovePoint Editor"))
-	{
-		ImGui::Dummy(ImVec2(0.0f, 5.0f));
-
-		//=========================================================
-		// 自動移動ポイントの追加
-		//=========================================================
-
-		static float addPos[3] = { 0.0f,0.0f,0.0f };
-
-		ImGui::DragFloat3("Add Point", addPos, 1.0f);
-
-		ImGui::Dummy(ImVec2(0.0f, 5.0f));
-
-		if (ImGui::Button("Add Move Point"))
-		{
-			AddMovePoint(D3DXVECTOR3(addPos[0], addPos[1], addPos[2]));
-		}
-
-		ImGui::Dummy(ImVec2(0.0f, 10.0f));
-
-		//=========================================================
-		// 自動移動ポイントリスト
-		//=========================================================
-
-		for (int i = 0; i < (int)m_MovePoints.size(); i++)
-		{
-			ImGui::PushID(i);
-
-			char label[64];
-
-			sprintf_s(label, "Point %d", i);
-
-			if (ImGui::TreeNode(label))
-			{
-				ImGui::Dummy(ImVec2(0.0f, 5.0f));
-
-				//=================================================
-				// 位置
-				//=================================================
-
-				if (ImGui::DragFloat3("Pos", &m_MovePoints[i].x, 1.0f))
-				{
-					if (i < m_pPointObj.size() && m_pPointObj[i])
-					{
-						auto pointTransform = m_pPointObj[i]->GetComponent<CTransformComponent>();
-
-						if (pointTransform)
-						{
-							pointTransform->Position = m_MovePoints[i];
-						}
-					}
-				}
-
-				ImGui::Dummy(ImVec2(0.0f, 5.0f));
-
-				//=================================================
-				// 削除
-				//=================================================
-
-				if (ImGui::Button("Delete Point"))
-				{
-					// モデル削除
-					if (i < m_pPointObj.size())
-					{
-						if (m_pPointObj[i])
-						{
-							m_pPointObj[i]->Destroy();
-						}
-
-						m_pPointObj.erase(m_pPointObj.begin() + i);
-					}
-
-					m_MovePoints.erase(m_MovePoints.begin() + i);
-
-					// currentPoint補正
-					if (m_currentPoint >= (int)m_MovePoints.size())
-					{
-						m_currentPoint = std::max(0, (int)m_MovePoints.size() - 1);
-					}
-
-					ImGui::TreePop();
-					ImGui::PopID();
-
-					break;
-				}
-
-				ImGui::TreePop();
-			}
-
-			ImGui::PopID();
-		}
-
-		ImGui::Dummy(ImVec2(0.0f, 10.0f)); // 空白を空ける
-
-		ImGui::TreePop(); // 閉じる
-	}
-}
-
-//=============================================================================
-// 自動移動ポイントの追加
-//=============================================================================
-void CRiftPoleBlock::AddMovePoint(const D3DXVECTOR3& position)
-{
-	m_MovePoints.push_back(position);
-
-#ifdef _DEBUG
-	// デバッグ用自動移動ポイントモデルの生成
-	CreateMovePointObject(position);
-#endif
-}
-
-//=============================================================================
-// ポイントデバッグ表示用モデル生成
-//=============================================================================
-void CRiftPoleBlock::CreateMovePointObject(const D3DXVECTOR3& pos)
-{
-	// シーンの取得
-	auto scene = CManager::Instance()->GetSceneManager()->GetScene();
-
-	if (scene)
-	{
-		// ゲームオブジェクトの生成
-		auto point = scene->CreateObject();
-
-		// タグの設定
-		point->SetTag("RiftMovePoint");
-
-		// トランスフォームコンポーネントの追加
-		auto transform = point->AddComponent<CTransformComponent>();
-
-		transform->Position = pos;
-
-		//-----------------------------------------
-		// モデル描画
-		//-----------------------------------------
-
-		// モデルレンダーコンポーネントの追加
-		auto model = point->AddComponent<CXModelRenderComponent>();
-
-		// 描画順の設定
-		model->SetLayer(RenderLayer::Model);
-
-		// モデルのロード
-		model->Load("data/MODELS/MovePoint.x");
-
-		// ゲームオブジェクトの追加
-		m_pPointObj.push_back(point);
-	}
-}
-
-//=============================================================================
-// JSONでの保存
-//=============================================================================
-void CRiftPoleBlock::SaveToJson(json& b)
-{
-	CStageObject::SaveToJson(b);
-
-	json pointArray = json::array();
-
-	for (const auto& point : m_MovePoints)
-	{
-		pointArray.push_back({ point.x,point.y,point.z });
-	}
-
-	b["points"] = pointArray;
-}
-
-//=============================================================================
-// JSONでの読み込み
-//=============================================================================
-void CRiftPoleBlock::LoadFromJson(const json& b)
-{
-	CStageObject::LoadFromJson(b);
-
-	for (auto obj : m_pPointObj)
-	{
-		if (obj)
-		{
-			obj->Uninit();
-		}
-	}
-
-	m_pPointObj.clear();
-	m_MovePoints.clear();
-
-	if (b.contains("points"))
-	{
-		for (const auto& p : b["points"])
-		{
-			D3DXVECTOR3 point(p[0], p[1], p[2]);
-
-			m_MovePoints.push_back(point);
-
-#ifdef _DEBUG
-			// ポイントデバッグ表示用モデルの生成
-			CreateMovePointObject(point);
-#endif
-		}
-	}
-}
+////=============================================================================
+//// リフトポールの自動移動ポイントエディターの描画
+////=============================================================================
+//void CRiftPoleBlock::DrawCustomUI(void)
+//{
+//	// プレイヤー自動移動ポイント設置エディター
+//	if (ImGui::TreeNode("MovePoint Editor"))
+//	{
+//		ImGui::Dummy(ImVec2(0.0f, 5.0f));
+//
+//		//=========================================================
+//		// 自動移動ポイントの追加
+//		//=========================================================
+//
+//		static float addPos[3] = { 0.0f,0.0f,0.0f };
+//
+//		ImGui::DragFloat3("Add Point", addPos, 1.0f);
+//
+//		ImGui::Dummy(ImVec2(0.0f, 5.0f));
+//
+//		if (ImGui::Button("Add Move Point"))
+//		{
+//			AddMovePoint(D3DXVECTOR3(addPos[0], addPos[1], addPos[2]));
+//		}
+//
+//		ImGui::Dummy(ImVec2(0.0f, 10.0f));
+//
+//		//=========================================================
+//		// 自動移動ポイントリスト
+//		//=========================================================
+//
+//		for (int i = 0; i < (int)m_MovePoints.size(); i++)
+//		{
+//			ImGui::PushID(i);
+//
+//			char label[64];
+//
+//			sprintf_s(label, "Point %d", i);
+//
+//			if (ImGui::TreeNode(label))
+//			{
+//				ImGui::Dummy(ImVec2(0.0f, 5.0f));
+//
+//				//=================================================
+//				// 位置
+//				//=================================================
+//
+//				if (ImGui::DragFloat3("Pos", &m_MovePoints[i].x, 1.0f))
+//				{
+//					if (i < m_pPointObj.size() && m_pPointObj[i])
+//					{
+//						auto pointTransform = m_pPointObj[i]->GetComponent<CTransformComponent>();
+//
+//						if (pointTransform)
+//						{
+//							pointTransform->Position = m_MovePoints[i];
+//						}
+//					}
+//				}
+//
+//				ImGui::Dummy(ImVec2(0.0f, 5.0f));
+//
+//				//=================================================
+//				// 削除
+//				//=================================================
+//
+//				if (ImGui::Button("Delete Point"))
+//				{
+//					// モデル削除
+//					if (i < m_pPointObj.size())
+//					{
+//						if (m_pPointObj[i])
+//						{
+//							m_pPointObj[i]->Destroy();
+//						}
+//
+//						m_pPointObj.erase(m_pPointObj.begin() + i);
+//					}
+//
+//					m_MovePoints.erase(m_MovePoints.begin() + i);
+//
+//					// currentPoint補正
+//					if (m_currentPoint >= (int)m_MovePoints.size())
+//					{
+//						m_currentPoint = std::max(0, (int)m_MovePoints.size() - 1);
+//					}
+//
+//					ImGui::TreePop();
+//					ImGui::PopID();
+//
+//					break;
+//				}
+//
+//				ImGui::TreePop();
+//			}
+//
+//			ImGui::PopID();
+//		}
+//
+//		ImGui::Dummy(ImVec2(0.0f, 10.0f)); // 空白を空ける
+//
+//		ImGui::TreePop(); // 閉じる
+//	}
+//}
+//
+////=============================================================================
+//// 自動移動ポイントの追加
+////=============================================================================
+//void CRiftPoleBlock::AddMovePoint(const D3DXVECTOR3& position)
+//{
+//	m_MovePoints.push_back(position);
+//
+//#ifdef _DEBUG
+//	// デバッグ用自動移動ポイントモデルの生成
+//	CreateMovePointObject(position);
+//#endif
+//}
+//
+////=============================================================================
+//// ポイントデバッグ表示用モデル生成
+////=============================================================================
+//void CRiftPoleBlock::CreateMovePointObject(const D3DXVECTOR3& pos)
+//{
+//	// シーンの取得
+//	auto scene = CManager::Instance()->GetSceneManager()->GetScene();
+//
+//	if (scene)
+//	{
+//		// ゲームオブジェクトの生成
+//		auto point = scene->CreateObject();
+//
+//		// タグの設定
+//		point->SetTag("RiftMovePoint");
+//
+//		// トランスフォームコンポーネントの追加
+//		auto transform = point->AddComponent<CTransformComponent>();
+//
+//		transform->Position = pos;
+//
+//		//-----------------------------------------
+//		// モデル描画
+//		//-----------------------------------------
+//
+//		// モデルレンダーコンポーネントの追加
+//		auto model = point->AddComponent<CXModelRenderComponent>();
+//
+//		// 描画順の設定
+//		model->SetLayer(RenderLayer::Model);
+//
+//		// モデルのロード
+//		model->Load("data/MODELS/MovePoint.x");
+//
+//		// ゲームオブジェクトの追加
+//		m_pPointObj.push_back(point);
+//	}
+//}
+//
+////=============================================================================
+//// JSONでの保存
+////=============================================================================
+//void CRiftPoleBlock::SaveToJson(json& b)
+//{
+//	CStageObject::SaveToJson(b);
+//
+//	json pointArray = json::array();
+//
+//	for (const auto& point : m_MovePoints)
+//	{
+//		pointArray.push_back({ point.x,point.y,point.z });
+//	}
+//
+//	b["points"] = pointArray;
+//}
+//
+////=============================================================================
+//// JSONでの読み込み
+////=============================================================================
+//void CRiftPoleBlock::LoadFromJson(const json& b)
+//{
+//	CStageObject::LoadFromJson(b);
+//
+//	for (auto obj : m_pPointObj)
+//	{
+//		if (obj)
+//		{
+//			obj->Uninit();
+//		}
+//	}
+//
+//	m_pPointObj.clear();
+//	m_MovePoints.clear();
+//
+//	if (b.contains("points"))
+//	{
+//		for (const auto& p : b["points"])
+//		{
+//			D3DXVECTOR3 point(p[0], p[1], p[2]);
+//
+//			m_MovePoints.push_back(point);
+//
+//#ifdef _DEBUG
+//			// ポイントデバッグ表示用モデルの生成
+//			CreateMovePointObject(point);
+//#endif
+//		}
+//	}
+//}
 
 //=============================================================================
 // 得点サークルのコンストラクタ
@@ -1151,3 +1151,245 @@ void CGateBannerBlock::ApplySignTextures(void)
 	}
 }
 
+//=============================================================================
+// コンストラクタ
+//=============================================================================
+CRiftBlock::CRiftBlock() :
+	m_currentPoint(0)
+{
+
+}
+
+//=============================================================================
+// デストラクタ
+//=============================================================================
+CRiftBlock::~CRiftBlock()
+{
+
+}
+
+//=============================================================================
+// 初期化
+//=============================================================================
+HRESULT CRiftBlock::Init(void)
+{
+
+	return S_OK;
+}
+
+//=============================================================================
+// 更新処理
+//=============================================================================
+void CRiftBlock::Update(void)
+{
+	// ステージオブジェクトの更新
+	CStageObject::Update();
+}
+
+//=============================================================================
+// リフトポールの自動移動ポイントエディターの描画
+//=============================================================================
+void CRiftBlock::DrawCustomUI(void)
+{
+	// プレイヤー自動移動ポイント設置エディター
+	if (ImGui::TreeNode("MovePoint Editor"))
+	{
+		ImGui::Dummy(ImVec2(0.0f, 5.0f));
+
+		//=========================================================
+		// 自動移動ポイントの追加
+		//=========================================================
+
+		static float addPos[3] = { 0.0f,0.0f,0.0f };
+
+		ImGui::DragFloat3("Add Point", addPos, 1.0f);
+
+		ImGui::Dummy(ImVec2(0.0f, 5.0f));
+
+		if (ImGui::Button("Add Move Point"))
+		{
+			AddMovePoint(D3DXVECTOR3(addPos[0], addPos[1], addPos[2]));
+		}
+
+		ImGui::Dummy(ImVec2(0.0f, 10.0f));
+
+		//=========================================================
+		// 自動移動ポイントリスト
+		//=========================================================
+
+		for (int i = 0; i < (int)m_MovePoints.size(); i++)
+		{
+			ImGui::PushID(i);
+
+			char label[64];
+
+			sprintf_s(label, "Point %d", i);
+
+			if (ImGui::TreeNode(label))
+			{
+				ImGui::Dummy(ImVec2(0.0f, 5.0f));
+
+				//=================================================
+				// 位置
+				//=================================================
+
+				if (ImGui::DragFloat3("Pos", &m_MovePoints[i].x, 1.0f))
+				{
+					if (i < m_pPointObj.size() && m_pPointObj[i])
+					{
+						auto pointTransform = m_pPointObj[i]->GetComponent<CTransformComponent>();
+
+						if (pointTransform)
+						{
+							pointTransform->Position = m_MovePoints[i];
+						}
+					}
+				}
+
+				ImGui::Dummy(ImVec2(0.0f, 5.0f));
+
+				//=================================================
+				// 削除
+				//=================================================
+
+				if (ImGui::Button("Delete Point"))
+				{
+					// モデル削除
+					if (i < m_pPointObj.size())
+					{
+						if (m_pPointObj[i])
+						{
+							m_pPointObj[i]->Destroy();
+						}
+
+						m_pPointObj.erase(m_pPointObj.begin() + i);
+					}
+
+					m_MovePoints.erase(m_MovePoints.begin() + i);
+
+					// currentPoint補正
+					if (m_currentPoint >= (int)m_MovePoints.size())
+					{
+						m_currentPoint = std::max(0, (int)m_MovePoints.size() - 1);
+					}
+
+					ImGui::TreePop();
+					ImGui::PopID();
+
+					break;
+				}
+
+				ImGui::TreePop();
+			}
+
+			ImGui::PopID();
+		}
+
+		ImGui::Dummy(ImVec2(0.0f, 10.0f)); // 空白を空ける
+
+		ImGui::TreePop(); // 閉じる
+	}
+}
+
+//=============================================================================
+// 自動移動ポイントの追加
+//=============================================================================
+void CRiftBlock::AddMovePoint(const D3DXVECTOR3& position)
+{
+	m_MovePoints.push_back(position);
+
+#ifdef _DEBUG
+	// デバッグ用自動移動ポイントモデルの生成
+	CreateMovePointObject(position);
+#endif
+}
+
+//=============================================================================
+// ポイントデバッグ表示用モデル生成
+//=============================================================================
+void CRiftBlock::CreateMovePointObject(const D3DXVECTOR3& pos)
+{
+	// シーンの取得
+	auto scene = CManager::Instance()->GetSceneManager()->GetScene();
+
+	if (scene)
+	{
+		// ゲームオブジェクトの生成
+		auto point = scene->CreateObject();
+
+		// タグの設定
+		point->SetTag("RiftMovePoint");
+
+		// トランスフォームコンポーネントの追加
+		auto transform = point->AddComponent<CTransformComponent>();
+
+		transform->Position = pos;
+
+		//-----------------------------------------
+		// モデル描画
+		//-----------------------------------------
+
+		// モデルレンダーコンポーネントの追加
+		auto model = point->AddComponent<CXModelRenderComponent>();
+
+		// 描画順の設定
+		model->SetLayer(RenderLayer::Model);
+
+		// モデルのロード
+		model->Load("data/MODELS/MovePoint.x");
+
+		// ゲームオブジェクトの追加
+		m_pPointObj.push_back(point);
+	}
+}
+
+//=============================================================================
+// JSONでの保存
+//=============================================================================
+void CRiftBlock::SaveToJson(json& b)
+{
+	CStageObject::SaveToJson(b);
+
+	json pointArray = json::array();
+
+	for (const auto& point : m_MovePoints)
+	{
+		pointArray.push_back({ point.x,point.y,point.z });
+	}
+
+	b["points"] = pointArray;
+}
+
+//=============================================================================
+// JSONでの読み込み
+//=============================================================================
+void CRiftBlock::LoadFromJson(const json& b)
+{
+	CStageObject::LoadFromJson(b);
+
+	for (auto obj : m_pPointObj)
+	{
+		if (obj)
+		{
+			obj->Uninit();
+		}
+	}
+
+	m_pPointObj.clear();
+	m_MovePoints.clear();
+
+	if (b.contains("points"))
+	{
+		for (const auto& p : b["points"])
+		{
+			D3DXVECTOR3 point(p[0], p[1], p[2]);
+
+			m_MovePoints.push_back(point);
+
+#ifdef _DEBUG
+			// ポイントデバッグ表示用モデルの生成
+			CreateMovePointObject(point);
+#endif
+		}
+	}
+}
