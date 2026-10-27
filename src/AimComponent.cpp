@@ -14,6 +14,10 @@
 #include "TransformComponent.h"
 #include "Scene.h"
 #include "3DSpriteRenderComponent.h"
+#include "MathConstants.h"
+
+// 名前空間の使用
+using namespace MathConst;
 
 
 //=============================================================================
@@ -113,6 +117,30 @@ void CAimComponent::SetTarget(CAimTargetComponent* target)
     m_AimPosition = m_TargetCenter;
 
     m_IsTargetSet = true;
+}
+
+//=============================================================================
+// エイム位置の設定
+//=============================================================================
+void CAimComponent::SetAimPosition(const D3DXVECTOR3& position)
+{
+    //m_AimPosition = position;
+
+    // 0.0～1.0 の乱数
+    float r = (rand() % I_RAND_NUM) / F_RAND_NUM;
+
+    // 平方根を取って均一に分布させる
+    float radius = sqrtf(r) * m_AimRadius;
+
+    float angle = ((rand() % I_ANGLE_MAX) / F_ANGLE_HALF) * D3DX_PI;
+    //float height = (rand() % HEIGHT_RANGE) - MIN_HEIGHT;
+
+    // 位置
+    m_AimPosition.x = position.x + cosf(angle) * radius;
+    m_AimPosition.z = position.z + sinf(angle) * radius;
+    //m_AimPosition.y = height;
+
+    ClampAimPosition();
 }
 
 //=============================================================================

@@ -30,12 +30,8 @@ public:
 
     void SetTarget(CAimTargetComponent* target);
     
-    void SetAimPosition(const D3DXVECTOR3& position)
-    {
-        m_AimPosition = position;
-
-        ClampAimPosition();
-    }
+    // ÉGÉCÉÄà íuÇÃê›íË
+    void SetAimPosition(const D3DXVECTOR3& position);
 
     D3DXVECTOR3 GetAimPosition(void) const { return m_AimPosition; }
 
