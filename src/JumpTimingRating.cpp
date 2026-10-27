@@ -135,8 +135,8 @@ void CJumpTimingRating::Update(void)
 
 		break;
 	case VisibleState::Visible:
-		// •\Ž¦
-		sprite->SetIsVisible(true);
+		// •\Ž¦(¡‚¢‚ç‚È‚¢‚©‚çÁ‚µ‚Ä‚é)
+		//sprite->SetIsVisible(true);
 		m_InvisibleTimer = 2.0f;
 		m_VisibleState = VisibleState::Count;
 
