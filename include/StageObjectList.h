@@ -270,29 +270,6 @@ public:
     {
         return ColliderShape::Box;
     }
-
-//private:
-//
-//    void SaveToJson(json& j) override;
-//    void LoadFromJson(const json& j) override;
-//
-//    void DrawCustomUI(void) override;
-//
-//    void AddMovePoint(const D3DXVECTOR3& position);
-//
-//    // ポイントデバッグモデル生成
-//    void CreateMovePointObject(const D3DXVECTOR3& pos);
-//
-//private:
-//
-//    // 移動ポイント
-//    std::vector<D3DXVECTOR3> m_MovePoints;
-//
-//    // 自動移動ポイントデバッグ表示用
-//    std::vector<CGameObject*> m_pPointObj;
-//
-//    // 現在のポイント(エディタ用)
-//    int m_currentPoint;
 };
 
 //*****************************************************************************
