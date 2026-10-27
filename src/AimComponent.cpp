@@ -138,7 +138,7 @@ void CAimComponent::SetAimPosition(const D3DXVECTOR3& position)
     // ˆÊ’u
     m_AimPosition.x = position.x + cosf(angle) * radius;
     m_AimPosition.z = position.z + sinf(angle) * radius;
-    //m_AimPosition.y = height;
+    m_AimPosition.y = position.y/*height*/;
 
     ClampAimPosition();
 }
