@@ -27,6 +27,10 @@ public:
     // ボールを投げる
     void Throw(const D3DXVECTOR3& velocity);
 
+    bool HasScored(void) const { return m_HasScored; }
+
+    void SetScored(bool scored) { m_HasScored = scored; }
+
 private:
 
     // ボールの寿命（秒）
@@ -36,6 +40,8 @@ private:
     float m_ElapsedTime;
 
     bool m_IsThrown;
+
+    bool m_HasScored;
 };
 
 #endif

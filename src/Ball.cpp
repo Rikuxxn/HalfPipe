@@ -23,7 +23,8 @@
 CBall::CBall() : 
     m_LifeTime      (3.0f),     // ボールの寿命（秒）
     m_ElapsedTime   (0.0f),     // 経過時間
-	m_IsThrown      (false)     // ボールを投げたか
+	m_IsThrown      (false),    // ボールを投げたか
+    m_HasScored     (false)
 {
 
 }
