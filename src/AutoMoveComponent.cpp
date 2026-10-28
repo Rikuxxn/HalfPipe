@@ -42,6 +42,7 @@ CAutoMoveComponent::CAutoMoveComponent() :
 	m_HasTimingResult		(false),					// タイミング結果が確定しているか
 	m_Press					(false),					// 長押ししているか
 	m_ReleaseZone			(false),					// 長押しを放すゾーンにいるか
+	m_Jump					(false),					// ジャンプ中か
     m_CurrentMovePoint		(1),						// 現在目指しているポイント
 	m_CurrentMovePointMinas	(0),						// 現在目指しているポイント
 	m_CurrentMovePointPlus	(2),						// 現在目指しているポイント
@@ -198,6 +199,7 @@ void CAutoMoveComponent::UpdateAutoMove(float deltaTime)
 
 			m_IsTimingActive = true;
 			m_IsWaitingForJumpPoint = true;
+			m_Jump = false;
 
 			// 判定開始済みにする
 			m_JumpStartHandled = true;
@@ -218,6 +220,7 @@ void CAutoMoveComponent::UpdateAutoMove(float deltaTime)
 	if (currentPoint.Type == MovePointType::JumpBranch&& m_IsWaitingForJumpPoint==true)
 	{
 		m_ReleaseZone = false;
+		m_Jump = true;
 		// タイミング判定結果がなければBADにする
 		if (!m_HasTimingResult)
 		{

@@ -186,6 +186,8 @@ private:
     // 長押しを放すゾーンにいるか
     bool m_ReleaseZone;
 
+    bool m_Jump;
+
     // 確定したタイミング結果
     CJumpTiming::TIMING m_TimingResult;
 };
