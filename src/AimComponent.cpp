@@ -113,8 +113,8 @@ void CAimComponent::SetTarget(CAimTargetComponent* target)
     m_TargetRotation = m_pTarget->GetAimRotation();
     m_AimRadius = m_pTarget->GetAimRadius();
 
-    // 初期照準位置はBasketの中心
-    m_AimPosition = m_TargetCenter;
+    // ランダムな位置に照準を配置
+    SetRandomAimPosition();
 
     m_IsTargetSet = true;
 }
@@ -124,23 +124,41 @@ void CAimComponent::SetTarget(CAimTargetComponent* target)
 //=============================================================================
 void CAimComponent::SetAimPosition(const D3DXVECTOR3& position)
 {
-    //m_AimPosition = position;
-
-    // 0.0～1.0 の乱数
-    float r = (rand() % I_RAND_NUM) / F_RAND_NUM;
-
-    // 平方根を取って均一に分布させる
-    float radius = sqrtf(r) * m_AimRadius;
-
-    float angle = ((rand() % I_ANGLE_MAX) / F_ANGLE_HALF) * D3DX_PI;
-    //float height = (rand() % HEIGHT_RANGE) - MIN_HEIGHT;
-
-    // 位置
-    m_AimPosition.x = position.x + cosf(angle) * radius;
-    m_AimPosition.z = position.z + sinf(angle) * radius;
-    m_AimPosition.y = position.y/*height*/;
+    m_AimPosition = position;
 
     ClampAimPosition();
+}
+
+//=============================================================================
+// エイム位置をランダムに設定
+//=============================================================================
+void CAimComponent::SetRandomAimPosition(void)
+{
+    // ターゲットの円の内部からランダムな位置を選択
+    float randomAngle = (static_cast<float>(rand()) / RAND_MAX) * D3DX_PI * F_DOUBLE;
+
+    // 円の内部に均等に分布させるため、半径に平方根を使用
+    float randomRadius = m_AimRadius * sqrtf(static_cast<float>(rand()) / RAND_MAX);
+
+    // ターゲットのローカル座標でランダム位置を計算
+    D3DXVECTOR3 localOffset(
+        cosf(randomAngle) * randomRadius,
+        0.0f,
+        sinf(randomAngle) * randomRadius
+    );
+
+    // ターゲットの回転行列を作成
+    D3DXMATRIX rotationMatrix;
+
+    D3DXMatrixRotationQuaternion(&rotationMatrix, &m_TargetRotation);
+
+    // ローカル座標からワールド座標へ変換
+    D3DXVECTOR3 worldOffset;
+
+    D3DXVec3TransformNormal(&worldOffset, &localOffset, &rotationMatrix);
+
+    // ターゲット中心からランダム位置へ配置
+    m_AimPosition = m_TargetCenter + worldOffset;
 }
 
 //=============================================================================
