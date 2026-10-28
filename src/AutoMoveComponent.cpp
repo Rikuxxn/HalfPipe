@@ -199,7 +199,7 @@ void CAutoMoveComponent::UpdateAutoMove(float deltaTime)
 
 			m_IsTimingActive = true;
 			m_IsWaitingForJumpPoint = true;
-			m_Jump = false;
+			//m_Jump = false;
 
 			// 判定開始済みにする
 			m_JumpStartHandled = true;
@@ -214,13 +214,16 @@ void CAutoMoveComponent::UpdateAutoMove(float deltaTime)
 	// ジャンプの長押し判定
 	JumpTiming();
 
+	// ジャンプフラグ
+	m_Jump = currentPoint.Type == MovePointType::Normal || currentPoint.Type == MovePointType::JumpStart ? false : true;
+
 	//=========================================================
 	// ジャンプ分岐地点の判定
 	//=========================================================
 	if (currentPoint.Type == MovePointType::JumpBranch&& m_IsWaitingForJumpPoint==true)
 	{
 		m_ReleaseZone = false;
-		m_Jump = true;
+		//m_Jump = true;
 		// タイミング判定結果がなければBADにする
 		if (!m_HasTimingResult)
 		{
