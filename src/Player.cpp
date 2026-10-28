@@ -149,6 +149,18 @@ void CPlayer::Update(void)
 		aim->MoveAim(input.moveDir, dt);
 	}
 
+	// 玉の投擲
+	if (pKeyboard->GetTrigger(DIK_F) || pJoypad->GetTriggerR2())
+	{
+		// 投擲コンポーネントの取得
+		auto ballThrow = GetComponent<CThrowComponent>();
+
+		if (ballThrow)
+		{
+			ballThrow->Throw();
+		}
+	}
+
 	//============================================================
 	// LocalPlayerなら入力をサーバーへ送信
 	//============================================================
@@ -167,18 +179,6 @@ void CPlayer::Update(void)
 
 	// ハーフパイプの面に合わせた姿勢制御
 	UpdateSurfaceAlignment(dt);
-
-	// テスト : 投擲
-	if (pKeyboard->GetTrigger(DIK_F) || pJoypad->GetTriggerR2())
-	{
-		// 投擲コンポーネントの取得
-		auto ballThrow = GetComponent<CThrowComponent>();
-
-		if (ballThrow)
-		{
-			ballThrow->Throw();
-		}
-	}
 }
 
 //=============================================================================
