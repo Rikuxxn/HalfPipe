@@ -95,6 +95,13 @@ public:
         return m_IsAutoMove;
     }
 
+    // ジャンプ中か
+    bool IsJump(void) const
+    {
+        return m_Jump;
+    }
+
+
     // 進行方向の取得
     D3DXVECTOR3 GetMoveDirection(void) const { return m_MoveDirection; }
 
