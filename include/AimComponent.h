@@ -41,6 +41,12 @@ public:
     // 照準移動
     void MoveAim(const D3DXVECTOR3& moveDirection, float deltaTime);
 
+    // エイム表示処理
+    void VisibleAim(void);
+
+    // エイム非表示処理
+    void InvisibleAim(void);
+
 private:
 
     // エイム表示の生成

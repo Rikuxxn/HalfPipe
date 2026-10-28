@@ -68,6 +68,8 @@ void CAimComponent::Update(void)
         SetTarget(nearest);
     }
 
+
+
     UpdateAimMarker();
 }
 
@@ -186,6 +188,34 @@ void CAimComponent::MoveAim(const D3DXVECTOR3& moveDirection, float deltaTime)
 
     // 移動可能範囲を制限
     ClampAimPosition();
+}
+
+//=============================================================================
+// エイムの表示
+//=============================================================================
+void CAimComponent::VisibleAim(void)
+{
+    // 3D板ポリゴン取得
+    auto sprite = m_pAimMarker->GetComponent<C3DSpriteRenderComponent>();
+
+    if (sprite)
+    {
+        sprite->SetIsVisible(true);
+    }
+}
+
+//=============================================================================
+// エイムの非表示
+//=============================================================================
+void CAimComponent::InvisibleAim(void)
+{
+    // 3D板ポリゴン取得
+    auto sprite = m_pAimMarker->GetComponent<C3DSpriteRenderComponent>();
+
+    if (sprite)
+    {
+        sprite->SetIsVisible(false);
+    }
 }
 
 //=============================================================================
