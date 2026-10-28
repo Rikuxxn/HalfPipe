@@ -68,8 +68,6 @@ void CAimComponent::Update(void)
         SetTarget(nearest);
     }
 
-
-
     UpdateAimMarker();
 }
 
