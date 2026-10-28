@@ -42,6 +42,9 @@ public:
 private:
 	std::unique_ptr<CPauseManager> m_PauseManager;
 	std::unique_ptr<CSky> m_pSky;
+
+	// Åuì_Åv UI
+	CGameObject* m_pPointUI;
 };
 
 #endif

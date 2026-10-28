@@ -39,13 +39,17 @@
 #include "Camera.h"
 #include "JumpTimingRating.h"
 #include "ScoreRenderComponent.h"
+#include "UIAnimationManager.h"
+#include "UIFactory.h"
+#include "UIAnimationComponent.h"
 
 
 
 //=============================================================================
 // コンストラクタ
 //=============================================================================
-CGame::CGame()
+CGame::CGame() :
+	m_pPointUI (nullptr)
 {
 	// 値のクリア
 }
@@ -185,20 +189,44 @@ HRESULT CGame::Init(void)
 		// UIコンポーネント
 		auto ui = scoreObject->AddComponent<CUIComponent>();
 
-		// 表示位置
-		UITransform transform = ui->GetTransform();
-
-		transform.Position = { 0.8f, 0.15f };
-		transform.Scale = { 0.2f, 0.2f };
-
 		// スコア描画コンポーネント
 		auto score = scoreObject->AddComponent<CScoreRenderComponent>();
+
+		ui->SetPosition({ 0.54f, 0.13f });
+		ui->SetScale({ 2.0f, 2.0f });
 
 		score->SetLayer(RenderLayer::UI);
 		score->SetTexture("data/TEXTURE/num_01.png");
 		score->SetDigitSize(40.0f, 60.0f);
 		score->SetCountSpeed(100.0f);
 		score->SetScore(0);
+	}
+
+	//-----------------------------------------------------
+	// JSONに保存したUI (「点」 UI)
+	//-----------------------------------------------------
+	{
+		// UIアニメーションデータの読み込み
+		auto uiManager = CManager::Instance()->GetUIAnimationManager();
+
+		if (uiManager)
+		{
+			uiManager->Load("data/UIAnimation/Point.json");
+		}
+
+		// 登録済みのUIデータを取得
+		UIAnimationData* data = uiManager->GetData("Point");
+
+		// UI生成
+		m_pPointUI = CUIFactory::Create(this, *data);
+
+		// 最初は非表示
+		auto sprite = m_pPointUI->GetComponent<CSpriteRenderComponent>();
+
+		if (sprite)
+		{
+			sprite->SetIsVisible(true);
+		}
 	}
 
 	// カメラの取得

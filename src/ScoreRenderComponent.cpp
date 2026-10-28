@@ -144,8 +144,8 @@ void CScoreRenderComponent::Draw(void)
     std::string scoreText = std::to_string(m_Score);
 
     // 1文字の描画サイズ
-    float w = m_DigitWidth * transform.Scale.x;
-    float h = m_DigitHeight * transform.Scale.y;
+    float w = /*screenW * */m_DigitWidth * transform.Scale.x;
+    float h = /*screenH * */m_DigitHeight * transform.Scale.y;
 
     // UIの中心位置
     float centerX = transform.Position.x * screenW;
