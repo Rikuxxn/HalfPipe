@@ -25,13 +25,22 @@ public:
     void Update(void) override;
 
     // ボールを投げる
-    void Throw(const D3DXVECTOR3& velocity);
+    void Throw(const D3DXVECTOR3& AimPos,const D3DXVECTOR3& PlayerPos);
 
     bool HasScored(void) const { return m_HasScored; }
 
     void SetScored(bool scored) { m_HasScored = scored; }
 
 private:
+    // 最初のスプライン位置
+    D3DXVECTOR3 m_SprainStart;
+    // プレイヤー位置
+    D3DXVECTOR3 m_PlayerPosition;
+    // 照準位置
+    D3DXVECTOR3 m_AimPosition;
+    // 最後のスプライン位置
+    D3DXVECTOR3 m_SprainEnd;
+
 
     // ボールの寿命（秒）
     float m_LifeTime;
@@ -42,6 +51,8 @@ private:
     bool m_IsThrown;
 
     bool m_HasScored;
+
+    bool m_Sprain;
 };
 
 #endif

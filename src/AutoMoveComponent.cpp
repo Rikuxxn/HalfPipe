@@ -199,7 +199,6 @@ void CAutoMoveComponent::UpdateAutoMove(float deltaTime)
 
 			m_IsTimingActive = true;
 			m_IsWaitingForJumpPoint = true;
-			//m_Jump = false;
 
 			// 判定開始済みにする
 			m_JumpStartHandled = true;
@@ -223,7 +222,6 @@ void CAutoMoveComponent::UpdateAutoMove(float deltaTime)
 	if (currentPoint.Type == MovePointType::JumpBranch&& m_IsWaitingForJumpPoint==true)
 	{
 		m_ReleaseZone = false;
-		//m_Jump = true;
 		// タイミング判定結果がなければBADにする
 		if (!m_HasTimingResult)
 		{
@@ -324,7 +322,7 @@ void CAutoMoveComponent::UpdateAutoMove(float deltaTime)
 		return;
 	}
 
-	m_fDeltaSpeed = m_IsWaitingForJumpPoint ? m_fBasicSpeed : 0.008f;
+	m_fDeltaSpeed = m_Jump ? 0.008f : m_fBasicSpeed;
 
 	// 時間を進める
 	m_CurrentTime += m_fDeltaSpeed;

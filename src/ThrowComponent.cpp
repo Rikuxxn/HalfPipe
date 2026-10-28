@@ -29,7 +29,7 @@ using namespace MatrixUtil;
 CThrowComponent::CThrowComponent() :
 	m_BallThrowOffset	({ 0.0f, 50.0f, 0.0f }),// ボールのオフセット
 	m_ThrowCount		(MAX_DEF_THROW_NUM),	// 投擲数
-	m_BallThrowSpeed	(1500.0f)				// ボールの投擲スピード
+	m_BallThrowSpeed	(3500.0f)				// ボールの投擲スピード
 {
 
 }
@@ -140,5 +140,5 @@ void CThrowComponent::Throw(void)
 	D3DXVECTOR3 velocity = direction * m_BallThrowSpeed;
 
 	// 投擲
-	ball->Throw(velocity);
+	ball->Throw(targetPosition, spawnPosition);
 }

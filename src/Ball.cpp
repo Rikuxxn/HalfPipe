@@ -15,6 +15,7 @@
 #include "CollisionGroup.h"
 #include "Manager.h"
 #include "TimeSystem.h"
+#include "MathUtility.h"
 
 
 //=============================================================================
@@ -24,7 +25,8 @@ CBall::CBall() :
     m_LifeTime      (3.0f),     // ボールの寿命（秒）
     m_ElapsedTime   (0.0f),     // 経過時間
 	m_IsThrown      (false),    // ボールを投げたか
-    m_HasScored     (false)
+    m_HasScored     (false),
+    m_Sprain        (false)
 {
 
 }
@@ -115,12 +117,26 @@ void CBall::Update(void)
     {
         return;
     }
+    // コンポーネントの取得
+    auto transform = GetComponent<CTransformComponent>();
+    auto rigid = GetComponent<CRigidBodyComponent>();
+
+    if (m_Sprain)
+    {
+        transform->Position = MathUtil::Spline(m_SprainStart, m_PlayerPosition, m_AimPosition, m_SprainEnd, m_ElapsedTime);
+        rigid->Transform();
+    }
 
     // デルタタイムの取得
     float deltaTime = CManager::Instance()->GetTimeSystem()->GetDeltaTime();
 
     // 経過時間を加算
     m_ElapsedTime += deltaTime;
+
+    if (m_ElapsedTime >= 1.0f)
+    {
+        m_Sprain = false;
+    }
 
     // 寿命を超えたら削除
     if (m_ElapsedTime >= m_LifeTime)
@@ -133,7 +149,7 @@ void CBall::Update(void)
 //=============================================================================
 // 投擲処理
 //=============================================================================
-void CBall::Throw(const D3DXVECTOR3& velocity)
+void CBall::Throw(const D3DXVECTOR3& AimPos, const D3DXVECTOR3& PlayerPos)
 {
     // リジッドボディコンポーネントの取得
     auto rigid = GetComponent<CRigidBodyComponent>();
@@ -142,12 +158,18 @@ void CBall::Throw(const D3DXVECTOR3& velocity)
     {
         return;
     }
+    m_PlayerPosition = PlayerPos;
+    m_AimPosition = AimPos;
+    D3DXVECTOR3 dir = m_PlayerPosition - m_AimPosition;
+    m_SprainStart = D3DXVECTOR3(m_PlayerPosition.x + dir.x * 7.0f, m_PlayerPosition.y, m_PlayerPosition.z + dir.z * 2.0f);
+    m_SprainEnd = D3DXVECTOR3(AimPos.x, AimPos.y - 1000.0f, AimPos.z);
 
     // 物理速度の設定
-    rigid->SetPhysicsVelocity(velocity);
+    rigid->SetPhysicsVelocity(dir);
 
     // タイマー初期化
     m_ElapsedTime = 0.0f;
 
     m_IsThrown = true;
+    m_Sprain = true;
 }
