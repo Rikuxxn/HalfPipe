@@ -15,6 +15,11 @@
 #include "Scene.h"
 #include "3DSpriteRenderComponent.h"
 #include "MathConstants.h"
+#include "Manager.h"
+#include "SceneManager.h"
+#include "XModelRenderComponent.h"
+#include "MathUtility.h"
+
 
 // 名前空間の使用
 using namespace MathConst;
@@ -51,6 +56,8 @@ HRESULT CAimComponent::Init(void)
 {
     // エイム表示の生成
     CreateAimMarker();
+    // 予測線の生成
+    CreatePredictionLine();
 
     return S_OK;
 }
@@ -69,6 +76,7 @@ void CAimComponent::Update(void)
     }
 
     UpdateAimMarker();
+    UpdatePredictionLine();
 }
 
 //=============================================================================
@@ -200,6 +208,27 @@ void CAimComponent::VisibleAim(void)
     {
         sprite->SetIsVisible(true);
     }
+
+    // 予測線
+    for (int nCount = 0; nCount < m_pPointObj.size(); nCount++)
+    {
+        auto pointObj = m_pPointObj[nCount];
+
+        if (!pointObj)
+        {
+            return;
+        }
+
+        // モデルコンポーネントの取得
+        auto model = pointObj->GetComponent<CXModelRenderComponent>();
+
+        if (!model)
+        {
+            return;
+        }
+        model->SetVisible(true);
+    }
+
 }
 
 //=============================================================================
@@ -214,6 +243,27 @@ void CAimComponent::InvisibleAim(void)
     {
         sprite->SetIsVisible(false);
     }
+
+    // 予測線
+    for (int nCount = 0; nCount < m_pPointObj.size(); nCount++)
+    {
+        auto pointObj = m_pPointObj[nCount];
+
+        if (!pointObj)
+        {
+            return;
+        }
+
+        // モデルコンポーネントの取得
+        auto model = pointObj->GetComponent<CXModelRenderComponent>();
+
+        if (!model)
+        {
+            return;
+        }
+        model->SetVisible(false);
+    }
+
 }
 
 //=============================================================================
@@ -361,4 +411,82 @@ CAimTargetComponent* CAimComponent::FindNearestTarget(void)
     }
 
     return nearestTarget;
+}
+
+//=============================================================================
+// 予測線の生成
+//=============================================================================
+void CAimComponent::CreatePredictionLine(void)
+{
+    // シーンの取得
+    auto scene = CManager::Instance()->GetSceneManager()->GetScene();
+
+    if (scene)
+    {
+        for (int nCount = 0; nCount < 25; nCount++)
+        {
+            // ゲームオブジェクトの生成
+            auto point = scene->CreateObject();
+
+            // タグの設定
+            point->SetTag("MovePoint");
+
+            // トランスフォームコンポーネントの追加
+            auto transform = point->AddComponent<CTransformComponent>();
+
+            transform->Position = m_AimPosition;
+
+            // モデルレンダーコンポーネントの追加
+            auto model = point->AddComponent<CXModelRenderComponent>();
+
+            // 描画順の設定
+            model->SetLayer(RenderLayer::Model);
+
+            // モデルのロード
+            model->Load("data/MODELS/MovePoint.x");
+
+            // ゲームオブジェクトの追加
+            m_pPointObj.push_back(point);
+        }
+    }
+}
+
+//=============================================================================
+// 予測線の更新
+//=============================================================================
+void CAimComponent::UpdatePredictionLine(void)
+{
+    // プレイヤーのトランスフォームコンポーネント
+    auto transform = m_pOwner->GetComponent<CTransformComponent>();
+
+    if (!transform)
+    {
+        return;
+    }
+
+    D3DXVECTOR3 PlayerPos = transform->Position;
+    PlayerPos.y = PlayerPos.y + 50.0f;
+
+    D3DXVECTOR3 dir = PlayerPos - m_AimPosition;
+    D3DXVECTOR3 SplineStart = D3DXVECTOR3(PlayerPos.x + dir.x * 7.0f, PlayerPos.y, PlayerPos.z + dir.z * 2.0f);
+    D3DXVECTOR3 SplineEnd = D3DXVECTOR3(m_AimPosition.x, m_AimPosition.y - 1000.0f, m_AimPosition.z);
+
+    for (int nCount = 0; nCount < m_pPointObj.size(); nCount++)
+    {
+        auto pointObj = m_pPointObj[nCount];
+
+        if (!pointObj)
+        {
+            return;
+        }
+
+        // モデルコンポーネントの取得
+        auto ModelTransform = pointObj->GetComponent<CTransformComponent>();
+
+        if (!ModelTransform)
+        {
+            return;
+        }
+        ModelTransform->Position = MathUtil::Spline(SplineStart, transform->Position, m_AimPosition, SplineEnd, 1.0f / m_pPointObj.size() * nCount);
+    }
 }

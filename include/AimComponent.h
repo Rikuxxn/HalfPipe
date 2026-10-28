@@ -52,8 +52,14 @@ private:
     // エイム表示の生成
     void CreateAimMarker(void);
 
+    // 予測線の生成
+    void CreatePredictionLine(void);
+
     // エイム表示の更新
     void UpdateAimMarker(void);
+
+    // 予測線の生成
+    void UpdatePredictionLine(void);
 
     // エイム範囲制限
     void ClampAimPosition(void);
@@ -64,6 +70,7 @@ private:
 private:
     CAimTargetComponent*    m_pTarget;          // エイム対象
     CGameObject*            m_pAimMarker;       // エイム表示用オブジェクト
+    std::vector<CGameObject*> m_pPointObj;      // 自動移動ポイントデバッグ表示用
     D3DXVECTOR3             m_AimPosition;      // 照準位置(ワールド)
     D3DXVECTOR3             m_TargetCenter;     // エイム範囲の中心
     D3DXQUATERNION          m_TargetRotation;   // 対象の回転
