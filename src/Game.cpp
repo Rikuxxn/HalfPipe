@@ -198,7 +198,7 @@ HRESULT CGame::Init(void)
 		score->SetTexture("data/TEXTURE/num_01.png");
 		score->SetDigitSize(40.0f, 60.0f);
 		score->SetCountSpeed(100.0f);
-		score->SetScore(123);
+		score->SetScore(0);
 	}
 
 	// ƒJƒƒ‰‚Ìæ“¾
