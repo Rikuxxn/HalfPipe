@@ -144,13 +144,17 @@ void CPlayer::Update(void)
 	// エイムコンポーネント取得
 	auto aim = GetComponent<CAimComponent>();
 
-	if (aim)
+	// 自動移動コンポーネントの取得
+	auto autoMove = GetComponent<CAutoMoveComponent>();
+
+	if (aim && autoMove->IsJump())
 	{
 		aim->MoveAim(input.moveDir, dt);
 	}
 
 	// 玉の投擲
-	if (pKeyboard->GetTrigger(DIK_F) || pJoypad->GetTriggerR2())
+	if (autoMove->IsJump() && 
+		(pKeyboard->GetTrigger(DIK_F) || pJoypad->GetTriggerR2()))
 	{
 		// 投擲コンポーネントの取得
 		auto ballThrow = GetComponent<CThrowComponent>();
