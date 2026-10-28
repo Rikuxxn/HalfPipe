@@ -65,20 +65,6 @@ HRESULT CXModelRenderComponent::Load(const char* filepath)
         return E_FAIL;
     }
 
-    //char buf[256];
-
-    //sprintf_s(buf, "Model : %s\n", filepath);
-    //OutputDebugStringA(buf);
-
-    //sprintf_s(buf, "Vertices : %u\n", m_Model->Mesh->GetNumVertices());
-    //OutputDebugStringA(buf);
-
-    //sprintf_s(buf, "Faces : %u\n", m_Model->Mesh->GetNumFaces());
-    //OutputDebugStringA(buf);
-
-    //sprintf_s(buf, "Subsets : %zu\n", m_Model->Materials.size());
-    //OutputDebugStringA(buf);
-
     return S_OK;
 }
 
@@ -130,6 +116,12 @@ void CXModelRenderComponent::SetFaceTexture(int faceIndex, const std::string& pa
 //=============================================================================
 void CXModelRenderComponent::SetAllFaceTexture(const std::string& path)
 {
+    // モデルが読み込まれているか確認
+    if (!m_Model)
+    {
+        return;
+    }
+
     // テクスチャをロード
     auto texture = CManager::Instance()->GetTextureManager()->Load(path);
 
@@ -138,10 +130,13 @@ void CXModelRenderComponent::SetAllFaceTexture(const std::string& path)
         return;
     }
 
-    for (int i = 0; i < m_FaceTextures.size(); i++)
+    // すべての面に同じテクスチャを登録
+    m_FaceTextures.clear();
+
+    for (int i = 0; i < m_Model->NumFaces; i++)
     {
         // すべての面のテクスチャとして登録
-        m_FaceTextures[i] = texture;
+        m_FaceTextures[static_cast<int>(i)] = texture;
     }
 }
 
