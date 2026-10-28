@@ -91,6 +91,9 @@ HRESULT CPlayer::Init(void)
 		return E_FAIL;
 	}
 
+	// エイムは最初は非表示
+	aim->InvisibleAim();
+
 	// レイキャストコンポーネントの追加
 	AddComponent<CRaycastComponent>();
 
@@ -150,6 +153,14 @@ void CPlayer::Update(void)
 	if (aim && autoMove->IsJump())
 	{
 		aim->MoveAim(input.moveDir, dt);
+
+		// エイムを表示
+		aim->VisibleAim();
+	}
+	else
+	{
+		// エイムを非表示
+		aim->InvisibleAim();
 	}
 
 	// 玉の投擲

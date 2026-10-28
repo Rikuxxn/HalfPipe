@@ -14,6 +14,7 @@ enum CollisionGroup
     COLLISION_GROUP_GHOST   = 1 << 2,
     COLLISION_GROUP_ENEMY   = 1 << 3,
     COLLISION_GROUP_CAMERA  = 1 << 4,
+    COLLISION_GROUP_BALL    = 1 << 5,
 };
 
 #endif

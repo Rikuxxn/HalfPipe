@@ -189,6 +189,34 @@ void CAimComponent::MoveAim(const D3DXVECTOR3& moveDirection, float deltaTime)
 }
 
 //=============================================================================
+// エイムの表示
+//=============================================================================
+void CAimComponent::VisibleAim(void)
+{
+    // 3D板ポリゴン取得
+    auto sprite = m_pAimMarker->GetComponent<C3DSpriteRenderComponent>();
+
+    if (sprite)
+    {
+        sprite->SetIsVisible(true);
+    }
+}
+
+//=============================================================================
+// エイムの非表示
+//=============================================================================
+void CAimComponent::InvisibleAim(void)
+{
+    // 3D板ポリゴン取得
+    auto sprite = m_pAimMarker->GetComponent<C3DSpriteRenderComponent>();
+
+    if (sprite)
+    {
+        sprite->SetIsVisible(false);
+    }
+}
+
+//=============================================================================
 // エイム表示の生成
 //=============================================================================
 void CAimComponent::CreateAimMarker(void)
