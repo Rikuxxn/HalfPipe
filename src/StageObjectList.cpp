@@ -24,6 +24,10 @@
 #include "AimComponent.h"
 #include "AimTargetComponent.h"
 #include <FileDialogUtils.h>
+#include "TimeSystem.h"
+#include <ScoreRenderComponent.h>
+#include <Ball.h>
+
 
 // 名前空間の使用
 using namespace MatrixUtil;
@@ -316,13 +320,13 @@ HRESULT CBasketBlock::Init(void)
 	);
 
 	// 50点：中心
-	CreatePointCircle(m_CenterPosition, 4.0f, "data/TEXTURE/Target_50.png");
+	CreatePointCircle(m_CenterPosition, 4.0f, "data/TEXTURE/wall100./*jpg*/", 50);
 
 	// 30点：中間
-	CreatePointCircle(m_CenterPosition, 6.0f, "data/TEXTURE/Target_30.png");
+	CreatePointCircle(m_CenterPosition, 6.0f, "data/TEXTURE/Target_30./*png*/", 30);
 
 	// 10点：外側
-	CreatePointCircle(m_CenterPosition, 9.0f, "data/TEXTURE/Target_10.png");
+	CreatePointCircle(m_CenterPosition, 9.0f, "data/TEXTURE/Target_10./*png*/", 10);
 
 	//=============================================================================
 	// エイム対象の設定
@@ -396,7 +400,7 @@ void CBasketBlock::UpdatePointCircles(void)
 		}
 
 		circleTransform->Position = m_CenterPosition;
-		circleTransform->Rotation = m_CenterRotation;
+		circleTransform->SetRotation(m_CenterRotation);
 	}
 }
 
@@ -404,7 +408,7 @@ void CBasketBlock::UpdatePointCircles(void)
 // 得点サークル生成処理
 //=============================================================================
 CPointCircleBlock* CBasketBlock::CreatePointCircle(
-	const D3DXVECTOR3& position, float scale, const std::string texPath)
+	const D3DXVECTOR3& position, float scale, const std::string texPath, int point)
 {
 	// シーン取得
 	auto scene = CManager::Instance()->GetSceneManager()->GetScene();
@@ -436,6 +440,9 @@ CPointCircleBlock* CBasketBlock::CreatePointCircle(
 	obj->SetTag("PointCircle");
 	obj->SetGroupName("PointCircles");
 
+	// 得点を設定
+	obj->SetPoint(point);
+
 	// モデル描画
 	auto model = obj->AddComponent<CXModelRenderComponent>();
 
@@ -445,9 +452,9 @@ CPointCircleBlock* CBasketBlock::CreatePointCircle(
 	}
 
 	model->SetLayer(RenderLayer::Model);
-	//model->SetFaceTexture(0, texPath);
-	//model->SetAllFaceTexture(texPath);
 	model->Load("data/MODELS/PointCircle.x");
+	//model->SetFaceTexture(0, texPath);
+	model->SetAllFaceTexture(texPath);
 
 	// 剛体
 	auto rigid = obj->AddComponent<CRigidBodyComponent>();
@@ -473,6 +480,9 @@ CPointCircleBlock* CBasketBlock::CreatePointCircle(
 	
 	// シリンダーコライダーの生成
 	rigid->CreateCylinder(modelSize, 1.0f);
+
+	// 当たり判定更新
+	rigid->UpdateFromScale(transform->Scale);
 
 	// 得点サークルを保存
 	m_PointCircles.push_back(obj);
@@ -720,7 +730,8 @@ void CRiftPoleBlock::Update(void)
 //=============================================================================
 // 得点サークルのコンストラクタ
 //=============================================================================
-CPointCircleBlock::CPointCircleBlock()
+CPointCircleBlock::CPointCircleBlock() :
+	m_Point (0) // 得点
 {
 
 }
@@ -752,14 +763,77 @@ void CPointCircleBlock::Update(void)
 }
 
 //=============================================================================
+// スコア加算
+//=============================================================================
+void CPointCircleBlock::AddScore(int point)
+{
+	// シーンの取得
+	auto scene = CManager::Instance()->GetSceneManager()->GetScene();
+
+	if (!scene)
+	{
+		return;
+	}
+
+	// Scoreタグのオブジェクトを取得
+	auto scoreObject = scene->FindGameObject("Score");
+
+	if (!scoreObject || !scoreObject->CompareTag("Score"))
+	{
+		return;
+	}
+
+	auto score = scoreObject->GetComponent<CScoreRenderComponent>();
+
+	if (!score)
+	{
+		return;
+	}
+
+	// スコア加算
+	score->AddScore(point);
+}
+
+//=============================================================================
 // コリジョンエンター
 //=============================================================================
 void CPointCircleBlock::OnCollisionEnter(CGameObject* other)
 {
-	if (other->CompareTag("Ball"))
+	if (!other || !other->CompareTag("Ball"))
 	{
-
+		return;
 	}
+
+	// シーンの取得
+	auto scene = CManager::Instance()->GetSceneManager()->GetScene();
+
+	if (!scene)
+	{
+		return;
+	}
+
+	// ボールの得点済み状態を取得
+	auto ball = scene->FindGameObject<CBall>("Ball");
+
+	if (!ball)
+	{
+		return;
+	}
+
+	// すでに得点していたら無視
+	if (ball->HasScored())
+	{
+		return;
+	}
+
+	// 得点済みにする
+	ball->SetScored(true);
+
+	// このサークルの得点を取得
+	int point = GetPoint();
+
+	// 得点加算
+	AddScore(GetPoint());
 }
 
 //=============================================================================
@@ -952,7 +1026,7 @@ CRiftBlock::CRiftBlock() :
 	m_MoveDirection		(INIT_VEC3),	// 進行方向
 	m_currentPoint		(0),			// 現在のポイント(エディタ用)
 	m_StartMovePoint	(0),			// 移動開始ポイント
-	m_AutoMoveSpeed		(50.0f)			// 移動スピード
+	m_AutoMoveSpeed		(100.0f)		// 移動スピード
 {
 
 }
@@ -982,62 +1056,80 @@ void CRiftBlock::Update(void)
 	// ステージオブジェクトの更新
 	CStageObject::Update();
 
-	// ポイントが無い場合は飛ばす
 	if (m_MovePoints.empty())
 	{
 		return;
 	}
 
-	// トランスフォームコンポーネントの取得
 	auto transform = GetComponent<CTransformComponent>();
+	auto rigid = GetComponent<CRigidBodyComponent>();
 
-	if (!transform)
+	if (!transform || !rigid)
 	{
 		return;
 	}
 
-	D3DXVECTOR3 target = m_MovePoints[m_StartMovePoint];
+	// ポイント番号の範囲チェック
+	if (m_StartMovePoint < 0 ||
+		m_StartMovePoint >= static_cast<int>(m_MovePoints.size()))
+	{
+		m_StartMovePoint = 0;
+	}
 
-	D3DXVECTOR3 pos = transform->Position;
+	// 現在の目標地点
+	const D3DXVECTOR3& target = m_MovePoints[m_StartMovePoint];
 
-	D3DXVECTOR3 dir = target - pos;
+	// 現在位置から目標地点への方向
+	D3DXVECTOR3 dir = target - transform->Position;
 
-	// 方向ベクトルが有効な場合
-	if (D3DXVec3LengthSq(&dir) > 0.0001f)
+	float dist = D3DXVec3Length(&dir);
+
+	// 到着判定
+	if (dist <= REACH_DIST)
+	{
+		m_StartMovePoint = (m_StartMovePoint + 1) % static_cast<int>(m_MovePoints.size());
+
+		// 次の目標地点を取得
+		dir = m_MovePoints[m_StartMovePoint] - transform->Position;
+
+		dist = D3DXVec3Length(&dir);
+	}
+
+	// 移動方向が有効な場合
+	if (dist > 0.0001f)
 	{
 		D3DXVec3Normalize(&dir, &dir);
 
-		// 進行方向を保存
 		m_MoveDirection = dir;
+
+		// デルタタイム
+		const float deltaTime = CManager::Instance()->GetTimeSystem()->GetDeltaTime();
+
+		// 1フレームの移動距離
+		const float moveDistance = m_AutoMoveSpeed * deltaTime;
+
+		// 移動距離を制限
+		const float actualDistance = (std::min)(moveDistance, dist);
+
+		transform->Position += dir * actualDistance;
+
+		// 進行方向から目標角度を求める
+		float targetAngle = atan2f(-dir.x, -dir.z);
+
+		// 現在の角度
+		float currentAngle = transform->Rotation.y;
+
+		// 角度差を求める（-PI ～ PI）
+		float angleDiff = atan2f(
+			sinf(targetAngle - currentAngle),
+			cosf(targetAngle - currentAngle)
+		);
+
+		// 回転を補間
+		transform->Rotation.y += angleDiff * std::min(ROTATION_SPEED * deltaTime, 1.0f);
 	}
 
-	// 距離を求める
-	float dist = D3DXVec3Length(&dir);
-
-	// 到着
-	if (dist < REACH_DIST)
-	{
-		m_StartMovePoint++;
-
-		if (m_StartMovePoint >= (int)m_MovePoints.size())
-		{
-			m_StartMovePoint = 0;
-		}
-	}
-
-	// 正規化
-	D3DXVec3Normalize(&dir, &dir);
-
-	// リジッドボディコンポーネントの取得
-	auto rigid = GetComponent<CRigidBodyComponent>();
-
-	if (!rigid)
-	{
-		return;
-	}
-
-	transform->Position = target;
-
+	// Bullet側の座標を同期
 	rigid->Transform();
 }
 

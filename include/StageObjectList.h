@@ -144,7 +144,8 @@ public:
     CPointCircleBlock* CreatePointCircle(
         const D3DXVECTOR3& position,
         float scale, 
-        const std::string texPath);
+        const std::string texPath,
+        int point);
 
     // 中心位置取得
     const D3DXVECTOR3& GetCenterPosition(void) const { return m_CenterPosition; }
@@ -171,7 +172,7 @@ private:
     void UpdatePointCircles(void);
 
 private:
-    static constexpr float CIRCLE_OFFSET_Y = 55.0f;
+    static constexpr float CIRCLE_OFFSET_Y = 60.0f;
 
     // バスケットの中心位置
     D3DXVECTOR3 m_CenterPosition;
@@ -285,6 +286,8 @@ public:
     HRESULT Init(void) override;
     void Update(void) override;
 
+    void AddScore(int point);
+
     StageObjectType GetType(void) const override
     {
         return StageObjectType::PointCircle;
@@ -297,7 +300,14 @@ public:
 
     void OnCollisionEnter(CGameObject* other)override;
 
+    // 得点設定
+    void SetPoint(int point) { m_Point = point; }
+
+    // 得点取得
+    int GetPoint(void) const { return m_Point; }
+
 private:
+    int m_Point;    // 得点
 };
 
 //*****************************************************************************
@@ -378,7 +388,9 @@ private:
     void SetStartPoint(int nPoint) { m_StartMovePoint = nPoint; }
 
 private:
-    static constexpr float REACH_DIST = 5.0f;   // 到達判定距離
+    static constexpr float REACH_DIST       = 15.0f;   // 到達判定距離
+    static constexpr float ROTATION_SPEED   = 2.0f;    // 角度の補間速度
+
 
     // 移動ポイント
     std::vector<D3DXVECTOR3> m_MovePoints;
