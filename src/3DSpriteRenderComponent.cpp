@@ -84,10 +84,17 @@ void C3DSpriteRenderComponent::Draw(void)
     float halfW = m_Width * MathConst::HALF;
     float halfH = m_Height * MathConst::HALF;
 
-    vertex[0].pos = { -halfW, halfH, 0.0f };    // 左上
-    vertex[1].pos = { halfW, halfH, 0.0f };     // 右上
-    vertex[2].pos = { -halfW, -halfH, 0.0f };   // 左下
-    vertex[3].pos = { halfW, -halfH, 0.0f };    // 右下
+    // XY平面
+    //vertex[0].pos = { -halfW, halfH, 0.0f };    // 左上
+    //vertex[1].pos = { halfW, halfH, 0.0f };     // 右上
+    //vertex[2].pos = { -halfW, -halfH, 0.0f };   // 左下
+    //vertex[3].pos = { halfW, -halfH, 0.0f };    // 右下
+
+    // XZ平面
+    vertex[0].pos = { -halfW, 0.0f, halfH };    // 左上
+    vertex[1].pos = { halfW, 0.0f, halfH };     // 右上
+    vertex[2].pos = { -halfW, 0.0f, -halfH };   // 左下
+    vertex[3].pos = { halfW, 0.0f, -halfH };    // 右下
 
     // 法線・色・UVの設定
     for (int i = 0; i < MathConst::VERTEX; i++)
@@ -109,6 +116,13 @@ void C3DSpriteRenderComponent::Draw(void)
 
     // ワールド行列の取得
     D3DXMATRIX matWorld = transform->GetWorldMatrix();
+
+    //-------------------------------------------------------------------------
+    // αテスト
+    //-------------------------------------------------------------------------
+    device->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
+    device->SetRenderState(D3DRS_ALPHAREF, 0);
+    device->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
 
     // カリング設定を無効化
     device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
@@ -136,4 +150,9 @@ void C3DSpriteRenderComponent::Draw(void)
 
     // ライティングを有効化
     device->SetRenderState(D3DRS_LIGHTING, TRUE);
+
+    //-------------------------------------------------------------------------
+    // αテスト無効
+    //-------------------------------------------------------------------------
+    device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
 }

@@ -143,9 +143,13 @@ public:
 
     CPointCircleBlock* CreatePointCircle(
         const D3DXVECTOR3& position,
-        float scale, 
-        const std::string texPath,
+        float scale,
         int point);
+
+    CGameObject* CreateTexPoly(
+        const D3DXVECTOR3 pos,
+        float scale,
+        const std::string texPath);
 
     // 中心位置取得
     const D3DXVECTOR3& GetCenterPosition(void) const { return m_CenterPosition; }
@@ -171,6 +175,9 @@ private:
     // 得点サークルの位置・回転を更新
     void UpdatePointCircles(void);
 
+    // テクスチャ用板ポリの位置・回転を更新
+    void UpdateTexPoly(void);
+
 private:
     static constexpr float CIRCLE_OFFSET_Y = 60.0f;
 
@@ -180,6 +187,9 @@ private:
 
     // 得点サークル
     std::vector<CPointCircleBlock*> m_PointCircles;
+
+    // テクスチャ用板ポリ
+    std::vector<CGameObject*> m_TexPoly;
 
     // エイム可能な半径
     float m_AimRadius;

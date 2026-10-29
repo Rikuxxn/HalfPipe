@@ -27,6 +27,7 @@
 #include "TimeSystem.h"
 #include <ScoreRenderComponent.h>
 #include <Ball.h>
+#include "3DSpriteRenderComponent.h"
 
 
 // 名前空間の使用
@@ -293,6 +294,7 @@ CBasketBlock::CBasketBlock() :
 CBasketBlock::~CBasketBlock()
 {
 	m_PointCircles.clear();
+	m_TexPoly.clear();
 }
 
 //=============================================================================
@@ -320,13 +322,22 @@ HRESULT CBasketBlock::Init(void)
 	);
 
 	// 50点：中心
-	CreatePointCircle(m_CenterPosition, 4.0f, "data/TEXTURE/wall100./*jpg*/", 50);
+	CreatePointCircle(m_CenterPosition, 1.8f, 50);
 
 	// 30点：中間
-	CreatePointCircle(m_CenterPosition, 6.0f, "data/TEXTURE/Target_30./*png*/", 30);
+	CreatePointCircle(m_CenterPosition, 5.6f, 30);
 
 	// 10点：外側
-	CreatePointCircle(m_CenterPosition, 9.0f, "data/TEXTURE/Target_10./*png*/", 10);
+	CreatePointCircle(m_CenterPosition, 9.0f, 10);
+
+	// テクスチャ用板ポリの生成
+	CreateTexPoly(m_CenterPosition, 1.3f, "data/TEXTURE/Target_50.png");
+
+	// テクスチャ用板ポリの生成
+	CreateTexPoly(m_CenterPosition, 4.2f, "data/TEXTURE/Target_30.png");
+
+	// テクスチャ用板ポリの生成
+	CreateTexPoly(m_CenterPosition, 7.4f, "data/TEXTURE/Target_10.png");
 
 	//=============================================================================
 	// エイム対象の設定
@@ -357,6 +368,9 @@ void CBasketBlock::Update(void)
 
 	// 得点サークルをかごに追従させる
 	UpdatePointCircles();
+
+	// テクスチャ用板ポリをかごに追従させる
+	UpdateTexPoly();
 }
 
 //=============================================================================
@@ -405,10 +419,57 @@ void CBasketBlock::UpdatePointCircles(void)
 }
 
 //=============================================================================
+// テクスチャ用板ポリの更新処理
+//=============================================================================
+void CBasketBlock::UpdateTexPoly(void)
+{
+	auto transform = GetComponent<CTransformComponent>();
+
+	if (!transform)
+	{
+		return;
+	}
+
+	// かごの中心となるローカル座標
+	D3DXVECTOR3 localCenter(0.0f, CIRCLE_OFFSET_Y, 0.0f);
+
+	// 現在の位置・回転・拡縮からワールド座標を計算
+	m_CenterPosition = MatrixUtil::LocalToWorld(
+		localCenter,
+		transform->Position,
+		transform->Rotation,
+		transform->Scale
+	);
+
+	m_CenterRotation.x = transform->Rotation.x;
+	m_CenterRotation.y = transform->Rotation.y;
+	m_CenterRotation.z = transform->Rotation.z;
+
+	// テクスチャ用板ポリを更新
+	for (auto* circle : m_TexPoly)
+	{
+		if (!circle)
+		{
+			continue;
+		}
+
+		auto circleTransform = circle->GetComponent<CTransformComponent>();
+
+		if (!circleTransform)
+		{
+			continue;
+		}
+
+		circleTransform->Position = m_CenterPosition;
+		circleTransform->SetRotation({ m_CenterRotation.x, m_CenterRotation.y, m_CenterRotation.z });
+	}
+}
+
+//=============================================================================
 // 得点サークル生成処理
 //=============================================================================
 CPointCircleBlock* CBasketBlock::CreatePointCircle(
-	const D3DXVECTOR3& position, float scale, const std::string texPath, int point)
+	const D3DXVECTOR3& position, float scale, int point)
 {
 	// シーン取得
 	auto scene = CManager::Instance()->GetSceneManager()->GetScene();
@@ -453,8 +514,7 @@ CPointCircleBlock* CBasketBlock::CreatePointCircle(
 
 	model->SetLayer(RenderLayer::Model);
 	model->Load("data/MODELS/PointCircle.x");
-	//model->SetFaceTexture(0, texPath);
-	model->SetAllFaceTexture(texPath);
+	model->SetVisible(false);
 
 	// 剛体
 	auto rigid = obj->AddComponent<CRigidBodyComponent>();
@@ -486,6 +546,62 @@ CPointCircleBlock* CBasketBlock::CreatePointCircle(
 
 	// 得点サークルを保存
 	m_PointCircles.push_back(obj);
+
+	return obj;
+}
+
+//=============================================================================
+// テクスチャ用板ポリ生成処理
+//=============================================================================
+CGameObject* CBasketBlock::CreateTexPoly(const D3DXVECTOR3 pos, float scale, const std::string texPath)
+{
+	// シーン取得
+	auto scene = CManager::Instance()->GetSceneManager()->GetScene();
+
+	if (!scene)
+	{
+		return nullptr;
+	}
+
+	// テクスチャ用板ポリオブジェクトの生成
+	auto obj = scene->CreateObject<CPointCircleBlock>();
+
+	if (!obj)
+	{
+		return nullptr;
+	}
+
+	// トランスフォームコンポーネントの取得
+	auto transform = obj->AddComponent<CTransformComponent>();
+
+	if (!transform)
+	{
+		return nullptr;
+	}
+
+	obj->SetTag("TexPoly");
+
+	// 3D板ポリゴン描画
+	auto sprite = obj->AddComponent<C3DSpriteRenderComponent>();
+
+	if (sprite)
+	{
+		sprite->SetSize(80.0f, 80.0f);
+		sprite->SetTexture(texPath);
+		sprite->SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+		sprite->SetIsVisible(true);
+	}
+
+	// 初期位置
+	if (transform)
+	{
+		transform->Position = pos;
+		transform->Scale = D3DXVECTOR3(scale, scale, scale);
+		transform->Rotation = { 0.0f, 0.0f, 0.0f };
+	}
+
+	// テクスチャ用板ポリを保存
+	m_TexPoly.push_back(obj);
 
 	return obj;
 }
