@@ -423,7 +423,7 @@ void CAimComponent::CreatePredictionLine(void)
 
     if (scene)
     {
-        for (int nCount = 0; nCount < 40; nCount++)
+        for (int nCount = 0; nCount < 25; nCount++)
         {
             // ゲームオブジェクトの生成
             auto point = scene->CreateObject();
