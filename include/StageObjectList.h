@@ -522,4 +522,29 @@ public:
 private:
 };
 
+//*****************************************************************************
+// 表彰台ブロッククラス
+//*****************************************************************************
+class CPodiumBlock : public CStageObject
+{
+public:
+    CPodiumBlock();
+    ~CPodiumBlock();
+
+    HRESULT Init(void) override;
+    void Update(void) override;
+
+    StageObjectType GetType(void) const override
+    {
+        return StageObjectType::Podium;
+    }
+
+    ColliderShape GetColliderShape(void) const override
+    {
+        return ColliderShape::Box;
+    }
+
+private:
+};
+
 #endif

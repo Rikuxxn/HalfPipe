@@ -1567,3 +1567,25 @@ void CRainYellowBlock::Update(void)
 	// ステージオブジェクトの更新
 	CStageObject::Update();
 }
+
+CPodiumBlock::CPodiumBlock()
+{
+
+}
+
+CPodiumBlock::~CPodiumBlock()
+{
+
+}
+
+HRESULT CPodiumBlock::Init(void)
+{
+
+	return S_OK;
+}
+
+void CPodiumBlock::Update(void)
+{
+	// ステージオブジェクトの更新
+	CStageObject::Update();
+}
