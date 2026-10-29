@@ -59,4 +59,8 @@ void CStageFactory::InitFactory(void)
     m_Factory[CStageObject::StageObjectType::PointCircle]   = [](CScene* scene) { return scene->CreateObject<CPointCircleBlock>(); };
     m_Factory[CStageObject::StageObjectType::GateBanner]    = [](CScene* scene) { return scene->CreateObject<CGateBannerBlock>(); };
     m_Factory[CStageObject::StageObjectType::Rift]          = [](CScene* scene) { return scene->CreateObject<CRiftBlock>(); };
+    m_Factory[CStageObject::StageObjectType::RainGray]      = [](CScene* scene) { return scene->CreateObject<CRainGrayBlock>(); };
+    m_Factory[CStageObject::StageObjectType::RainOrange]    = [](CScene* scene) { return scene->CreateObject<CRainOrangeBlock>(); };
+    m_Factory[CStageObject::StageObjectType::RainRed]       = [](CScene* scene) { return scene->CreateObject<CRainRedBlock>(); };
+    m_Factory[CStageObject::StageObjectType::RainYellow]    = [](CScene* scene) { return scene->CreateObject<CRainYellowBlock>(); };
 }

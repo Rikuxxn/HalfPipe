@@ -187,6 +187,7 @@
     <ClInclude Include="include\ColorConstants.h" />
     <ClInclude Include="include\Component.h" />
     <ClInclude Include="include\Connect.h" />
+    <ClInclude Include="include\CountRenderComponent.h" />
     <ClInclude Include="include\DebugDrawer.h" />
     <ClInclude Include="include\DebugManager.h" />
     <ClInclude Include="include\DebugRenderer.h" />
@@ -316,6 +317,7 @@
     <ClCompile Include="src\CollisionSystem.cpp" />
     <ClCompile Include="src\Component.cpp" />
     <ClCompile Include="src\Connect.cpp" />
+    <ClCompile Include="src\CountRenderComponent.cpp" />
     <ClCompile Include="src\DebugManager.cpp" />
     <ClCompile Include="src\DebugRenderer.cpp" />
     <ClCompile Include="src\DeviceResourceManager.cpp" />

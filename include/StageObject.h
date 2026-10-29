@@ -42,6 +42,10 @@ public:
         PointCircle,// 得点サークル
         GateBanner, // ゲートバナー
         Rift,       // リフト
+        RainGray,   // グレーライン
+        RainOrange, // オレンジライン
+        RainRed,    // 赤ライン
+        RainYellow, // 黄色ライン
 
         Max
     };

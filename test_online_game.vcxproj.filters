@@ -648,6 +648,9 @@
     <ClInclude Include="include\AimTargetComponent.h">
       <Filter>ヘッダー ファイル\Component</Filter>
     </ClInclude>
+    <ClInclude Include="include\CountRenderComponent.h">
+      <Filter>ヘッダー ファイル\Component\Render</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="imgui\imgui.cpp">
@@ -994,6 +997,9 @@
     </ClCompile>
     <ClCompile Include="src\AimTargetComponent.cpp">
       <Filter>ソース ファイル\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CountRenderComponent.cpp">
+      <Filter>ソース ファイル\Component\Render</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
