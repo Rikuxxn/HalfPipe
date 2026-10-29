@@ -154,7 +154,7 @@ HRESULT CPlayer::Init(void)
 	ui->SetScale({ 2.0f, 2.0f });
 
 	score->SetLayer(RenderLayer::UI);
-	score->SetTexture("data/TEXTURE/SnowNum.png");
+	score->SetTexture("data/TEXTURE/Num_01.png");
 	score->SetDigitSize(40.0f, 60.0f);
 	score->SetCount(throwCmp->GetCurrentThrowCount());
 	score->SetCountType(CountType::Dec);
