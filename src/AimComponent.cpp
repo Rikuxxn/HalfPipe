@@ -423,7 +423,7 @@ void CAimComponent::CreatePredictionLine(void)
 
     if (scene)
     {
-        for (int nCount = 0; nCount < 25; nCount++)
+        for (int nCount = 0; nCount < 40; nCount++)
         {
             // ゲームオブジェクトの生成
             auto point = scene->CreateObject();
@@ -435,6 +435,9 @@ void CAimComponent::CreatePredictionLine(void)
             auto transform = point->AddComponent<CTransformComponent>();
 
             transform->Position = m_AimPosition;
+            //transform->Scale.x = 0.75f + 0.1f * nCount;
+            //transform->Scale.y = 0.75f + 0.1f * nCount;
+            //transform->Scale.z = 0.75f + 0.1f * nCount;
 
             // モデルレンダーコンポーネントの追加
             auto model = point->AddComponent<CXModelRenderComponent>();
@@ -467,9 +470,10 @@ void CAimComponent::UpdatePredictionLine(void)
     D3DXVECTOR3 PlayerPos = transform->Position;
     PlayerPos.y = PlayerPos.y + 50.0f;
 
-    D3DXVECTOR3 dir = PlayerPos - m_AimPosition;
-    D3DXVECTOR3 SplineStart = D3DXVECTOR3(PlayerPos.x + dir.x * 7.0f, PlayerPos.y, PlayerPos.z + dir.z * 2.0f);
-    D3DXVECTOR3 SplineEnd = D3DXVECTOR3(m_AimPosition.x, m_AimPosition.y - 1000.0f, m_AimPosition.z);
+    D3DXVECTOR3 dirA = PlayerPos - m_AimPosition;
+    D3DXVECTOR3 dirB = m_AimPosition - PlayerPos;
+    D3DXVECTOR3 SplineStart = D3DXVECTOR3(PlayerPos.x + dirA.x * 5.0f, PlayerPos.y, PlayerPos.z + dirA.z * 5.0f);
+    D3DXVECTOR3 SplineEnd = D3DXVECTOR3(m_AimPosition.x, m_AimPosition.y + dirB.y*5.0f, m_AimPosition.z);
 
     for (int nCount = 0; nCount < m_pPointObj.size(); nCount++)
     {

@@ -269,6 +269,7 @@ void CAutoMoveComponent::UpdateAutoMove(float deltaTime)
 				// ”»’èŒ‹‰Ê‚ğÁ”ï
 				m_HasTimingResult = false;
 				m_IsWaitingForJumpPoint = false;
+				m_fJumpHeight = 0.0f;
 
 				return;
 			}
@@ -608,7 +609,7 @@ void CAutoMoveComponent::JumpTiming(void)
 			fPoint = m_CurrentTime;
 			nPressCount = m_fPressCount;
 		}
-			m_fPressCount = 0.0f;
+		m_fPressCount = 0.0f;
 	}
 
 	m_fJumpHeight = fPoint * (nPressCount + 1.0f);

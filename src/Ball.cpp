@@ -160,12 +160,13 @@ void CBall::Throw(const D3DXVECTOR3& AimPos, const D3DXVECTOR3& PlayerPos)
     }
     m_PlayerPosition = PlayerPos;
     m_AimPosition = AimPos;
-    D3DXVECTOR3 dir = m_PlayerPosition - m_AimPosition;
-    m_SprainStart = D3DXVECTOR3(m_PlayerPosition.x + dir.x * 7.0f, m_PlayerPosition.y, m_PlayerPosition.z + dir.z * 2.0f);
-    m_SprainEnd = D3DXVECTOR3(AimPos.x, AimPos.y - 1000.0f, AimPos.z);
+    D3DXVECTOR3 dirA = m_PlayerPosition - m_AimPosition;
+    D3DXVECTOR3 dirB = m_AimPosition - m_PlayerPosition;
+    m_SprainStart = D3DXVECTOR3(m_PlayerPosition.x + dirA.x * 5.0f, m_PlayerPosition.y, m_PlayerPosition.z + dirA.z * 5.0f);
+    m_SprainEnd = D3DXVECTOR3(AimPos.x, AimPos.y + dirB.y*5.0f, AimPos.z);
 
     // 物理速度の設定
-    rigid->SetPhysicsVelocity(dir);
+    rigid->SetPhysicsVelocity(dirA);
 
     // タイマー初期化
     m_ElapsedTime = 0.0f;
