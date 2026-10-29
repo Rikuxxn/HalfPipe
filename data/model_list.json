@@ -88,5 +88,11 @@
     "category": "Model",
     "name": "RainYellow",
     "filepath": "data/MODELS/rainYellow.x"
+  },
+  {
+    "type": 15,
+    "category": "Model",
+    "name": "Podium",
+    "filepath": "data/MODELS/podium.x"
   }
 ]

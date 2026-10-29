@@ -46,6 +46,7 @@ public:
         RainOrange, // オレンジライン
         RainRed,    // 赤ライン
         RainYellow, // 黄色ライン
+        Podium,     // 表彰台
 
         Max
     };

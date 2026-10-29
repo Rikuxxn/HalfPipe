@@ -63,4 +63,5 @@ void CStageFactory::InitFactory(void)
     m_Factory[CStageObject::StageObjectType::RainOrange]    = [](CScene* scene) { return scene->CreateObject<CRainOrangeBlock>(); };
     m_Factory[CStageObject::StageObjectType::RainRed]       = [](CScene* scene) { return scene->CreateObject<CRainRedBlock>(); };
     m_Factory[CStageObject::StageObjectType::RainYellow]    = [](CScene* scene) { return scene->CreateObject<CRainYellowBlock>(); };
+    m_Factory[CStageObject::StageObjectType::Podium]        = [](CScene* scene) { return scene->CreateObject<CPodiumBlock>(); };
 }

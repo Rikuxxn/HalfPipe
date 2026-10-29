@@ -149,7 +149,8 @@ public:
     CGameObject* CreateTexPoly(
         const D3DXVECTOR3 pos,
         float scale,
-        const std::string texPath);
+        const std::string texPath,
+        const D3DXCOLOR col);
 
     // 中心位置取得
     const D3DXVECTOR3& GetCenterPosition(void) const { return m_CenterPosition; }
@@ -511,6 +512,31 @@ public:
     StageObjectType GetType(void) const override
     {
         return StageObjectType::RainYellow;
+    }
+
+    ColliderShape GetColliderShape(void) const override
+    {
+        return ColliderShape::Box;
+    }
+
+private:
+};
+
+//*****************************************************************************
+// 表彰台ブロッククラス
+//*****************************************************************************
+class CPodiumBlock : public CStageObject
+{
+public:
+    CPodiumBlock();
+    ~CPodiumBlock();
+
+    HRESULT Init(void) override;
+    void Update(void) override;
+
+    StageObjectType GetType(void) const override
+    {
+        return StageObjectType::Podium;
     }
 
     ColliderShape GetColliderShape(void) const override
