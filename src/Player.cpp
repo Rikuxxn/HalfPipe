@@ -157,6 +157,7 @@ HRESULT CPlayer::Init(void)
 	score->SetTexture("data/TEXTURE/SnowNum.png");
 	score->SetDigitSize(40.0f, 60.0f);
 	score->SetCount(throwCmp->GetCurrentThrowCount());
+	score->SetCountType(CountType::Dec);
 
     return S_OK;
 }
@@ -230,16 +231,18 @@ void CPlayer::Update(void)
 			ballThrow->Throw();
 		}
 
-		//// シーンの取得
-		//auto scene = CManager::Instance()->GetSceneManager()->GetScene();
+		// シーンの取得
+		auto scene = CManager::Instance()->GetSceneManager()->GetScene();
 
-		//// 雪玉カウントの取得
-		//auto countObject = scene->FindGameObject("SnowBallCount");
+		// 雪玉カウントの取得
+		auto countObject = scene->FindGameObject("SnowBallCount");
 
-		//// カウント描画コンポーネント
-		//auto score = countObject->AddComponent<CCountRenderComponent>();
+		// カウント描画コンポーネント
+		auto Count = countObject->GetComponent<CCountRenderComponent>();
 
-		//score->DecCount(1);
+		auto throwCmp = GetComponent<CThrowComponent>();
+
+		Count->SetCount(throwCmp->GetCurrentThrowCount());
 	}
 
 	//============================================================

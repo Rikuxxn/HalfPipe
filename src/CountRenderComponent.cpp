@@ -73,7 +73,7 @@ void CCountRenderComponent::Update(void)
 
     if (m_CountType == CountType::Add)
     {
-        // 目標スコアに到達している場合
+        // 目標カウントに到達している場合
         if (m_Count >= m_TargetCount)
         {
             m_Count = m_TargetCount;
@@ -97,7 +97,7 @@ void CCountRenderComponent::Update(void)
         // 加算した整数部分だけ残りの小数を保持
         m_CountRemainder -= static_cast<float>(addValue);
 
-        // 目標スコアを超えないように加算
+        // 目標カウントを超えないように加算
         int remaining = m_TargetCount - m_Count;
 
         if (addValue >= remaining)
@@ -112,7 +112,42 @@ void CCountRenderComponent::Update(void)
     }
     else if (m_CountType == CountType::Dec)
     {
+        // 目標カウントに到達している場合
+        if (m_Count <= m_TargetCount)
+        {
+            m_Count = m_TargetCount;
+            m_CountRemainder = 0.0f;
+            return;
+        }
 
+        // このフレームで加算する量
+        float addAmount = m_CountSpeed * deltaTime;
+
+        // 小数部分を保持して、低フレームレートでも加算が止まらないようにする
+        m_CountRemainder += addAmount;
+
+        int addValue = static_cast<int>(m_CountRemainder);
+
+        if (addValue <= 0)
+        {
+            return;
+        }
+
+        // 加算した整数部分だけ残りの小数を保持
+        m_CountRemainder -= static_cast<float>(addValue);
+
+        // 目標カウントを超えないように加算
+        int remaining = m_TargetCount - m_Count;
+
+        if (addValue >= remaining)
+        {
+            m_Count = m_TargetCount;
+            m_CountRemainder = 0.0f;
+        }
+        else
+        {
+            m_Count -= addValue;
+        }
     }
 }
 
@@ -280,4 +315,18 @@ void CCountRenderComponent::AddCount(int count)
 
     // 目標スコアを加算
     m_TargetCount += count;
+}
+
+//=============================================================================
+// カウント減算
+//=============================================================================
+void CCountRenderComponent::DecCount(int count)
+{
+    if (count <= 0)
+    {
+        return;
+    }
+
+    // 目標カウントを減算
+    m_TargetCount -= count;
 }

@@ -46,6 +46,9 @@ public:
     // カウント加算
     void AddCount(int count);
 
+    // カウント減算
+    void DecCount(int count);
+
     // 現在表示しているカウント
     int GetCount(void) const { return m_Count; }
 
