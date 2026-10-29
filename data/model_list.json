@@ -64,5 +64,29 @@
     "category": "Model",
     "name": "Rift",
     "filepath": "data/MODELS/rift.x"
+  },
+  {
+    "type": 11,
+    "category": "Model",
+    "name": "RainGray",
+    "filepath": "data/MODELS/rainGray.x"
+  },
+  {
+    "type": 12,
+    "category": "Model",
+    "name": "RainOrange",
+    "filepath": "data/MODELS/rainOrange.x"
+  },
+  {
+    "type": 13,
+    "category": "Model",
+    "name": "RainRed",
+    "filepath": "data/MODELS/rainRed.x"
+  },
+  {
+    "type": 14,
+    "category": "Model",
+    "name": "RainYellow",
+    "filepath": "data/MODELS/rainYellow.x"
   }
 ]

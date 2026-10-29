@@ -411,4 +411,104 @@ private:
     float m_AutoMoveSpeed;
 };
 
+//*****************************************************************************
+// グレーラインブロッククラス
+//*****************************************************************************
+class CRainGrayBlock : public CStageObject
+{
+public:
+    CRainGrayBlock();
+    ~CRainGrayBlock();
+
+    HRESULT Init(void) override;
+    void Update(void) override;
+
+    StageObjectType GetType(void) const override
+    {
+        return StageObjectType::RainGray;
+    }
+
+    ColliderShape GetColliderShape(void) const override
+    {
+        return ColliderShape::Box;
+    }
+
+private:
+};
+
+//*****************************************************************************
+// オレンジラインブロッククラス
+//*****************************************************************************
+class CRainOrangeBlock : public CStageObject
+{
+public:
+    CRainOrangeBlock();
+    ~CRainOrangeBlock();
+
+    HRESULT Init(void) override;
+    void Update(void) override;
+
+    StageObjectType GetType(void) const override
+    {
+        return StageObjectType::RainOrange;
+    }
+
+    ColliderShape GetColliderShape(void) const override
+    {
+        return ColliderShape::Box;
+    }
+
+private:
+};
+
+//*****************************************************************************
+// 赤ラインブロッククラス
+//*****************************************************************************
+class CRainRedBlock : public CStageObject
+{
+public:
+    CRainRedBlock();
+    ~CRainRedBlock();
+
+    HRESULT Init(void) override;
+    void Update(void) override;
+
+    StageObjectType GetType(void) const override
+    {
+        return StageObjectType::RainRed;
+    }
+
+    ColliderShape GetColliderShape(void) const override
+    {
+        return ColliderShape::Box;
+    }
+
+private:
+};
+
+//*****************************************************************************
+// 黄色ラインブロッククラス
+//*****************************************************************************
+class CRainYellowBlock : public CStageObject
+{
+public:
+    CRainYellowBlock();
+    ~CRainYellowBlock();
+
+    HRESULT Init(void) override;
+    void Update(void) override;
+
+    StageObjectType GetType(void) const override
+    {
+        return StageObjectType::RainYellow;
+    }
+
+    ColliderShape GetColliderShape(void) const override
+    {
+        return ColliderShape::Box;
+    }
+
+private:
+};
+
 #endif

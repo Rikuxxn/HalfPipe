@@ -1360,3 +1360,91 @@ void CRiftBlock::LoadFromJson(const json& b)
 		m_StartMovePoint = b.value("start_point", 0);
 	}
 }
+
+CRainGrayBlock::CRainGrayBlock()
+{
+
+}
+
+CRainGrayBlock::~CRainGrayBlock()
+{
+
+}
+
+HRESULT CRainGrayBlock::Init(void)
+{
+
+	return S_OK;
+}
+
+void CRainGrayBlock::Update(void)
+{
+	// ステージオブジェクトの更新
+	CStageObject::Update();
+}
+
+CRainOrangeBlock::CRainOrangeBlock()
+{
+
+}
+
+CRainOrangeBlock::~CRainOrangeBlock()
+{
+
+}
+
+HRESULT CRainOrangeBlock::Init(void)
+{
+
+	return S_OK;
+}
+
+void CRainOrangeBlock::Update(void)
+{
+	// ステージオブジェクトの更新
+	CStageObject::Update();
+}
+
+CRainRedBlock::CRainRedBlock()
+{
+
+}
+
+CRainRedBlock::~CRainRedBlock()
+{
+
+}
+
+HRESULT CRainRedBlock::Init(void)
+{
+
+	return S_OK;
+}
+
+void CRainRedBlock::Update(void)
+{
+	// ステージオブジェクトの更新
+	CStageObject::Update();
+}
+
+CRainYellowBlock::CRainYellowBlock()
+{
+
+}
+
+CRainYellowBlock::~CRainYellowBlock()
+{
+
+}
+
+HRESULT CRainYellowBlock::Init(void)
+{
+
+	return S_OK;
+}
+
+void CRainYellowBlock::Update(void)
+{
+	// ステージオブジェクトの更新
+	CStageObject::Update();
+}
