@@ -28,10 +28,12 @@
 #include <ScoreRenderComponent.h>
 #include <Ball.h>
 #include "3DSpriteRenderComponent.h"
+#include "ColorConstants.h"
 
 
 // 名前空間の使用
 using namespace MatrixUtil;
+using namespace ColorConst;
 
 
 CFloorBlock::CFloorBlock()
@@ -331,13 +333,13 @@ HRESULT CBasketBlock::Init(void)
 	CreatePointCircle(m_CenterPosition, 9.0f, 10);
 
 	// テクスチャ用板ポリの生成
-	CreateTexPoly(m_CenterPosition, 1.3f, "data/TEXTURE/Target_50.png");
+	CreateTexPoly(m_CenterPosition, 1.3f, "data/TEXTURE/Target_50.png", DX::RED);
 
 	// テクスチャ用板ポリの生成
-	CreateTexPoly(m_CenterPosition, 4.2f, "data/TEXTURE/Target_30.png");
+	CreateTexPoly(m_CenterPosition, 4.2f, "data/TEXTURE/Target_30.png", DX::GREEN);
 
 	// テクスチャ用板ポリの生成
-	CreateTexPoly(m_CenterPosition, 7.4f, "data/TEXTURE/Target_10.png");
+	CreateTexPoly(m_CenterPosition, 7.4f, "data/TEXTURE/Target_10.png", DX::WHITE);
 
 	//=============================================================================
 	// エイム対象の設定
@@ -553,7 +555,8 @@ CPointCircleBlock* CBasketBlock::CreatePointCircle(
 //=============================================================================
 // テクスチャ用板ポリ生成処理
 //=============================================================================
-CGameObject* CBasketBlock::CreateTexPoly(const D3DXVECTOR3 pos, float scale, const std::string texPath)
+CGameObject* CBasketBlock::CreateTexPoly(const D3DXVECTOR3 pos, float scale, const std::string texPath,
+	const D3DXCOLOR col)
 {
 	// シーン取得
 	auto scene = CManager::Instance()->GetSceneManager()->GetScene();
@@ -588,7 +591,7 @@ CGameObject* CBasketBlock::CreateTexPoly(const D3DXVECTOR3 pos, float scale, con
 	{
 		sprite->SetSize(80.0f, 80.0f);
 		sprite->SetTexture(texPath);
-		sprite->SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+		sprite->SetColor(col);
 		sprite->SetIsVisible(true);
 	}
 

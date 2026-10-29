@@ -149,7 +149,8 @@ public:
     CGameObject* CreateTexPoly(
         const D3DXVECTOR3 pos,
         float scale,
-        const std::string texPath);
+        const std::string texPath,
+        const D3DXCOLOR col);
 
     // ’†SˆÊ’uæ“¾
     const D3DXVECTOR3& GetCenterPosition(void) const { return m_CenterPosition; }
