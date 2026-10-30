@@ -23,7 +23,8 @@
 //=============================================================================
 // コンストラクタ
 //=============================================================================
-CParticleEmitterComponent::CParticleEmitterComponent()
+CParticleEmitterComponent::CParticleEmitterComponent() :
+    m_IsPlay (false)
 {
 
 }
@@ -66,11 +67,17 @@ HRESULT CParticleEmitterComponent::Init(void)
 //=============================================================================
 void CParticleEmitterComponent::Update(void)
 {
+    //// 停止の場合はスキップ
+    //if (!m_IsPlay)
+    //{
+    //    return;
+    //}
+
     //---------------------------------
     // 発生
     //---------------------------------
 
-    if (EmitMode == ParticleEmitMode::Loop)
+    if (EmitMode == ParticleEmitMode::Loop && m_IsPlay)
     {
         m_EmitTimer += 1.0f;
 
@@ -246,6 +253,12 @@ void CParticleEmitterComponent::UpdateParticles(void)
         if (p.Age >= p.LifeTime)
         {
             p.Active = false;
+            continue;
+        }
+
+        // 停止の場合はスキップ
+        if (!m_IsPlay)
+        {
             continue;
         }
 

@@ -111,6 +111,8 @@ public:
         return m_Jump;
     }
 
+    // —­‚ß’†‚©
+    bool IsPress(void) const { return m_Press; }
 
     // is•ûŒü‚Ìæ“¾
     D3DXVECTOR3 GetMoveDirection(void) const { return m_MoveDirection; }

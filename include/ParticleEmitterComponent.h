@@ -86,6 +86,8 @@ public:
 
     void SetTexture(const std::string& path);
 
+    void SetPlay(bool flag) { m_IsPlay = flag; }
+
     // テクスチャ取得
     LPDIRECT3DTEXTURE9 GetTexture(void) const;
 
@@ -158,6 +160,9 @@ private:
 
     // シェーダーリソース
     std::shared_ptr<CShaderResource> m_Shader;
+
+    // パーティクルを再生するかどうか
+    bool m_IsPlay;
 };
 
 #endif
