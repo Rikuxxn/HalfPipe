@@ -370,7 +370,7 @@ bool CInputJoypad::GetTrigger(JOYKEY Key)
 bool CInputJoypad::GetRelease(JOYKEY Key)
 {
 	bool Trigger = false;
-	if (m_aOldJoyKeyState.Gamepad.wButtons & 0x80 && !(m_joyKeyState.Gamepad.wButtons & 0x80))
+	if (m_aOldJoyKeyState.Gamepad.wButtons & 0x01 && !(m_joyKeyState.Gamepad.wButtons & 0x01))
 	{
 		Trigger = true;
 	}
