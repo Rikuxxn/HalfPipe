@@ -35,6 +35,16 @@ enum class MovePointType
     JumpSmall       // 小ジャンプポイント
 };
 
+// タイミングの列挙型
+enum class Timing
+{
+    TIMING_PERFECT = 0, // 完璧
+    TIMING_GREAT,       // 良い
+    TIMING_GOOD,        // まぁまぁ
+    TIMING_MAX
+};
+
+
 //=============================================================================
 // 移動ポイント
 //=============================================================================
@@ -194,6 +204,8 @@ private:
     bool m_ReleaseZone;
 
     bool m_Jump;
+
+    CJumpTiming::TIMING m_Timing;
 
     // 確定したタイミング結果
     CJumpTiming::TIMING m_TimingResult;

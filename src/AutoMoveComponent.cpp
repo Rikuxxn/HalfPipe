@@ -56,7 +56,8 @@ CAutoMoveComponent::CAutoMoveComponent() :
 	m_fJumpHeight			(0.0f),						// ジャンプの最終的な高さ
 	m_fDeltaSpeed			(0.005f),					// スプラインの早さ
 	m_fBasicSpeed			(0.02f),					// 基礎スピード
-    m_TimingResult			(CJumpTiming::TIMING_MAX)  // 確定したタイミング結果
+    m_TimingResult			(CJumpTiming::TIMING_MAX),  // 確定したタイミング結果
+	m_Timing				(CJumpTiming::TIMING_MAX)	// タイミングの種類
 {
 
 }
@@ -378,12 +379,9 @@ void CAutoMoveComponent::UpdateJump(float deltaTime)
 	//	m_TimingResult = timing;
 	//	m_HasTimingResult = true;
 
-		// タイミング判定終了
-		//m_IsTimingActive = false;
+	//	 //タイミング判定終了
+	//	m_IsTimingActive = false;
 	//}
-
-	//// BAD判定
-	//OnTimingResult(CJumpTiming::TIMING_BAD);
 }
 
 //=============================================================================
@@ -588,8 +586,9 @@ void CAutoMoveComponent::JumpTiming(void)
 	if (!m_IsTimingActive)return;
 
 	CInputKeyboard* pKeyboard = CManager::Instance()->GetInput()->GetKeyboard();
+	CInputJoypad* pJoypad = CManager::Instance()->GetInput()->GetJoypad();
 	// スペースを押す(トリガー)
-	if (pKeyboard->GetTrigger(DIK_SPACE))m_Press = true;
+	if (pKeyboard->GetTrigger(DIK_SPACE)|| pJoypad->GetTrigger(CInputJoypad::JOYKEY_A))m_Press = true;
 
 	// 押されていなかったら処理しない
 	if (!m_Press)return;
@@ -601,13 +600,16 @@ void CAutoMoveComponent::JumpTiming(void)
 	float fPoint = 0.0f;
 	float nPressCount = m_fPressCount;
 	// 放したタイミングでカウントリセット
-	if (pKeyboard->GetRelease(DIK_SPACE))
+	if (pKeyboard->GetRelease(DIK_SPACE) || pJoypad->GetRelease(CInputJoypad::JOYKEY_A))
 	{
 		m_Press = false;
 		if (m_ReleaseZone)
 		{
 			fPoint = m_CurrentTime;
 			nPressCount = m_fPressCount;
+			if (m_CurrentTime < 0.25f)m_Timing = CJumpTiming::TIMING_PERFECT;
+			else if(m_CurrentTime < 0.5f)m_Timing = CJumpTiming::TIMING_GREAT;
+			else if(m_CurrentTime < 0.75f)m_Timing = CJumpTiming::TIMING_GOOD;
 		}
 		m_fPressCount = 0.0f;
 	}
