@@ -232,8 +232,13 @@ HRESULT CGame::Init(void)
 	// カメラの取得
 	CCamera* pCamera = CManager::Instance()->GetCamera();
 
+#ifdef _DEBUG
 	// カメラの初期位置を設定しておく
 	pCamera->SetCamMode(CCamera::MODE_EDIT);
+#else
+	// カメラの初期位置を設定しておく
+	pCamera->SetCamMode(CCamera::MODE_THIRD_PERSON);
+#endif
 
 	return S_OK;
 }

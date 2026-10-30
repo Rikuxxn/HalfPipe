@@ -347,7 +347,8 @@ void CTitle::Update(void)
 //#endif
 
 #ifdef _DEBUG
-	if (pFade->GetFade() == CFade::FADE_NONE && pKeyboard->GetTrigger(DIK_RETURN))
+	if (pFade->GetFade() == CFade::FADE_NONE && 
+		(pKeyboard->GetTrigger(DIK_RETURN) || pJoypad->GetRelease(CInputJoypad::JOYKEY_A)))
 	{
 		// 接続画面に移行
 		pFade->StartFadeOut(Mode::Connect);
@@ -370,13 +371,17 @@ void CTitle::Draw(void)
 	// シーンの描画処理
 	CScene::Draw();
 
-	//// カメラの取得
-	//CCamera* pCamera = CManager::Instance()->GetCamera();
+#ifdef _DEBUG
 
-	//// カメラの設定
-	//pCamera->SetPosV({ -505.0f, -1035.0f, 4408.0f });
-	//pCamera->SetPosR({ -7.0f, -835.0f, 4000.0f });
-	//pCamera->SetRot({ 0.0f, -0.88f, 0.0f });
+#else
+	// カメラの取得
+	CCamera* pCamera = CManager::Instance()->GetCamera();
+
+	// カメラの設定
+	pCamera->SetPosV({ -505.0f, -1035.0f, 4408.0f });
+	pCamera->SetPosR({ -7.0f, -835.0f, 4000.0f });
+	pCamera->SetRot({ 0.0f, -0.88f, 0.0f });
+#endif
 }
 //=============================================================================
 // ライト設定処理
