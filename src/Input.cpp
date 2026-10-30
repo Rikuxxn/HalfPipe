@@ -365,6 +365,18 @@ bool CInputJoypad::GetTrigger(JOYKEY Key)
 	return joykey;
 }
 //=============================================================================
+// ジョイパッドのリリース情報を取得
+//=============================================================================
+bool CInputJoypad::GetRelease(JOYKEY Key)
+{
+	bool Trigger = false;
+	if (m_aOldJoyKeyState.Gamepad.wButtons & 0x80 && !(m_joyKeyState.Gamepad.wButtons & 0x80))
+	{
+		Trigger = true;
+	}
+	return Trigger;
+}
+//=============================================================================
 // ジョイパッドのプレス
 //=============================================================================
 bool CInputJoypad::GetPress(JOYKEY Key)

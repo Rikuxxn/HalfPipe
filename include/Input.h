@@ -109,6 +109,7 @@ public:
 	void Uninit(void);
 	void Update(void);
 	bool GetTrigger(JOYKEY Key);
+	bool GetRelease(JOYKEY Key);
 	bool GetPress(JOYKEY Key);
 	bool GetTriggerL2(void);
 	bool GetTriggerR2(void);
