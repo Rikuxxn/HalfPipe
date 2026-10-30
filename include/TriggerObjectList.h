@@ -77,7 +77,9 @@ public:
     void OnTriggerEnter(CGameObject* other) override;
 
 private:
-    CGameObject* m_FinishUI;          // FInishUIオブジェクト
+    CGameObject* m_FinishUI;    // FInishUIオブジェクト
+
+    bool m_IsGoal;              // ゴールしたかどうか
 };
 
 #endif

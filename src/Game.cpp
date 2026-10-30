@@ -400,12 +400,12 @@ void CGame::Update(void)
 		}
 	}
 
-	if (pFade->GetFade() == CFade::FADE_NONE &&
-		(pJoypad->GetTrigger(CInputJoypad::JOYKEY_A) || pKeyboard->GetTrigger(DIK_RETURN)))
-	{
-		// リザルト画面に移行
-		pFade->StartFadeOut(Mode::Result);
-	}
+	//if (pFade->GetFade() == CFade::FADE_NONE &&
+	//	(pJoypad->GetTrigger(CInputJoypad::JOYKEY_A) || pKeyboard->GetTrigger(DIK_RETURN)))
+	//{
+	//	// リザルト画面に移行
+	//	pFade->StartFadeOut(Mode::Result);
+	//}
 }
 //=============================================================================
 // 描画処理
