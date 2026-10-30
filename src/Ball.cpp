@@ -80,10 +80,11 @@ HRESULT CBall::Init(void)
 
     // 衝突フィルター
     rigid->SetCollisionFilter(
-        COLLISION_GROUP_PLAYER,
+        COLLISION_GROUP_BALL,
         COLLISION_GROUP_STAGE |
         COLLISION_GROUP_PLAYER |
-        COLLISION_GROUP_ENEMY
+        COLLISION_GROUP_ENEMY |
+        COLLISION_GROUP_GHOST
     );
 
     auto size = VEC3_DEFAULT;

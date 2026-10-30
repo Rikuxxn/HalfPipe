@@ -150,12 +150,12 @@ HRESULT CPlayer::Init(void)
 	// カウント描画コンポーネント
 	auto score = countObject->AddComponent<CCountRenderComponent>();
 
-	ui->SetPosition({ 0.95f, 0.89f });
+	ui->SetPosition({ 0.97f, 0.9f });
 	ui->SetScale({ 2.0f, 2.0f });
 
 	score->SetLayer(RenderLayer::UI);
 	score->SetTexture("data/TEXTURE/Num_01.png");
-	score->SetDigitSize(40.0f, 60.0f);
+	score->SetDigitSize(0.03f, 0.05f);
 	score->SetCount(throwCmp->GetCurrentThrowCount());
 	score->SetCountType(CountType::Dec);
 

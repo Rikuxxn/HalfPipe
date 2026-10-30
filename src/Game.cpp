@@ -197,7 +197,7 @@ HRESULT CGame::Init(void)
 
 		score->SetLayer(RenderLayer::UI);
 		score->SetTexture("data/TEXTURE/Num_01.png");
-		score->SetDigitSize(40.0f, 60.0f);
+		score->SetDigitSize(0.02f, 0.04f);
 		score->SetCountSpeed(100.0f);
 		score->SetScore(0);
 	}
@@ -400,12 +400,12 @@ void CGame::Update(void)
 		}
 	}
 
-	if (pFade->GetFade() == CFade::FADE_NONE &&
-		(pJoypad->GetTrigger(CInputJoypad::JOYKEY_A) || pKeyboard->GetTrigger(DIK_RETURN)))
-	{
-		// リザルト画面に移行
-		pFade->StartFadeOut(Mode::Result);
-	}
+	//if (pFade->GetFade() == CFade::FADE_NONE &&
+	//	(pJoypad->GetTrigger(CInputJoypad::JOYKEY_A) || pKeyboard->GetTrigger(DIK_RETURN)))
+	//{
+	//	// リザルト画面に移行
+	//	pFade->StartFadeOut(Mode::Result);
+	//}
 }
 //=============================================================================
 // 描画処理

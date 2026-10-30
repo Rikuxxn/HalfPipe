@@ -18,13 +18,18 @@
 #include "UIComponent.h"
 #include "SpriteRenderComponent.h"
 #include "UIFactory.h"
+#include <Input.h>
+#include "InputManager.h"
+#include "Fade.h"
+#include "Scene.h"
 
 
 //=============================================================================
 // ゴールエリアのコンストラクタ
 //=============================================================================
 CGoalTrigger::CGoalTrigger() :
-	m_FinishUI(nullptr)				// FinishUIオブジェクト
+	m_FinishUI	(nullptr),		// FinishUIオブジェクト
+	m_IsGoal	(false)			// ゴールしたかどうか
 {
 
 }
@@ -88,6 +93,20 @@ HRESULT CGoalTrigger::Init(void)
 void CGoalTrigger::Update(void)
 {
 	CTriggerObject::Update();
+
+	CFade* pFade = CManager::Instance()->GetFade();
+	CInputKeyboard* pKeyboard = CManager::Instance()->GetInput()->GetKeyboard();
+	CInputJoypad* pJoypad = CManager::Instance()->GetInput()->GetJoypad();
+
+	// ゴールした　かつ　任意のボタンを押した
+	if (m_IsGoal && pFade->GetFade() == CFade::FADE_NONE)
+	{
+		if (pJoypad->GetTrigger(CInputJoypad::JOYKEY_A) || pKeyboard->GetTrigger(DIK_RETURN))
+		{
+			// リザルト画面に移行
+			pFade->StartFadeOut(CScene::Mode::Result);
+		}
+	}
 }
 
 //=============================================================================
@@ -98,6 +117,8 @@ void CGoalTrigger::OnTriggerEnter(CGameObject* other)
 	// プレイヤーがゴールしたらUIを表示
 	if (other->CompareTag("Player"))
 	{
+		m_IsGoal = true;
+
 		// 2Dレンダーコンポーネントの取得
 		auto sprite = m_FinishUI->GetComponent<CSpriteRenderComponent>();
 

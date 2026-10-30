@@ -194,6 +194,9 @@ private:
 
     // エイム可能な半径
     float m_AimRadius;
+
+    // 得点サークルの高さの間隔
+    float m_HeightOffset;
 };
 
 //*****************************************************************************
@@ -309,7 +312,7 @@ public:
         return ColliderShape::Cylinder;
     }
 
-    void OnCollisionEnter(CGameObject* other)override;
+    void OnTriggerEnter(CGameObject* other)override;
 
     // 得点設定
     void SetPoint(int point) { m_Point = point; }
