@@ -30,6 +30,7 @@ public:
     void UpdateFromScale(const D3DXVECTOR3& scale);
 
     void CreateBox(const D3DXVECTOR3& size);
+    void CreateCylinder(const D3DXVECTOR3& size);
     //void CreateSphere(const D3DXVECTOR3& size);
     //void CreateCapsule(const D3DXVECTOR3& size);
 

@@ -29,6 +29,7 @@
 #include <Ball.h>
 #include "3DSpriteRenderComponent.h"
 #include "ColorConstants.h"
+#include <GhostObjectComponent.h>
 
 
 // 名前空間の使用
@@ -285,7 +286,8 @@ void CHalfPipeBlock::Update(void)
 CBasketBlock::CBasketBlock() :
 	m_CenterPosition	(INIT_VEC3),	// バスケットの中心位置
 	m_CenterRotation	(INIT_VEC3),	// 回転
-	m_AimRadius			(400.0f)		// エイム可能な半径
+	m_AimRadius			(400.0f),		// エイム可能な半径
+	m_HeightOffset		(5.0f)			// 得点サークルの高さの間隔
 {
 
 }
@@ -322,6 +324,9 @@ HRESULT CBasketBlock::Init(void)
 		transform->Rotation,
 		transform->Scale
 	);
+
+	// 得点サークルの高さの間隔
+	const float heightOffset = 30.0f;
 
 	// 50点：中心
 	CreatePointCircle(m_CenterPosition, 1.8f, 50);
@@ -400,9 +405,19 @@ void CBasketBlock::UpdatePointCircles(void)
 
 	m_CenterRotation = transform->Rotation;
 
+	// 得点サークルの高さを設定
+	const D3DXVECTOR3 offsets[] = 
+	{ 
+		D3DXVECTOR3(0.0f, m_HeightOffset, 0.0f),	// 50点
+		D3DXVECTOR3(0.0f, 0.0f, 0.0f),				// 30点 
+		D3DXVECTOR3(0.0f, -m_HeightOffset, 0.0f)	// 10点
+	};
+	
 	// 得点サークルを更新
-	for (auto* circle : m_PointCircles)
+	for (size_t i = 0; i < m_PointCircles.size(); ++i) 
 	{
+		auto* circle = m_PointCircles[i]; 
+
 		if (!circle)
 		{
 			continue;
@@ -415,7 +430,8 @@ void CBasketBlock::UpdatePointCircles(void)
 			continue;
 		}
 
-		circleTransform->Position = m_CenterPosition;
+		// 中心位置に高さのオフセットを加える 
+		circleTransform->Position = m_CenterPosition + offsets[i];
 		circleTransform->SetRotation(m_CenterRotation);
 	}
 }
@@ -443,27 +459,36 @@ void CBasketBlock::UpdateTexPoly(void)
 		transform->Scale
 	);
 
-	m_CenterRotation.x = transform->Rotation.x;
-	m_CenterRotation.y = transform->Rotation.y;
-	m_CenterRotation.z = transform->Rotation.z;
+	m_CenterRotation = transform->Rotation;
+
+	// 得点サークルの高さを設定
+	const D3DXVECTOR3 offsets[] =
+	{
+		D3DXVECTOR3(0.0f, m_HeightOffset, 0.0f),	// 50点
+		D3DXVECTOR3(0.0f, 0.0f, 0.0f),				// 30点 
+		D3DXVECTOR3(0.0f, -m_HeightOffset, 0.0f)	// 10点
+	};
 
 	// テクスチャ用板ポリを更新
-	for (auto* circle : m_TexPoly)
+	for (size_t i = 0; i < m_TexPoly.size(); ++i)
 	{
-		if (!circle)
+		auto* texPoly = m_TexPoly[i];
+		
+		if (!texPoly)
 		{
 			continue;
 		}
 
-		auto circleTransform = circle->GetComponent<CTransformComponent>();
+		auto polyTransform = texPoly->GetComponent<CTransformComponent>();
 
-		if (!circleTransform)
+		if (!polyTransform)
 		{
 			continue;
 		}
 
-		circleTransform->Position = m_CenterPosition;
-		circleTransform->SetRotation({ m_CenterRotation.x, m_CenterRotation.y, m_CenterRotation.z });
+		// 中心位置に高さのオフセットを加える 
+		polyTransform->Position = m_CenterPosition + offsets[i];
+		polyTransform->SetRotation(m_CenterRotation);
 	}
 }
 
@@ -518,33 +543,58 @@ CPointCircleBlock* CBasketBlock::CreatePointCircle(
 	model->Load("data/MODELS/PointCircle.x");
 	model->SetVisible(false);
 
-	// 剛体
-	auto rigid = obj->AddComponent<CRigidBodyComponent>();
+	//// 剛体
+	//auto rigid = obj->AddComponent<CRigidBodyComponent>();
 
-	if (!rigid)
-	{
-		return nullptr;
-	}
+	//if (!rigid)
+	//{
+	//	return nullptr;
+	//}
 
-	rigid->SetCollisionFilter(
-		COLLISION_GROUP_STAGE,
-		COLLISION_GROUP_STAGE |
+	//rigid->SetCollisionFilter(
+	//	COLLISION_GROUP_STAGE,
+	//	COLLISION_GROUP_STAGE |
+	//	COLLISION_GROUP_PLAYER |
+	//	COLLISION_GROUP_GHOST |
+	//	COLLISION_GROUP_ENEMY |
+	//	COLLISION_GROUP_CAMERA
+	//);
+
+	//rigid->SetDynamic(false);
+
+	//// モデルサイズ取得
+	//D3DXVECTOR3 modelSize = model->GetModelSize();
+	//
+	//// シリンダーコライダーの生成
+	//rigid->CreateCylinder(modelSize, 1.0f);
+
+	//// 当たり判定更新
+	//rigid->UpdateFromScale(transform->Scale);
+
+	//-----------------------------------------
+	// ゴーストオブジェクトの生成
+	//-----------------------------------------
+
+	// ゴーストオブジェクトコンポーネントの追加
+	auto ghost = obj->AddComponent<CGhostObjectComponent>();
+
+	// ゴーストの衝突フィルター
+	ghost->SetCollisionFilter(
+		COLLISION_GROUP_GHOST,
 		COLLISION_GROUP_PLAYER |
-		COLLISION_GROUP_GHOST |
+		COLLISION_GROUP_STAGE |
 		COLLISION_GROUP_ENEMY |
-		COLLISION_GROUP_CAMERA
+		COLLISION_GROUP_BALL
 	);
 
-	rigid->SetDynamic(false);
-
-	// モデルサイズ取得
+	// モデルのサイズを取得
 	D3DXVECTOR3 modelSize = model->GetModelSize();
-	
-	// シリンダーコライダーの生成
-	rigid->CreateCylinder(modelSize, 1.0f);
+
+	// シリンダートリガーを生成
+	ghost->CreateCylinder(modelSize);
 
 	// 当たり判定更新
-	rigid->UpdateFromScale(transform->Scale);
+	ghost->UpdateFromScale(transform->Scale);
 
 	// 得点サークルを保存
 	m_PointCircles.push_back(obj);
@@ -914,9 +964,9 @@ void CPointCircleBlock::AddScore(int point)
 }
 
 //=============================================================================
-// コリジョンエンター
+// トリガーエンター
 //=============================================================================
-void CPointCircleBlock::OnCollisionEnter(CGameObject* other)
+void CPointCircleBlock::OnTriggerEnter(CGameObject* other)
 {
 	if (!other || !other->CompareTag("Ball"))
 	{
@@ -939,14 +989,14 @@ void CPointCircleBlock::OnCollisionEnter(CGameObject* other)
 		return;
 	}
 
-	// すでに得点していたら無視
-	if (ball->HasScored())
-	{
-		return;
-	}
+	//// すでに得点していたら無視
+	//if (ball->HasScored())
+	//{
+	//	return;
+	//}
 
-	// 得点済みにする
-	ball->SetScored(true);
+	//// 得点済みにする
+	//ball->SetScored(true);
 
 	// このサークルの得点を取得
 	int point = GetPoint();

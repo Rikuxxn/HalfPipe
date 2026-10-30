@@ -161,3 +161,58 @@ void CGhostObjectComponent::CreateBox(const D3DXVECTOR3& size)
     // 登録
     CManager::Instance()->GetGhostObjectManager()->AddGhost(m_Ghost);
 }
+
+//=============================================================================
+// シリンダー
+//=============================================================================
+void CGhostObjectComponent::CreateCylinder(const D3DXVECTOR3& size)
+{
+    // 名前空間の使用
+    using namespace MathConst;
+
+    // 円柱シェイプの生成
+    m_Shape = new btCylinderShape(btVector3(size.x * HALF, size.y * HALF, size.z * HALF));
+
+    // ゴーストオブジェクトの生成
+    m_Ghost = new btPairCachingGhostObject();
+
+    btTransform t;
+    t.setIdentity();
+
+    // トランスフォームの取得
+    auto transform = m_pOwner->GetComponent<CTransformComponent>();
+
+    if (!transform)
+    {
+        delete m_Ghost;
+        delete m_Shape;
+
+        m_Ghost = nullptr;
+        m_Shape = nullptr;
+
+        return;
+    }
+
+    // 位置を設定
+    t.setOrigin(btVector3(transform->Position.x, transform->Position.y, transform->Position.z));
+
+    m_Ghost->setWorldTransform(t);
+
+    // シェイプを設定
+    m_Ghost->setCollisionShape(m_Shape);
+
+    // ゲームオブジェクトとの対応付け
+    m_Ghost->setUserPointer(m_pOwner);
+
+    // 物理的な衝突応答を無効化
+    m_Ghost->setCollisionFlags(m_Ghost->getCollisionFlags() | btCollisionObject::CF_NO_CONTACT_RESPONSE);
+
+    // 物理世界の取得
+    auto world = CManager::Instance()->GetPhysicsWorld();
+
+    // 追加
+    world->addCollisionObject(m_Ghost, m_CollisionGroup, m_CollisionMask);
+
+    // 登録
+    CManager::Instance()->GetGhostObjectManager()->AddGhost(m_Ghost);
+}
