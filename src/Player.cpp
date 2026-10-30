@@ -36,6 +36,7 @@
 #include "UIAnimationComponent.h"
 #include <SpriteRenderComponent.h>
 #include "CountRenderComponent.h"
+#include <ParticleRenderer3D.h>
 //#include "FBXManager.h"
 //#include "FBXModelComponent.h"
 
@@ -59,7 +60,8 @@ CPlayer::CPlayer() :
     m_SurfaceForward	({ 0, 0, 1 }),			// 面に沿う進行方向
     m_IsGrounded		(false),				// 接地中か
     m_WasGrounded		(false),				// 前フレームの接地状態
-    m_AlignToSurface	(true)					// 面に姿勢を合わせるか
+    m_AlignToSurface	(true),					// 面に姿勢を合わせるか
+	m_ParticleObject	(nullptr)				// パーティクル
 {
 
 }
@@ -159,6 +161,55 @@ HRESULT CPlayer::Init(void)
 	score->SetCount(throwCmp->GetCurrentThrowCount());
 	score->SetCountType(CountType::Dec);
 
+
+	//// 3D炎パーティクルオブジェクトの生成
+	//m_ParticleObject = scene->CreateObject();
+
+	//m_ParticleObject->SetTag("Particle3D_Player");
+
+	//// 松明の位置
+	//auto transform = GetComponent<CTransformComponent>();
+
+	//// パーティクルの位置
+	//auto particle3DTransform = m_ParticleObject->AddComponent<CTransformComponent>();
+
+	//// 松明の先端位置
+	//D3DXVECTOR3 localTipPosition(0.0f, 10.0f, 0.0f);
+
+	//// ローカルからワールドへ
+	//particle3DTransform->Position = LocalToWorld(
+	//	localTipPosition,
+	//	transform->Position,
+	//	transform->Rotation,
+	//	transform->Scale
+	//);
+
+	//auto fire3D = m_ParticleObject->AddComponent<CParticleEmitterComponent>();
+
+	//fire3D->SetLayer(RenderLayer::Particle3D);
+
+	//// 放出空間の設定
+	//fire3D->Space = ParticleSpace::Space3D;
+
+	//// エミッターのセッターにテクスチャを設定
+	//fire3D->SetTexture("data/TEXTURE/smoke.jpg");
+
+	//// シェーダーの設定
+	//fire3D->SetShader("data/Shader/Instancing/ParticleInstancing.fx");
+
+	//fire3D->col = { 1.0f, 0.7f, 0.2f, 1.0f };
+	//fire3D->EmitMode = ParticleEmitMode::Loop;
+	//fire3D->Type = ParticleType::Fire;
+	//fire3D->SpawnShape = ParticleSpawnShape::Point;
+	//fire3D->Radius = 3.0f;
+	//fire3D->EmitRate = 1;
+	//fire3D->LifeTimeMin = 20;
+	//fire3D->LifeTimeMax = 40;
+	//fire3D->SpeedMin = 0.5f;
+	//fire3D->SpeedMax = 2.0f;
+	//fire3D->SizeMin = 20;
+	//fire3D->SizeMax = 40;
+
     return S_OK;
 }
 
@@ -175,6 +226,31 @@ void CPlayer::Update(void)
 
     // ゲームオブジェクトの更新
     CGameObject::Update();
+
+	//auto transform = GetComponent<CTransformComponent>();
+
+	//if (!transform || !m_ParticleObject)
+	//{
+	//	return;
+	//}
+
+	//auto particleTransform = m_ParticleObject->GetComponent<CTransformComponent>();
+
+	//if (!particleTransform)
+	//{
+	//	return;
+	//}
+
+	//// 松明の先端位置
+	//D3DXVECTOR3 localTipPosition(0.0f, 10.0f, 0.0f);
+
+	//// ローカルからワールドへ
+	//particleTransform->Position = LocalToWorld(
+	//	localTipPosition,
+	//	transform->Position,
+	//	transform->Rotation,
+	//	transform->Scale
+	//);
 
 #ifdef _DEBUG
 	if (pCamera->GetMode() == CCamera::MODE_EDIT &&

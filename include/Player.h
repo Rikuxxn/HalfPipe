@@ -75,6 +75,8 @@ private:
     // 雪玉アイコン UI
     CGameObject* m_pSnowBallIconUI;
 
+    CGameObject* m_ParticleObject;// パーティクル
+
     D3DXVECTOR3 m_rotDest;          // 目標の向き
     bool        m_bIsMoving;	    // 移動入力フラグ
     bool        m_bControlFlag;     // 移動許可フラグ
