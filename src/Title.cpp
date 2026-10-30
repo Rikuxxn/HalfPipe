@@ -65,9 +65,12 @@ namespace Particle
 //=============================================================================
 // コンストラクタ
 //=============================================================================
-CTitle::CTitle()
+CTitle::CTitle() :
+	m_pPressUI		(nullptr),	// Press UIオブジェクト
+	m_pTitleLogoUI	(nullptr)	// TitleLogo UIオブジェクト
 {
-	// 値のクリア
+
+
 }
 //=============================================================================
 // デストラクタ
@@ -137,6 +140,33 @@ HRESULT CTitle::Init(void)
 
 		// 最初は非表示
 		auto sprite = m_pPressUI->GetComponent<CSpriteRenderComponent>();
+
+		if (sprite)
+		{
+			sprite->SetIsVisible(true);
+		}
+	}
+
+	//-----------------------------------------------------
+	// JSONに保存したUI (TitleLogo UI)
+	//-----------------------------------------------------
+	{
+		// UIアニメーションデータの読み込み
+		auto uiManager = CManager::Instance()->GetUIAnimationManager();
+
+		if (uiManager)
+		{
+			uiManager->Load("data/UIAnimation/TitleLogo.json");
+		}
+
+		// 登録済みのUIデータを取得
+		UIAnimationData* data = uiManager->GetData("TitleLogo");
+
+		// UI生成
+		m_pTitleLogoUI = CUIFactory::Create(this, *data);
+
+		// 最初は非表示
+		auto sprite = m_pTitleLogoUI->GetComponent<CSpriteRenderComponent>();
 
 		if (sprite)
 		{

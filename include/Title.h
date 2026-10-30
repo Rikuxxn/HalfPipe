@@ -38,7 +38,10 @@ private:
 	std::unique_ptr<CSky>	m_pSky;
 
 	// Press UI
-	CGameObject* m_pPressUI = nullptr;
+	CGameObject* m_pPressUI;
+
+	// TitleLogo UI
+	CGameObject* m_pTitleLogoUI;
 };
 
 #endif
