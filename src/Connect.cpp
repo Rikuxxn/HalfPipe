@@ -525,14 +525,5 @@ void CConnect::SpawnPlayer(uint8_t playerId)
 
 		// ‰ñ“]ˆöŽq‚ÌÝ’è
 		rigid->SetAngularFactor(btVector3(0.0f, 0.0f, 0.0f));
-
-		transform->Position =
-		{
-			static_cast<float>(playerId * 60.0f - 30.0f),
-			730.0f,
-			-2250.0f
-		};
-
-		rigid->Transform();
 	}
 }
