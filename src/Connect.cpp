@@ -510,7 +510,7 @@ void CConnect::SpawnPlayer(uint8_t playerId)
 	transform->Position =
 	{
 		static_cast<float>(playerId * 60.0f - 30.0f),
-		730.0f,
+		640.0f,
 		-2250.0f
 	};
 
