@@ -63,7 +63,7 @@ public:
 	//============================================================ 
 	bool GetPlayerState(uint8_t playerId, Network::PlayerState& outState) const; 
 
-	void SendJoinRequest(void);
+	void SendJoinRequest(float x, float y, float z);
 
 	bool IsJoined(void) const {	return m_IsJoined; }
 

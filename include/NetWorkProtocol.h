@@ -69,6 +69,10 @@ namespace Network
 	struct JoinRequestPacket
 	{
 		PacketHeader header;
+
+		float spawnX;
+		float spawnY;
+		float spawnZ;
 	};
 
 	//============================================================

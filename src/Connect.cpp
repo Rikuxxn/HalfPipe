@@ -409,7 +409,13 @@ void CConnect::Update(void)
 		if (pKeyboard->GetTrigger(DIK_RETURN) ||
 			pJoypad->GetTrigger(CInputJoypad::JOYKEY_A))
 		{
-			network->SendJoinRequest();
+			D3DXVECTOR3 spawnPos =
+				GetSpawnPosition(network->GetLocalPlayerId());
+
+			network->SendJoinRequest(
+				spawnPos.x,
+				spawnPos.y,
+				spawnPos.z);
 
 			m_JoinRequestSent = true;
 		}

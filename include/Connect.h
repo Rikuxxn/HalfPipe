@@ -32,6 +32,15 @@ public:
 	void	Update	(void) override;
 	void	Draw	(void) override;
 
+	D3DXVECTOR3 GetSpawnPosition(uint8_t playerId)
+	{
+		return {
+			static_cast<float>(playerId * 60.0f - 30.0f),
+			730.0f,
+			-2250.0f
+		};
+	}
+
 	// ÉvÉåÉCÉÑÅ[ê∂ê¨
 	void SpawnPlayer(uint8_t playerId);
 
