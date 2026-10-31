@@ -514,6 +514,8 @@ void CConnect::SpawnPlayer(uint8_t playerId)
 		-2250.0f
 	};
 
+	transform->Rotation = { 0.0f, D3DXToRadian(180.0f), 0.0f };
+
 	// キャラクター
 	auto character = player->AddComponent<CCharacterComponent>();
 
