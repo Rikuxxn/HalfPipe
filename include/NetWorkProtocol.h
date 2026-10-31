@@ -135,8 +135,10 @@ namespace Network
 		uint8_t playerId; 
 		float posX; 
 		float posY;
-		float posZ; 
-		float rotY; 
+		float posZ;
+		float rotX;
+		float rotY;
+		float rotZ;
 		float velocityX;
 		float velocityY; 
 		float velocityZ; 

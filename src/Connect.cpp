@@ -338,7 +338,9 @@ void CConnect::Update(void)
 					state.posZ
 				};
 
+				transform->Rotation.x = state.rotX;
 				transform->Rotation.y = state.rotY;
+				transform->Rotation.z = state.rotZ;
 
 				player->UpdateNetworkMotion(state.isMoving != 0);
 			}
