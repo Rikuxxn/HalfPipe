@@ -279,7 +279,7 @@ void CConnect::Update(void)
 	// ClientFServer‚©‚çŽóM‚µ‚½Playeró‘Ô‚ð”½‰f
 	//============================================================
 	{
-		if (network && network->IsConnected())
+		if (network && network->IsConnected() && network->IsJoined())
 		{
 			for (uint8_t playerId = 0;
 				playerId < Network::MAX_PLAYERS;
