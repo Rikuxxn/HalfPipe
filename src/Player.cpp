@@ -220,28 +220,28 @@ HRESULT CPlayer::Init(void)
 //=============================================================================
 HRESULT CPlayer::ConnectInit(void)
 {
-	//// 自動移動コンポーネントの追加
-	//auto autoMove = AddComponent<CAutoMoveComponent>();
+	// 自動移動コンポーネントの追加
+	auto autoMove = AddComponent<CAutoMoveComponent>();
 
-	//// 投擲コンポーネントの追加
-	//auto throwCmp = AddComponent<CThrowComponent>();
+	// 投擲コンポーネントの追加
+	auto throwCmp = AddComponent<CThrowComponent>();
 
-	////// 自動移動ポイントの読み込み
-	////autoMove->LoadMovePoint("data/MovePointInfo01.json");
+	//// 自動移動ポイントの読み込み
+	//autoMove->LoadMovePoint("data/MovePointInfo01.json");
 
-	//// エイムコンポーネントの追加
-	//auto aim = AddComponent<CAimComponent>();
+	// エイムコンポーネントの追加
+	auto aim = AddComponent<CAimComponent>();
 
-	//if (!aim)
-	//{
-	//	return E_FAIL;
-	//}
+	if (!aim)
+	{
+		return E_FAIL;
+	}
 
-	//// エイムは最初は非表示
-	//aim->InvisibleAim();
+	// エイムは最初は非表示
+	aim->InvisibleAim();
 
-	//// レイキャストコンポーネントの追加
-	//AddComponent<CRaycastComponent>();
+	// レイキャストコンポーネントの追加
+	AddComponent<CRaycastComponent>();
 
 	// インスタンスのポインタを渡す
 	m_stateMachine.Start(this);
@@ -249,56 +249,56 @@ HRESULT CPlayer::ConnectInit(void)
 	// 初期状態のステートをセット
 	m_stateMachine.ChangeState<CPlayerStandState>();
 
-	//// UIアニメーションデータの読み込み
-	//auto uiManager = CManager::Instance()->GetUIAnimationManager();
+	// UIアニメーションデータの読み込み
+	auto uiManager = CManager::Instance()->GetUIAnimationManager();
 
-	//if (uiManager)
-	//{
-	//	uiManager->Load("data/UIAnimation/SnowBall_Icon.json");
-	//}
+	if (uiManager)
+	{
+		uiManager->Load("data/UIAnimation/SnowBall_Icon.json");
+	}
 
-	//// 登録済みのUIデータを取得
-	//UIAnimationData* data = uiManager->GetData("SnowBallIcon");
+	// 登録済みのUIデータを取得
+	UIAnimationData* data = uiManager->GetData("SnowBallIcon");
 
-	//// シーンの取得
-	//auto scene = CManager::Instance()->GetSceneManager()->GetScene();
+	// シーンの取得
+	auto scene = CManager::Instance()->GetSceneManager()->GetScene();
 
-	//if (!scene)
-	//{
-	//	return E_FAIL;
-	//}
+	if (!scene)
+	{
+		return E_FAIL;
+	}
 
-	//// UI生成
-	//m_pSnowBallIconUI = CUIFactory::Create(scene, *data);
+	// UI生成
+	m_pSnowBallIconUI = CUIFactory::Create(scene, *data);
 
-	//// 最初は表示
-	//auto sprite = m_pSnowBallIconUI->GetComponent<CSpriteRenderComponent>();
+	// 最初は表示
+	auto sprite = m_pSnowBallIconUI->GetComponent<CSpriteRenderComponent>();
 
-	//if (sprite)
-	//{
-	//	sprite->SetIsVisible(false);
-	//}
+	if (sprite)
+	{
+		sprite->SetIsVisible(false);
+	}
 
-	//// 雪玉カウントの生成
-	//auto countObject = scene->CreateObject<CGameObject>();
+	// 雪玉カウントの生成
+	auto countObject = scene->CreateObject<CGameObject>();
 
-	//countObject->SetTag("SnowBallCount");
+	countObject->SetTag("SnowBallCount");
 
-	//// UIコンポーネント
-	//auto ui = countObject->AddComponent<CUIComponent>();
+	// UIコンポーネント
+	auto ui = countObject->AddComponent<CUIComponent>();
 
-	//// カウント描画コンポーネント
-	//auto score = countObject->AddComponent<CCountRenderComponent>();
+	// カウント描画コンポーネント
+	auto score = countObject->AddComponent<CCountRenderComponent>();
 
-	//ui->SetPosition({ 0.97f, 0.9f });
-	//ui->SetScale({ 2.0f, 2.0f });
+	ui->SetPosition({ 0.97f, 0.9f });
+	ui->SetScale({ 2.0f, 2.0f });
 
-	//score->SetLayer(RenderLayer::UI);
-	//score->SetTexture("data/TEXTURE/Num_01.png");
-	//score->SetDigitSize(0.03f, 0.05f);
-	//score->SetCount(throwCmp->GetCurrentThrowCount());
-	//score->SetCountType(CountType::Dec);
-	//score->SetIsVisible(false);
+	score->SetLayer(RenderLayer::UI);
+	score->SetTexture("data/TEXTURE/Num_01.png");
+	score->SetDigitSize(0.03f, 0.05f);
+	score->SetCount(throwCmp->GetCurrentThrowCount());
+	score->SetCountType(CountType::Dec);
+	score->SetIsVisible(false);
 
 	return S_OK;
 }
@@ -341,91 +341,91 @@ void CPlayer::Update(void)
 	// デルタタイムの取得
 	float dt = CManager::Instance()->GetTimeSystem()->GetDeltaTime();
 
-	//// エイムコンポーネント取得
-	//auto aim = GetComponent<CAimComponent>();
+	// エイムコンポーネント取得
+	auto aim = GetComponent<CAimComponent>();
 
-	//// 自動移動コンポーネントの取得
-	//auto autoMove = GetComponent<CAutoMoveComponent>();
+	// 自動移動コンポーネントの取得
+	auto autoMove = GetComponent<CAutoMoveComponent>();
 
-	//if (aim && autoMove->IsJump())
-	//{
-	//	aim->MoveAim(input.moveDir, dt);
+	if (aim && autoMove->IsJump())
+	{
+		aim->MoveAim(input.moveDir, dt);
 
-	//	// エイムを表示
-	//	aim->VisibleAim();
-	//}
-	//else
-	//{
-	//	// エイムを非表示
-	//	aim->InvisibleAim();
-	//}
+		// エイムを表示
+		aim->VisibleAim();
+	}
+	else
+	{
+		// エイムを非表示
+		aim->InvisibleAim();
+	}
 
-	//// 玉の投擲
-	//if (autoMove->IsJump() && 
-	//	(pKeyboard->GetTrigger(DIK_F) || pJoypad->GetTriggerR2()))
-	//{
-	//	// 投擲コンポーネントの取得
-	//	auto ballThrow = GetComponent<CThrowComponent>();
+	// 玉の投擲
+	if (autoMove->IsJump() && 
+		(pKeyboard->GetTrigger(DIK_F) || pJoypad->GetTriggerR2()))
+	{
+		// 投擲コンポーネントの取得
+		auto ballThrow = GetComponent<CThrowComponent>();
 
-	//	if (ballThrow)
-	//	{
-	//		ballThrow->Throw();
-	//	}
+		if (ballThrow)
+		{
+			ballThrow->Throw();
+		}
 
-	//	// シーンの取得
-	//	auto scene = CManager::Instance()->GetSceneManager()->GetScene();
+		// シーンの取得
+		auto scene = CManager::Instance()->GetSceneManager()->GetScene();
 
-	//	// 雪玉カウントの取得
-	//	auto countObject = scene->FindGameObject("SnowBallCount");
+		// 雪玉カウントの取得
+		auto countObject = scene->FindGameObject("SnowBallCount");
 
-	//	// カウント描画コンポーネント
-	//	auto Count = countObject->GetComponent<CCountRenderComponent>();
+		// カウント描画コンポーネント
+		auto Count = countObject->GetComponent<CCountRenderComponent>();
 
-	//	auto throwCmp = GetComponent<CThrowComponent>();
+		auto throwCmp = GetComponent<CThrowComponent>();
 
-	//	Count->SetCount(throwCmp->GetCurrentThrowCount());
-	//}
+		Count->SetCount(throwCmp->GetCurrentThrowCount());
+	}
 
 	auto transform = GetComponent<CTransformComponent>();
 
-	if (!transform/* || !m_ParticleObject*/)
+	if (!transform || !m_ParticleObject)
 	{
 		return;
 	}
 
-	//auto particleTransform = m_ParticleObject->GetComponent<CTransformComponent>();
+	auto particleTransform = m_ParticleObject->GetComponent<CTransformComponent>();
 
-	//if (!particleTransform)
-	//{
-	//	return;
-	//}
+	if (!particleTransform)
+	{
+		return;
+	}
 
-	//// 松明の先端位置
-	//D3DXVECTOR3 localTipPosition(0.0f, 10.0f, 0.0f);
+	// 松明の先端位置
+	D3DXVECTOR3 localTipPosition(0.0f, 10.0f, 0.0f);
 
-	//// ローカルからワールドへ
-	//particleTransform->Position = LocalToWorld(
-	//	localTipPosition,
-	//	transform->Position,
-	//	transform->Rotation,
-	//	transform->Scale
-	//);
+	// ローカルからワールドへ
+	particleTransform->Position = LocalToWorld(
+		localTipPosition,
+		transform->Position,
+		transform->Rotation,
+		transform->Scale
+	);
 
-	//// パーティクル取得
-	//auto fire = m_ParticleObject->GetComponent<CParticleEmitterComponent>();
+	// パーティクル取得
+	auto fire = m_ParticleObject->GetComponent<CParticleEmitterComponent>();
 
-	//if (autoMove->IsPress())
-	//{
-	//	// 再生
-	//	if (fire)
-	//	{
-	//		fire->SetPlay(true);
-	//	}
-	//}
-	//else
-	//{
-	//	fire->SetPlay(false);
-	//}
+	if (autoMove->IsPress())
+	{
+		// 再生
+		if (fire)
+		{
+			fire->SetPlay(true);
+		}
+	}
+	else
+	{
+		fire->SetPlay(false);
+	}
 
 
 	//============================================================
