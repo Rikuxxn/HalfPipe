@@ -386,12 +386,12 @@ void CPlayer::Update(void)
 	//	Count->SetCount(throwCmp->GetCurrentThrowCount());
 	//}
 
-	//auto transform = GetComponent<CTransformComponent>();
+	auto transform = GetComponent<CTransformComponent>();
 
-	//if (!transform || !m_ParticleObject)
-	//{
-	//	return;
-	//}
+	if (!transform/* || !m_ParticleObject*/)
+	{
+		return;
+	}
 
 	//auto particleTransform = m_ParticleObject->GetComponent<CTransformComponent>();
 
@@ -438,9 +438,9 @@ void CPlayer::Update(void)
 		if (network && network->IsConnected())
 		{
 			network->SendPlayerInput(
-				input.moveDir.x,
-				input.moveDir.y,
-				input.moveDir.z);
+				transform->Position.x,
+				transform->Position.y,
+				transform->Position.z);
 		}
 	}
 

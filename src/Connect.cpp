@@ -320,9 +320,9 @@ void CConnect::Update(void)
 				// ‘ŠŽè‚ÌˆÊ’uE‰ñ“]‚ð”½‰f
 				transform->Position =
 				{
-					static_cast<float>(playerId * 60.0f - 30.0f),
-					730.0f,
-					-2250.0f
+					state.posX,
+					state.posY,
+					state.posZ
 				};
 
 				transform->Rotation.y = state.rotY;
