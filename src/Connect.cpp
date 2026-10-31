@@ -489,8 +489,8 @@ void CConnect::SpawnPlayer(uint8_t playerId)
 	transform->Position =
 	{
 		static_cast<float>(playerId * 60.0f - 30.0f),
-		0.0f,
-		0.0f
+		680.0f,
+		-2050.0f
 	};
 
 	// キャラクター
