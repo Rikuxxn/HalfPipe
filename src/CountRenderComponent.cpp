@@ -29,10 +29,11 @@ CCountRenderComponent::CCountRenderComponent() :
     m_CountType     (CountType::Add),   // カウントの種類
     m_Count         (0),                // カウント
     m_TargetCount   (0),                // 目標カウント
-    m_CountSpeed    (200.0f),           // 1秒あたりの加算ポイント数 
+    m_CountSpeed    (200.0f),           // 1秒あたりの加算ポイント数
     m_CountRemainder(0.0f),             // 加算量の小数部分を保持 
     m_DigitWidth    (50.0f),            // 1文字当たりの幅
-    m_DigitHeight   (50.0f)             // 1文字当たりの高さ
+    m_DigitHeight   (50.0f),            // 1文字当たりの高さ
+    m_IsVisible     (true)              // 表示するかどうか
 {
 
 }
@@ -68,6 +69,11 @@ HRESULT CCountRenderComponent::Init(void)
 //=============================================================================
 void CCountRenderComponent::Update(void)
 {
+    if (!m_IsVisible)
+    {
+        return;
+    }
+
     // デルタタイムの取得
     float deltaTime = CManager::Instance()->GetTimeSystem()->GetDeltaTime();
 
@@ -156,7 +162,7 @@ void CCountRenderComponent::Update(void)
 //=============================================================================
 void CCountRenderComponent::Draw(void)
 {
-    if (/*!m_isVisible ||*/ !m_pOwner || !m_pVtxBuff)
+    if (!m_IsVisible || !m_pOwner || !m_pVtxBuff)
     {
         return;
     }

@@ -220,6 +220,15 @@ HRESULT CPlayer::Init(void)
 //=============================================================================
 HRESULT CPlayer::ConnectInit(void)
 {
+	// 自動移動コンポーネントの追加
+	auto autoMove = AddComponent<CAutoMoveComponent>();
+
+	// 投擲コンポーネントの追加
+	auto throwCmp = AddComponent<CThrowComponent>();
+
+	// 自動移動ポイントの読み込み
+	autoMove->LoadMovePoint("data/MovePointInfo01.json");
+
 	// エイムコンポーネントの追加
 	auto aim = AddComponent<CAimComponent>();
 
@@ -231,11 +240,65 @@ HRESULT CPlayer::ConnectInit(void)
 	// エイムは最初は非表示
 	aim->InvisibleAim();
 
+	// レイキャストコンポーネントの追加
+	AddComponent<CRaycastComponent>();
+
 	// インスタンスのポインタを渡す
 	m_stateMachine.Start(this);
 
 	// 初期状態のステートをセット
 	m_stateMachine.ChangeState<CPlayerStandState>();
+
+	// UIアニメーションデータの読み込み
+	auto uiManager = CManager::Instance()->GetUIAnimationManager();
+
+	if (uiManager)
+	{
+		uiManager->Load("data/UIAnimation/SnowBall_Icon.json");
+	}
+
+	// 登録済みのUIデータを取得
+	UIAnimationData* data = uiManager->GetData("SnowBallIcon");
+
+	// シーンの取得
+	auto scene = CManager::Instance()->GetSceneManager()->GetScene();
+
+	if (!scene)
+	{
+		return E_FAIL;
+	}
+
+	// UI生成
+	m_pSnowBallIconUI = CUIFactory::Create(scene, *data);
+
+	// 最初は表示
+	auto sprite = m_pSnowBallIconUI->GetComponent<CSpriteRenderComponent>();
+
+	if (sprite)
+	{
+		sprite->SetIsVisible(false);
+	}
+
+	// 雪玉カウントの生成
+	auto countObject = scene->CreateObject<CGameObject>();
+
+	countObject->SetTag("SnowBallCount");
+
+	// UIコンポーネント
+	auto ui = countObject->AddComponent<CUIComponent>();
+
+	// カウント描画コンポーネント
+	auto score = countObject->AddComponent<CCountRenderComponent>();
+
+	ui->SetPosition({ 0.97f, 0.9f });
+	ui->SetScale({ 2.0f, 2.0f });
+
+	score->SetLayer(RenderLayer::UI);
+	score->SetTexture("data/TEXTURE/Num_01.png");
+	score->SetDigitSize(0.03f, 0.05f);
+	score->SetCount(throwCmp->GetCurrentThrowCount());
+	score->SetCountType(CountType::Dec);
+	score->SetIsVisible(false);
 
 	return S_OK;
 }

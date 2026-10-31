@@ -67,6 +67,9 @@ public:
     // カウントの種類の設定
     void SetCountType(CountType type) { m_CountType = type; }
 
+    // 表示するかどうか設定
+    void SetIsVisible(bool flag) { m_IsVisible = flag; }
+
     // 影を描画するか
     bool IsShadowCaster(void) override
     {
@@ -93,6 +96,8 @@ private:
     // 1文字のサイズ
     float m_DigitWidth;
     float m_DigitHeight;
+
+    bool m_IsVisible;
 
     // 頂点バッファ
     Microsoft::WRL::ComPtr<IDirect3DVertexBuffer9> m_pVtxBuff;
