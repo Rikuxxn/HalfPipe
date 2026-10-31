@@ -544,5 +544,7 @@ void CConnect::SpawnPlayer(uint8_t playerId)
 
 		// ‰ñ“]ˆöŽq‚ÌÝ’è
 		rigid->SetAngularFactor(btVector3(0.0f, 0.0f, 0.0f));
+
+		rigid->Transform();
 	}
 }
