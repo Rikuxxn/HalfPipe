@@ -220,6 +220,17 @@ HRESULT CPlayer::Init(void)
 //=============================================================================
 HRESULT CPlayer::ConnectInit(void)
 {
+	// エイムコンポーネントの追加
+	auto aim = AddComponent<CAimComponent>();
+
+	if (!aim)
+	{
+		return E_FAIL;
+	}
+
+	// エイムは最初は非表示
+	aim->InvisibleAim();
+
 	// インスタンスのポインタを渡す
 	m_stateMachine.Start(this);
 
