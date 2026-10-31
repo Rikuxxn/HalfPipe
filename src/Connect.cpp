@@ -293,6 +293,12 @@ void CConnect::Update(void)
 					continue;
 				}
 
+				// Snapshotに含まれるPlayerIDと配列添字を確認
+				if (state.playerId != playerId)
+				{
+					continue;
+				}
+
 				// まだ存在しないプレイヤーを生成
 				SpawnPlayer(playerId);
 
