@@ -88,8 +88,8 @@ HRESULT CPlayer::Init(void)
 	// 自動移動ポイントの読み込み
 	autoMove->LoadMovePoint("data/MovePointInfo01.json");
 
-	// 自動移動開始
-	autoMove->StartAutoMove();
+	//// 自動移動開始
+	//autoMove->StartAutoMove();
 
 	// エイムコンポーネントの追加
 	auto aim = AddComponent<CAimComponent>();
