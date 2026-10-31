@@ -226,8 +226,8 @@ HRESULT CPlayer::ConnectInit(void)
 	// 投擲コンポーネントの追加
 	auto throwCmp = AddComponent<CThrowComponent>();
 
-	// 自動移動ポイントの読み込み
-	autoMove->LoadMovePoint("data/MovePointInfo01.json");
+	//// 自動移動ポイントの読み込み
+	//autoMove->LoadMovePoint("data/MovePointInfo01.json");
 
 	// エイムコンポーネントの追加
 	auto aim = AddComponent<CAimComponent>();
