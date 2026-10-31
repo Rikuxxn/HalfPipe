@@ -25,6 +25,7 @@ public:
     static constexpr float SPEED        = 180.0f;	// 通常移動時スピード
 
     HRESULT Init            (void) override;
+    HRESULT ConnectInit     (void);
     void    Update          (void) override;
 
 #ifdef _DEBUG

@@ -498,7 +498,7 @@ void CConnect::SpawnPlayer(uint8_t playerId)
 
 	character->Load("data/MOTION/motion_player.txt");
 
-	player->Init();
+	player->ConnectInit();
 
 	auto rigid = player->AddComponent<CRigidBodyComponent>();
 
