@@ -299,6 +299,13 @@ void CConnect::Update(void)
 					continue;
 				}
 
+				// 自分のプレイヤーは参加確定後の処理で生成する
+				if (network->IsJoined() &&
+					playerId == network->GetLocalPlayerId())
+				{
+					continue;
+				}
+
 				// まだ存在しないプレイヤーを生成
 				SpawnPlayer(playerId);
 
