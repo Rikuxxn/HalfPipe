@@ -438,9 +438,9 @@ void CPlayer::Update(void)
 		if (network && network->IsConnected())
 		{
 			network->SendPlayerInput(
-				transform->Position.x,
-				transform->Position.y,
-				transform->Position.z);
+				input.moveDir.x,
+				input.moveDir.y,
+				input.moveDir.z);
 		}
 	}
 
