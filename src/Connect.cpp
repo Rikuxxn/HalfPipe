@@ -490,7 +490,7 @@ void CConnect::SpawnPlayer(uint8_t playerId)
 	{
 		static_cast<float>(playerId * 60.0f - 30.0f),
 		730.0f,
-		-2450.0f
+		-2250.0f
 	};
 
 	// キャラクター
