@@ -473,6 +473,8 @@ void CConnect::SpawnPlayer(uint8_t playerId)
 		return;
 	}
 
+	player->SetTag("Player");
+
 	player->SetPlayerId(playerId);
 
 	const bool isLocal = (playerId == network->GetLocalPlayerId());
@@ -514,7 +516,7 @@ void CConnect::SpawnPlayer(uint8_t playerId)
 
 		rigid->SetColliderOffset({ 0.0f, 50.0f, 0.0f });
 
-		rigid->CreateCapsule(15.5f, 45.5f, 1.0f);
+		rigid->CreateCapsule(15.5f, 45.5f, 0.8f);
 
 		rigid->SetDynamic(true);
 
