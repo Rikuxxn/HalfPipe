@@ -635,9 +635,9 @@ void CNetworkManager::SendJoinRequest(D3DXVECTOR3 pos,D3DXVECTOR3 rot)
 	packet.spawnY = pos.y;
 	packet.spawnZ = pos.z;
 
-	packet.spawnRotX = rot.x;
-	packet.spawnRotY = rot.y;
-	packet.spawnRotZ = rot.z;
+	packet.spawnRotX = D3DXToRadian(rot.x);
+	packet.spawnRotY = D3DXToRadian(rot.y);
+	packet.spawnRotZ = D3DXToRadian(rot.z);
 
 	ENetPacket* enetPacket =
 		enet_packet_create(
