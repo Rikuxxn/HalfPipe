@@ -47,7 +47,7 @@ public:
 		return
 		{
 			0.0f,
-			D3DXToRadian(180.0f),
+			180.0f,
 			0.0f
 		};
 	}

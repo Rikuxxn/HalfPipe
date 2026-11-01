@@ -338,9 +338,9 @@ void CConnect::Update(void)
 					state.posZ
 				};
 
-				transform->Rotation.x = D3DXToRadian(state.rotX);
-				transform->Rotation.y = D3DXToRadian(state.rotY);
-				transform->Rotation.z = D3DXToRadian(state.rotZ);
+				transform->Rotation.x = state.rotX;
+				transform->Rotation.y = state.rotY;
+				transform->Rotation.z = state.rotZ;
 
 				player->UpdateNetworkMotion(state.isMoving != 0);
 			}
