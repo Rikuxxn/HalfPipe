@@ -34,10 +34,21 @@ public:
 
 	D3DXVECTOR3 GetSpawnPosition(uint8_t playerId)
 	{
-		return {
+		return 
+		{
 			static_cast<float>(playerId * 60.0f - 30.0f),
-			730.0f,
+			640.0f,
 			-2250.0f
+		};
+	}
+
+	D3DXVECTOR3 GetSpawnRotation(uint8_t playerId)
+	{
+		return
+		{
+			0.0f,
+			D3DXToRadian(180.0f),
+			0.0f
 		};
 	}
 

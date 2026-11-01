@@ -73,6 +73,10 @@ namespace Network
 		float spawnX;
 		float spawnY;
 		float spawnZ;
+
+		float spawnRotX;
+		float spawnRotY;
+		float spawnRotZ;
 	};
 
 	//============================================================

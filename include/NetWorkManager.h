@@ -63,7 +63,7 @@ public:
 	//============================================================ 
 	bool GetPlayerState(uint8_t playerId, Network::PlayerState& outState) const; 
 
-	void SendJoinRequest(float x, float y, float z);
+	void SendJoinRequest(D3DXVECTOR3 pos, D3DXVECTOR3 rot);
 
 	bool IsJoined(void) const {	return m_IsJoined; }
 

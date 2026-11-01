@@ -411,13 +411,10 @@ void CConnect::Update(void)
 		if (pKeyboard->GetTrigger(DIK_RETURN) ||
 			pJoypad->GetTrigger(CInputJoypad::JOYKEY_A))
 		{
-			D3DXVECTOR3 spawnPos =
-				GetSpawnPosition(network->GetLocalPlayerId());
+			D3DXVECTOR3 spawnPos = GetSpawnPosition(network->GetLocalPlayerId());
+			D3DXVECTOR3 spawnRot = GetSpawnRotation(network->GetLocalPlayerId());
 
-			network->SendJoinRequest(
-				spawnPos.x,
-				spawnPos.y,
-				spawnPos.z);
+			network->SendJoinRequest(spawnPos, spawnRot);
 
 			m_JoinRequestSent = true;
 		}

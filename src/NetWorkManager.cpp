@@ -609,7 +609,7 @@ void CNetworkManager::SendPlayerInput(float moveX, float moveY, float moveZ)
 //=============================================================================
 // éQâ¡óvãÅëóêM
 //=============================================================================
-void CNetworkManager::SendJoinRequest(float x, float y, float z)
+void CNetworkManager::SendJoinRequest(D3DXVECTOR3 pos,D3DXVECTOR3 rot)
 {
 	if (!m_Host || !m_ServerPeer)
 	{
@@ -631,9 +631,13 @@ void CNetworkManager::SendJoinRequest(float x, float y, float z)
 	packet.header.type = Network::PacketType::JoinRequest;
 	packet.header.size = sizeof(packet);
 
-	packet.spawnX = x;
-	packet.spawnY = y;
-	packet.spawnZ = z;
+	packet.spawnX = pos.x;
+	packet.spawnY = pos.y;
+	packet.spawnZ = pos.z;
+
+	packet.spawnRotX = rot.x;
+	packet.spawnRotY = rot.y;
+	packet.spawnRotZ = rot.z;
 
 	ENetPacket* enetPacket =
 		enet_packet_create(
