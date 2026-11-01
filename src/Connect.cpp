@@ -212,7 +212,7 @@ HRESULT CConnect::Init(void)
 	CCamera* pCamera = CManager::Instance()->GetCamera();
 
 	// カメラの初期位置を設定しておく
-	pCamera->SetCamMode(CCamera::MODE_EDIT);
+	pCamera->SetCamMode(CCamera::MODE_FIXED);
 
 	//// サウンドマネージャーの取得
 	//auto sound = CManager::Instance()->GetSoundManager();
@@ -431,13 +431,13 @@ void CConnect::Draw(void)
 	// シーンの描画処理
 	CScene::Draw();
 
-	//// カメラの取得
-	//CCamera* pCamera = CManager::Instance()->GetCamera();
+	// カメラの取得
+	CCamera* pCamera = CManager::Instance()->GetCamera();
 
-	//// カメラの設定
-	//pCamera->SetPosV({ 0.0f, 680.0f, -2050.0f });
-	//pCamera->SetPosR({ 0.0f, 680.0f, -2350.0f });
-	//pCamera->SetRot({ 0.0f, 0.0f, 0.0f });
+	// カメラの設定
+	pCamera->SetPosV({ 0.0f, 680.0f, -2050.0f });
+	pCamera->SetPosR({ 0.0f, 680.0f, -2350.0f });
+	pCamera->SetRot({ 0.0f, 0.0f, 0.0f });
 }
 
 //=============================================================================
