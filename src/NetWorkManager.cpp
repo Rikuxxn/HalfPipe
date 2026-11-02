@@ -204,8 +204,20 @@ bool CNetworkManager::FindLANServer(uint16_t port)
 	sockaddr_in broadcastAddress{};
 
 	broadcastAddress.sin_family = AF_INET;
-	broadcastAddress.sin_port = htons(22334);
-	broadcastAddress.sin_addr.s_addr = htonl(INADDR_BROADCAST);
+	broadcastAddress.sin_addr.s_addr = htonl(INADDR_ANY);
+	broadcastAddress.sin_port = htons(0);
+
+	if (bind(
+		socketHandle,
+		reinterpret_cast<sockaddr*>(&broadcastAddress),
+		sizeof(broadcastAddress)
+	) == SOCKET_ERROR)
+	{
+		OutputDebugStringA("[Network] Discovery client bind failed\n");
+
+		closesocket(socketHandle);
+		return false;
+	}
 
 	//broadcastAddress.sin_family = AF_INET;
 	//broadcastAddress.sin_port = htons(22334);
