@@ -216,6 +216,17 @@ bool CNetworkManager::FindLANServer(uint16_t port)
 	//	&broadcastAddress.sin_addr
 	//);
 
+	char debug[256];
+
+	sprintf_s(
+		debug,
+		"[Client] Broadcast IP: %s Port: %u\n",
+		inet_ntoa(broadcastAddress.sin_addr),
+		ntohs(broadcastAddress.sin_port)
+	);
+
+	OutputDebugStringA(debug);
+
 	const char* message = "RIKU_GAME_DISCOVER";
 
 	//=========================================================
