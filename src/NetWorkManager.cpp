@@ -203,29 +203,29 @@ bool CNetworkManager::FindLANServer(uint16_t port)
 
 	sockaddr_in broadcastAddress{};
 
-	//broadcastAddress.sin_family = AF_INET;
-	//broadcastAddress.sin_port = htons(22334);
-	//broadcastAddress.sin_addr.s_addr = htonl(INADDR_BROADCAST);
-
 	broadcastAddress.sin_family = AF_INET;
 	broadcastAddress.sin_port = htons(22334);
+	broadcastAddress.sin_addr.s_addr = htonl(INADDR_BROADCAST);
 
-	inet_pton(
-		AF_INET,
-		"10.70.21.139",
-		&broadcastAddress.sin_addr
-	);
+	//broadcastAddress.sin_family = AF_INET;
+	//broadcastAddress.sin_port = htons(22334);
 
-	char debug[256];
+	//inet_pton(
+	//	AF_INET,
+	//	"10.70.21.139",
+	//	&broadcastAddress.sin_addr
+	//);
 
-	sprintf_s(
-		debug,
-		"[Client] Broadcast IP: %s Port: %u\n",
-		inet_ntoa(broadcastAddress.sin_addr),
-		ntohs(broadcastAddress.sin_port)
-	);
+	//char debug[256];
 
-	OutputDebugStringA(debug);
+	//sprintf_s(
+	//	debug,
+	//	"[Client] Broadcast IP: %s Port: %u\n",
+	//	inet_ntoa(broadcastAddress.sin_addr),
+	//	ntohs(broadcastAddress.sin_port)
+	//);
+
+	//OutputDebugStringA(debug);
 
 	const char* message = "RIKU_GAME_DISCOVER";
 
