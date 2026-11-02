@@ -30,6 +30,29 @@ public:
 	CGame();
 	~CGame();
 
+	D3DXVECTOR3 GetSpawnPosition(uint8_t playerId)
+	{
+		return
+		{
+			-400.0f,
+			580.0f,
+			-1330.0f
+		};
+	}
+
+	D3DXVECTOR3 GetSpawnRotation(uint8_t playerId)
+	{
+		return
+		{
+			0.0f,
+			180.0f,
+			0.0f
+		};
+	}
+
+	//// ÉvÉåÉCÉÑÅ[ê∂ê¨
+	//void SpawnPlayer(uint8_t playerId);
+
 	HRESULT Init(void) override;
 	void Uninit(void) override;
 	void Update(void) override;

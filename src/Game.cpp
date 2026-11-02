@@ -126,20 +126,12 @@ HRESULT CGame::Init(void)
 
 				auto transform = player->AddComponent<CTransformComponent>();
 
-				//transform->Position =
-				//{
-				//	static_cast<float>(/*i * 60*/ - 90),
-				//	0.0f,
-				//	0.0f
-				//};
-
 				transform->Position =
 				{
 					-400.0f,
 					580.0f,
 					-1330.0f
 				};
-
 
 				auto character = player->AddComponent<CCharacterComponent>();
 
