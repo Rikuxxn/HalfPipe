@@ -231,6 +231,19 @@ bool CNetworkManager::FindLANServer(uint16_t port)
 		sizeof(broadcastAddress)
 	);
 
+	char msg[256];
+
+	sprintf_s(
+		msg,
+		"[Client] Discovery sendResult = %d, Error = %d\n",
+		sendResult,
+		sendResult == SOCKET_ERROR
+		? WSAGetLastError()
+		: 0
+	);
+
+	OutputDebugStringA(msg);
+
 	if (sendResult == SOCKET_ERROR)
 	{
 		OutputDebugStringA("[Network] LANサーバー検索の送信に失敗\n");
