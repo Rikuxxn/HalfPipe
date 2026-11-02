@@ -212,7 +212,7 @@ bool CNetworkManager::FindLANServer(uint16_t port)
 
 	inet_pton(
 		AF_INET,
-		"10.70.21.139",
+		"10.70.21.255",
 		&broadcastAddress.sin_addr
 	);
 
