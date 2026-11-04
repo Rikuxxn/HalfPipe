@@ -20,6 +20,7 @@
 //*****************************************************************************
 class CPauseManager;
 class CSky;
+class CPlayer;
 
 //*****************************************************************************
 // ÉQÅ[ÉÄÉNÉâÉX
@@ -30,7 +31,7 @@ public:
 	CGame();
 	~CGame();
 
-	D3DXVECTOR3 GetSpawnPosition(uint8_t playerId)
+	D3DXVECTOR3 GetSpawnPosition(void)
 	{
 		return
 		{
@@ -40,7 +41,7 @@ public:
 		};
 	}
 
-	D3DXVECTOR3 GetSpawnRotation(uint8_t playerId)
+	D3DXVECTOR3 GetSpawnRotation(void)
 	{
 		return
 		{

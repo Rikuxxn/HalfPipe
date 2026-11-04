@@ -42,7 +42,7 @@ public:
 		};
 	}
 
-	D3DXVECTOR3 GetSpawnRotation(uint8_t playerId)
+	D3DXVECTOR3 GetSpawnRotation(void)
 	{
 		return
 		{
