@@ -47,7 +47,7 @@
 CConnect::CConnect() : 
 	m_JoinRequestSent	(false),
 	m_PlayerSpawned		(false),
-	m_nCount			(3)
+	m_fCount			(3.0f)
 {
 	// 値のクリア
 }
@@ -291,11 +291,11 @@ void CConnect::Update(void)
 			// デルタタイムの取得
 			float dt = CManager::Instance()->GetTimeSystem()->GetDeltaTime();
 
-			m_nCount -= dt;
+			m_fCount -= dt;
 
-			if (pFade->GetFade() == CFade::FADE_NONE && m_nCount <= 0)
+			if (pFade->GetFade() == CFade::FADE_NONE && m_fCount <= 0.0f)
 			{
-				m_nCount = 0;
+				m_fCount = 0.0f;
 
 				// ゲーム画面に移行
 				pFade->StartFadeOut(Mode::Game);

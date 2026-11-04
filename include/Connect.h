@@ -62,7 +62,7 @@ private:
 
 	std::unique_ptr<CSky>	m_pSky;
 
-	int m_nCount;			// 画面遷移カウント
+	float m_fCount;			// 画面遷移カウント
 
 	bool m_JoinRequestSent; // 参加要求を送ったか
 	bool m_PlayerSpawned;	// プレイヤーを生成したか
