@@ -266,6 +266,7 @@ void CAutoMoveComponent::UpdateAutoMove(float deltaTime)
 				m_CurrentMovePointPlusPlus += 2;
 
 				m_CurrentTime = 0.0f;
+				m_fPressCount = 0.0f;
 
 				// ”»’èŒ‹‰Ê‚ðÁ”ï
 				m_HasTimingResult = false;
@@ -583,7 +584,8 @@ D3DXVECTOR3 CAutoMoveComponent::Jumppoint(int nCount)
 void CAutoMoveComponent::JumpTiming(void)
 {
 	// ”»’è’†‚¶‚á‚È‚¯‚ê‚Îˆ—‚µ‚È‚¢
-	if (!m_IsTimingActive)return;
+	if (!m_IsTimingActive) return;
+	if (m_Jump)m_fPressCount = 0.0f;
 
 	CInputKeyboard* pKeyboard = CManager::Instance()->GetInput()->GetKeyboard();
 	CInputJoypad* pJoypad = CManager::Instance()->GetInput()->GetJoypad();
