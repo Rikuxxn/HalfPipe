@@ -55,6 +55,7 @@ public:
 	//============================================================ 
 	bool	IsConnected				(void) const { return m_IsConnected; }
 	bool	IsGameReady				(void) const { return m_IsGameReady; }
+	bool	IsGameFinish			(void) const { return m_IsGameFinish; }
 	bool	ConsumePlayerLeft		(uint8_t& playerId);
 	uint8_t GetLocalPlayerId		(void) const { return m_LocalPlayerId; } 
 
@@ -85,6 +86,7 @@ private:
 	bool						m_IsConnected;
 	bool						m_IsJoined;
 	bool						m_IsGameReady;
+	bool						m_IsGameFinish;
 	bool						m_HasPlayerLeft;
 };
 

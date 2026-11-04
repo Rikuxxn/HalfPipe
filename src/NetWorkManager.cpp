@@ -24,6 +24,7 @@ CNetworkManager::CNetworkManager() :
 	m_IsConnected			(false), 
 	m_IsJoined				(false),
 	m_IsGameReady			(false),
+	m_IsGameFinish			(false),
 	m_HasPlayerLeft			(false),
 	m_LocalPlayerId			(255),
 	m_LeftPlayerId			(255)
@@ -75,6 +76,7 @@ void CNetworkManager::Uninit(void)
 	m_IsConnected = false;
 	m_IsJoined = false;
 	m_IsGameReady = false;
+	m_IsGameFinish = false;
 	m_LocalPlayerId = 255;
 
 	if (enet_linked_version() != 0)
@@ -553,6 +555,18 @@ void CNetworkManager::OnReceive( ENetPeer* peer, ENetPacket* packet)
 
 		std::printf("[Network] ゲーム開始\n");
 	}
+	else if (header.type == Network::PacketType::GameFinish)
+	{
+		if (packet->dataLength < sizeof(Network::GameFinishPacket))
+		{
+			return;
+		}
+
+		// ゲーム終了通知を受信
+		m_IsGameFinish = true;
+
+		std::printf("[Network] ゲーム終了\n");
+	}
 	else if (header.type == Network::PacketType::PlayerLeft)
 	{
 		if (packet->dataLength < sizeof(Network::PlayerLeftPacket))
@@ -600,6 +614,7 @@ void CNetworkManager::OnDisconnect(ENetPeer* peer)
 		m_IsConnected = false;
 		m_IsJoined = false;
 		m_IsGameReady = false;
+		m_IsGameFinish = false;
 
 		m_LocalPlayerId = 255;
 		OutputDebugStringA("[Network] サーバーから切断されました\n");
