@@ -47,4 +47,19 @@ private:
 
 };
 
+//*****************************************************************************
+// ƒvƒŒƒCƒ„[‚Ì—­‚ßó‘Ô
+//*****************************************************************************
+class CPlayerChargeState :public StateBase<CPlayer>
+{
+public:
+
+	void OnStart(CPlayer* pPlayer) override;
+	void OnUpdate(CPlayer* pPlayer) override;
+	void OnExit(CPlayer* /*pPlayer*/) override {}
+
+private:
+
+};
+
 #endif

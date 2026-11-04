@@ -103,14 +103,14 @@ void CPlayerMoveState::OnUpdate(CPlayer* pPlayer)
 	//// デルタタイム
 	//float deltaTime = CManager::Instance()->GetTimeSystem()->GetDeltaTime();
 
-	//// 自動移動コンポーネントの取得
-	//auto autoMove = pPlayer->GetComponent<CAutoMoveComponent>();
+	// 自動移動コンポーネントの取得
+	auto autoMove = pPlayer->GetComponent<CAutoMoveComponent>();
 
-	//// 自動移動中の場合、自動移動更新
-	//if (autoMove && autoMove->IsAutoMove())
-	//{
-	//	autoMove->UpdateAutoMove(deltaTime);
-	//}
+	if (!autoMove->IsJump() && autoMove->IsPress())
+	{
+		// 溜め状態へ移行
+		m_pMachine->ChangeState<CPlayerChargeState>();
+	}
 
 	//
 	//// 物理移動の設定
@@ -127,4 +127,38 @@ void CPlayerMoveState::OnUpdate(CPlayer* pPlayer)
 	//	// 待機状態へ移行
 	//	m_pMachine->ChangeState<CPlayerStandState>();
 	//}
+}
+
+//=============================================================================
+// 溜め状態の開始処理
+//=============================================================================
+void CPlayerChargeState::OnStart(CPlayer* pPlayer)
+{
+	// キャラクターコンポーネントの取得
+	auto character = pPlayer->GetComponent<CCharacterComponent>();
+
+	if (!character)
+	{
+		return;
+	}
+
+	// 待機モーション
+	character->PlayMotion(4, 1);
+}
+//=============================================================================
+// 溜め状態の更新処理
+//=============================================================================
+void CPlayerChargeState::OnUpdate(CPlayer* pPlayer)
+{
+	// 入力を取得
+	CPlayer::InputData input = pPlayer->GatherInput();
+
+	// 自動移動コンポーネントの取得
+	auto autoMove = pPlayer->GetComponent<CAutoMoveComponent>();
+
+	if (autoMove->IsJump() || !autoMove->IsPress())
+	{
+		// 移動状態へ移行
+		m_pMachine->ChangeState<CPlayerMoveState>();
+	}
 }
