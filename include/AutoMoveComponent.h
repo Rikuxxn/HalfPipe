@@ -120,6 +120,9 @@ public:
     // タイミング結果から移動先の種類を取得
     MovePointType GetJumpTargetType(CJumpTiming::TIMING timing);
 
+    // 長押ししている時間を取得
+    float GetPressCount(void) { return m_fPressCount; }
+
     void SaveMovePoint(const char* filename);
     void LoadMovePoint(const char* filename);
 
