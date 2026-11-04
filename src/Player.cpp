@@ -426,7 +426,7 @@ void CPlayer::Update(void)
 	}
 	else
 	{
-		fire->col = { 0.0f, 0.2f, 1.0f, 1.0f };
+		fire->col = { 0.4f, 0.4f, 0.8f, 1.0f };
 	}
 
 
