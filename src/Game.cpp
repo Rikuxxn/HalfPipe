@@ -315,6 +315,14 @@ void CGame::Update(void)
 	//	}
 	//}
 
+	if (pFade->GetFade() == CFade::FADE_NONE && network && network->IsGameFinish())
+	{
+		// リザルト画面に移行
+		pFade->StartFadeOut(Mode::Result);
+
+		return;
+	}
+
 	// シーンの更新処理
 	CScene::Update();
 

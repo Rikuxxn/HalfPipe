@@ -67,6 +67,7 @@ public:
 	bool GetPlayerState(uint8_t playerId, Network::PlayerState& outState) const; 
 
 	void SendJoinRequest(D3DXVECTOR3 pos, D3DXVECTOR3 rot);
+	void SendPlayerGoal(void);
 
 	bool IsJoined(void) const {	return m_IsJoined; }
 

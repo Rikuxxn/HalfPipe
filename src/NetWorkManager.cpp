@@ -720,6 +720,35 @@ void CNetworkManager::SendJoinRequest(D3DXVECTOR3 pos,D3DXVECTOR3 rot)
 }
 
 //=============================================================================
+// ゴール判定送信
+//=============================================================================
+void CNetworkManager::SendPlayerGoal()
+{
+	if (!m_Host || !m_ServerPeer || !m_IsJoined)
+	{
+		return;
+	}
+
+	Network::GameFinishPacket packet{};
+
+	packet.header.type = Network::PacketType::GameFinish;
+	packet.header.size = sizeof(packet);
+	packet.playerId = m_LocalPlayerId;
+
+	ENetPacket* sendPacket = enet_packet_create(
+		&packet,
+		sizeof(packet),
+		ENET_PACKET_FLAG_RELIABLE
+	);
+
+	if (sendPacket)
+	{
+		enet_peer_send(m_ServerPeer, 0, sendPacket);
+		enet_host_flush(m_Host);
+	}
+}
+
+//=============================================================================
 // プレイヤー状態の入力
 //=============================================================================
 bool CNetworkManager::GetPlayerState(uint8_t playerId, Network::PlayerState& outState) const

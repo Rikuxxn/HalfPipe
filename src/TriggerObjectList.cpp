@@ -22,6 +22,8 @@
 #include "InputManager.h"
 #include "Fade.h"
 #include "Scene.h"
+#include <Player.h>
+#include "NetWorkManager.h"
 
 
 //=============================================================================
@@ -98,15 +100,15 @@ void CGoalTrigger::Update(void)
 	CInputKeyboard* pKeyboard = CManager::Instance()->GetInput()->GetKeyboard();
 	CInputJoypad* pJoypad = CManager::Instance()->GetInput()->GetJoypad();
 
-	// ゴールした　かつ　任意のボタンを押した
-	if (m_IsGoal && pFade->GetFade() == CFade::FADE_NONE)
-	{
-		if (pJoypad->GetTrigger(CInputJoypad::JOYKEY_A) || pKeyboard->GetTrigger(DIK_RETURN))
-		{
-			// リザルト画面に移行
-			pFade->StartFadeOut(CScene::Mode::Result);
-		}
-	}
+	//// ゴールした　かつ　任意のボタンを押した
+	//if (m_IsGoal && pFade->GetFade() == CFade::FADE_NONE)
+	//{
+	//	if (pJoypad->GetTrigger(CInputJoypad::JOYKEY_A) || pKeyboard->GetTrigger(DIK_RETURN))
+	//	{
+	//		// リザルト画面に移行
+	//		pFade->StartFadeOut(CScene::Mode::Result);
+	//	}
+	//}
 }
 
 //=============================================================================
@@ -114,27 +116,56 @@ void CGoalTrigger::Update(void)
 //=============================================================================
 void CGoalTrigger::OnTriggerEnter(CGameObject* other)
 {
-	// プレイヤーがゴールしたらUIを表示
-	if (other->CompareTag("Player"))
+	if (!other->CompareTag("Player"))
 	{
-		m_IsGoal = true;
+		return;
+	}
 
-		// 2Dレンダーコンポーネントの取得
-		auto sprite = m_FinishUI->GetComponent<CSpriteRenderComponent>();
+	// シーンの取得
+	auto scene = CManager::Instance()->GetSceneManager()->GetScene();
 
-		// 表示する
-		if (sprite)
+	if (!scene)
+	{
+		return;
+	}
+
+	auto player = scene->FindGameObject<CPlayer>("Player");
+
+	m_IsGoal = true;
+
+	if (!player || player->IsGoal())
+	{
+		return;
+	}
+
+	player->SetGoal(true);
+
+	// 2Dレンダーコンポーネントの取得
+	auto sprite = m_FinishUI->GetComponent<CSpriteRenderComponent>();
+
+	// 表示する
+	if (sprite)
+	{
+		sprite->SetIsVisible(true);
+	}
+
+	// UIアニメーションコンポーネントの取得
+	auto anim = m_FinishUI->GetComponent<CUIAnimationComponent>();
+
+	// アニメーション再生
+	if (anim)
+	{
+		anim->Play();
+	}
+
+	// 自分のプレイヤーがゴールした場合だけサーバーへ通知
+	if (player->IsLocalPlayer())
+	{
+		auto network = CManager::Instance()->GetNetworkManager();
+
+		if (network)
 		{
-			sprite->SetIsVisible(true);
-		}
-
-		// UIアニメーションコンポーネントの取得
-		auto anim = m_FinishUI->GetComponent<CUIAnimationComponent>();
-
-		// アニメーション再生
-		if (anim)
-		{
-			anim->Play();
+			network->SendPlayerGoal();
 		}
 	}
 }

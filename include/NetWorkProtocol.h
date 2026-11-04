@@ -116,6 +116,7 @@ namespace Network
 	struct GameFinishPacket
 	{
 		PacketHeader header;
+		uint8_t playerId;
 	};
 
 	//============================================================

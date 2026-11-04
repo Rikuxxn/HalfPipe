@@ -67,6 +67,10 @@ public:
     // モーション更新
     void UpdateNetworkMotion(bool isMoving);
 
+    // ゴール判定
+    void SetGoal(bool flag) { m_IsGoal = flag; }
+    bool IsGoal(void) { return m_IsGoal; }
+
 private:
 
     void UpdateSurfaceAlignment(float deltaTime);
@@ -88,6 +92,7 @@ private:
     bool m_NetworkControlled = false;
     bool m_IsLocalPlayer = false;
     bool m_NetworkMoving = false;
+    bool m_IsGoal = false;
     InputData m_NetworkInput{};
     uint8_t m_PlayerId = 0;
 
