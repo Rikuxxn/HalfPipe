@@ -616,7 +616,7 @@ void CAutoMoveComponent::JumpTiming(void)
 		m_fPressCount = 0.0f;
 	}
 
-	m_fJumpHeight = fPoint * (nPressCount + 1.0f);
+	m_fJumpHeight = fPoint * (nPressCount * 5.0f + 0.5f);
 	m_fBasicSpeed = m_fBasicSpeed * (m_fJumpHeight * 0.2f + 1.0f);
 	m_HasTimingResult = true;
 }
