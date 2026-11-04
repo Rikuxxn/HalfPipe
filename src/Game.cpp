@@ -393,13 +393,6 @@ void CGame::Update(void)
 				transform->Rotation.y = state.rotY;
 
 				player->UpdateNetworkMotion(state.isMoving != 0);
-
-				auto rigid = player->GetComponent<CRigidBodyComponent>();
-
-				if (rigid)
-				{
-					rigid->Transform();
-				}
 			}
 		}
 	}
