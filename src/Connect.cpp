@@ -23,9 +23,6 @@
 #include "LightComponent.h"
 #include "CharacterComponent.h"
 #include "Player.h"
-#include "ParticleEmitterComponent.h"
-#include "MeshRenderComponent.h"
-#include "MeshResource.h"
 #include "XModelRenderComponent.h"
 #include "RigidBodyComponent.h"
 #include "StageManager.h"
@@ -40,6 +37,7 @@
 #include "StageEditor.h"
 #include "TriggerObjectEditor.h"
 #include "NetWorkManager.h"
+#include "TimeSystem.h"
 
 
 
@@ -48,7 +46,8 @@
 //=============================================================================
 CConnect::CConnect() : 
 	m_JoinRequestSent	(false),
-	m_PlayerSpawned		(false)
+	m_PlayerSpawned		(false),
+	m_nCount			(3)
 {
 	// 値のクリア
 }
@@ -99,112 +98,6 @@ HRESULT CConnect::Init(void)
 	// 空の生成
 	m_pSky = std::make_unique<CSky>();
 	m_pSky->Init();
-
-	//// 2Dパーティクルオブジェクトの生成
-	//auto particle2D = CreateObject();
-
-	//particle2D->SetTag("Particle2D");
-
-	//auto particle2DTransform = particle2D->AddComponent<CTransformComponent>();
-
-	//particle2DTransform->Position = { 500.0f, 200.0f, 0.0f };
-
-	//auto emitter2D = particle2D->AddComponent<CParticleEmitterComponent>();
-
-	//// 描画順の設定
-	//emitter2D->SetLayer(RenderLayer::Particle2D);
-
-	//// 放出空間の設定
-	//emitter2D->Space = ParticleSpace::Space2D;
-
-	//// エミッターのセッターにテクスチャを設定
-	//emitter2D->SetTexture("data/TEXTURE/effect000.jpg");
-
-	//emitter2D->col = { 0.0f, 1.0f, 1.0f, 1.0f };
-
-	//emitter2D->EmitMode =	ParticleEmitMode::Loop;
-
-	//emitter2D->SpawnShape = ParticleSpawnShape::Box;
-
-	//emitter2D->Radius = 10;
-
-	//emitter2D->EmitRate = 0;
-
-	//emitter2D->LifeTimeMin = 30;
-	//emitter2D->LifeTimeMax = 60;
-
-	//emitter2D->SpeedMin = 1;
-	//emitter2D->SpeedMax = 5;
-
-	//emitter2D->SizeMin = 10;
-	//emitter2D->SizeMax = 20;
-
-
-
-	// 3D雪パーティクルオブジェクトの生成
-	auto snow = CreateObject();
-
-	snow->SetTag("SnowParticle3D");
-
-	auto snowTransform = snow->AddComponent<CTransformComponent>();
-
-	snowTransform->Position = { 0.0f, 300.0f, 0.0f };
-
-	auto snow3D = snow->AddComponent<CParticleEmitterComponent>();
-
-	snow3D->SetLayer(RenderLayer::Particle3D);
-
-	// 放出空間の設定
-	snow3D->Space = ParticleSpace::Space3D;
-
-	// エミッターのセッターにテクスチャを設定
-	snow3D->SetTexture("data/TEXTURE/effect000.jpg");
-
-	// シェーダーの設定
-	snow3D->SetShader("data/Shader/Instancing/ParticleInstancing.fx");
-
-	snow3D->col = { 1.0f, 1.0f, 1.0f, 1.0f };
-	snow3D->BoxSize = { 600.0f, 100.0f, 600.0f };
-	snow3D->EmitMode = ParticleEmitMode::Loop;
-
-	// パーティクルの種類の設定
-	snow3D->Type = ParticleType::Snow;
-
-	snow3D->SpawnShape = ParticleSpawnShape::Box;
-	snow3D->Radius = 5.0f;
-	snow3D->EmitRate = 1;
-	snow3D->LifeTimeMin = 100;
-	snow3D->LifeTimeMax = 300;
-	snow3D->SizeMin = 5;
-	snow3D->SizeMax = 10;
-
-
-
-	//// メッシュフィールドオブジェクトの生成
-	//auto meshField = CreateObject();
-
-	//meshField->SetTag("MeshField");
-
-	//auto meshFieldTransform = meshField->AddComponent<CTransformComponent>();
-
-	//meshFieldTransform->Position = { 0.0f, 0.0f, 0.0f };
-
-	//auto renderer = meshField->AddComponent<CMeshRenderComponent>();
-
-	//// 描画順の設定
-	//renderer->SetLayer(RenderLayer::Mesh);
-
-	//// メッシュ生成
-	//auto mesh = std::make_shared<CMeshResource>();
-
-	//// メッシュフィールドの生成
-	//mesh->CreatePlane(800.0f, 800.0f, 100, 100);
-
-	//// ポインタ設定
-	//renderer->SetMesh(mesh);
-
-	//// テクスチャの設定
-	//renderer->SetTexture("data/TEXTURE/field100.jpg");
 
 
 
@@ -395,11 +288,18 @@ void CConnect::Update(void)
 		// 最大人数がそろったら遷移
 		if (network->IsGameReady())
 		{
-			//if (pFade->GetFade() == CFade::FADE_NONE)
-			//{
-			//	// ゲーム画面に移行
-			//	pFade->StartFadeOut(Mode::Game);
-			//}
+			// デルタタイムの取得
+			float dt = CManager::Instance()->GetTimeSystem()->GetDeltaTime();
+
+			m_nCount -= dt;
+
+			if (pFade->GetFade() == CFade::FADE_NONE && m_nCount <= 0)
+			{
+				m_nCount = 0;
+
+				// ゲーム画面に移行
+				pFade->StartFadeOut(Mode::Game);
+			}
 		}
 
 		return;
