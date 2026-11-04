@@ -414,7 +414,7 @@ void CPlayer::Update(void)
 	// パーティクル取得
 	auto fire = m_ParticleObject->GetComponent<CParticleEmitterComponent>();
 
-	if (autoMove->IsPress())
+	if (!autoMove->IsJump() && autoMove->IsPress())
 	{
 		// 再生
 		if (fire)
