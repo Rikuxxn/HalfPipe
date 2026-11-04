@@ -585,7 +585,11 @@ void CAutoMoveComponent::JumpTiming(void)
 {
 	// ”»’è’†‚¶‚á‚È‚¯‚ê‚Îˆ—‚µ‚È‚¢
 	if (!m_IsTimingActive) return;
-	if (m_Jump)m_fPressCount = 0.0f;
+	if (m_Jump)
+	{
+		m_fPressCount = 0.0f;
+		return;
+	}
 
 	CInputKeyboard* pKeyboard = CManager::Instance()->GetInput()->GetKeyboard();
 	CInputJoypad* pJoypad = CManager::Instance()->GetInput()->GetJoypad();
