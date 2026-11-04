@@ -33,6 +33,7 @@ namespace Network
 		JoinAccepted,
 		JoinRejected,
 		GameStart,
+		GameFinish,
 		PlayerLeft
 	}; 
 	
@@ -104,6 +105,15 @@ namespace Network
 	// サーバー → 全クライアント
 	//============================================================
 	struct GameStartPacket
+	{
+		PacketHeader header;
+	};
+
+	//============================================================
+	// ゲーム終了
+	// サーバー → 全クライアント
+	//============================================================
+	struct GameFinishPacket
 	{
 		PacketHeader header;
 	};
