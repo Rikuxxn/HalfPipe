@@ -483,6 +483,9 @@ void CNetworkManager::OnReceive( ENetPeer* peer, ENetPacket* packet)
 		// 今回のスナップショットに含まれるプレイヤーだけ有効にする
 		std::memset(m_HasPlayerState, 0, sizeof(m_HasPlayerState));
 
+		// 参加プレイヤー一覧を更新
+		m_ActivePlayerIds.clear();
+
 		for (uint8_t i = 0; i < snapshot.playerCount; ++i)
 		{
 			const Network::PlayerState& state = snapshot.players[i];
@@ -494,6 +497,9 @@ void CNetworkManager::OnReceive( ENetPeer* peer, ENetPacket* packet)
 
 			m_PlayerStates[state.playerId] = state;
 			m_HasPlayerState[state.playerId] = true;
+
+			// 参加プレイヤーIDを追加
+			m_ActivePlayerIds.push_back(state.playerId);
 		}
 	}
 	else if (header.type == Network::PacketType::JoinAccepted)

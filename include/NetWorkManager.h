@@ -59,6 +59,8 @@ public:
 	bool	ConsumePlayerLeft		(uint8_t& playerId);
 	uint8_t GetLocalPlayerId		(void) const { return m_LocalPlayerId; } 
 
+	const std::vector<uint8_t>& GetActivePlayerIds(void) const { return m_ActivePlayerIds;}
+
 	//============================================================ 
 	// クライアントスナップショット
 	//============================================================ 
@@ -77,6 +79,9 @@ private:
 	void		OnDisconnect		(ENetPeer* peer); 
 
 private:
+	// 参加中のプレイヤーID
+	std::vector<uint8_t> m_ActivePlayerIds;
+
 	ENetPeer*					m_ServerPeer;
 	ENetHost*					m_Host;
 	uint8_t						m_LocalPlayerId;

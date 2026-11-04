@@ -112,62 +112,16 @@ HRESULT CGame::Init(void)
 	// Player生成(クライアント)
 	//============================================================
 	{
-		//auto network = CManager::Instance()->GetNetworkManager();
+		auto network = CManager::Instance()->GetNetworkManager();
 
-		//if (network)
+		if (network)
 		{
-			//for (uint8_t i = 0; i < Network::MAX_PLAYERS; ++i)
+			// サーバーから受け取った参加プレイヤー一覧を取得
+			const auto& playerIds = network->GetActivePlayerIds();
+
+			for (uint8_t id : playerIds)
 			{
-				auto player = CreateObject<CPlayer>();
-
-				player->SetTag("Player");
-
-				//player->SetPlayerId(static_cast<uint8_t>(i));
-
-				auto transform = player->AddComponent<CTransformComponent>();
-
-				transform->Position =
-				{
-					-400.0f,
-					580.0f,
-					-1330.0f
-				};
-
-				auto character = player->AddComponent<CCharacterComponent>();
-
-				character->Load("data/MOTION/motion_player.txt");
-
-				player->Init();
-
-				//// 自動移動ポイントの読み込み
-				//player->LoadMovePoint("data/MovePointInfo.json");
-
-				auto rigid = player->AddComponent<CRigidBodyComponent>();
-
-				if (rigid)
-				{
-					rigid->SetCollisionFilter(
-						COLLISION_GROUP_PLAYER,
-						COLLISION_GROUP_STAGE |
-						COLLISION_GROUP_GHOST |
-						COLLISION_GROUP_ENEMY |
-						COLLISION_GROUP_CAMERA
-					);
-
-					rigid->SetColliderOffset({ 0.0f, 50.0f, 0.0f });
-
-					rigid->CreateCapsule(15.5f, 45.5f, 0.8f);
-
-					rigid->SetDynamic(true);
-
-					// 回転同期しない
-					rigid->SetSyncRotation(false);
-
-					// 回転因子の設定
-					rigid->SetAngularFactor(btVector3(0.0f, 0.0f, 0.0f));
-				}
-
-				player->SetNetworkControlled(true);
+				SpawnPlayer(id);
 			}
 		}
 	}
@@ -343,6 +297,24 @@ void CGame::Update(void)
 		}
 	}
 
+	////=============================================================================
+	//// 参加プレイヤーの生成確認
+	////=============================================================================
+	//auto network = CManager::Instance()->GetNetworkManager();
+
+	//if (network && network->IsConnected())
+	//{
+	//	const auto& playerIds = network->GetActivePlayerIds();
+
+	//	for (uint8_t id : playerIds)
+	//	{
+	//		if (!FindPlayerById(id))
+	//		{
+	//			SpawnPlayer(id);
+	//		}
+	//	}
+	//}
+
 	// シーンの更新処理
 	CScene::Update();
 
@@ -452,6 +424,120 @@ void CGame::SetEnablePause(bool bPause)
 		//CManager::GetSound()->ResumeAll();
 	}
 }
+
+//=============================================================================
+// プレイヤー生成
+//=============================================================================
+void CGame::SpawnPlayer(uint8_t playerId)
+{
+	auto network = CManager::Instance()->GetNetworkManager();
+
+	if (!network)
+	{
+		return;
+	}
+
+	if (playerId >= Network::MAX_PLAYERS)
+	{
+		return;
+	}
+
+	// 同じIDのプレイヤーが存在するなら生成しない
+	if (FindPlayerById(playerId))
+	{
+		return;
+	}
+
+	// プレイヤー生成
+	auto player = CreateObject<CPlayer>();
+
+	if (!player)
+	{
+		return;
+	}
+
+	player->SetTag("Player");
+
+	player->SetPlayerId(playerId);
+
+	const bool isLocal = (playerId == network->GetLocalPlayerId());
+
+	player->SetLocalPlayer(isLocal);
+
+	// 自分のプレイヤーはローカル入力で操作する
+	// 相手のプレイヤーはネットワークの状態で動かす
+	player->SetNetworkControlled(!isLocal);
+
+	// トランスフォームコンポーネントの追加
+	auto transform = player->AddComponent<CTransformComponent>();
+
+	transform->Position =
+	{
+		-400.0f,
+		580.0f,
+		-1330.0f
+	};
+
+	transform->Rotation = { 0.0f, D3DXToRadian(180.0f), 0.0f };
+
+	// キャラクター
+	auto character = player->AddComponent<CCharacterComponent>();
+
+	character->Load("data/MOTION/motion_player.txt");
+
+	player->Init();
+
+	auto rigid = player->AddComponent<CRigidBodyComponent>();
+
+	if (rigid)
+	{
+		rigid->SetCollisionFilter(
+			COLLISION_GROUP_PLAYER,
+			COLLISION_GROUP_STAGE |
+			COLLISION_GROUP_GHOST |
+			COLLISION_GROUP_ENEMY |
+			COLLISION_GROUP_CAMERA
+		);
+
+		rigid->SetColliderOffset({ 0.0f, 50.0f, 0.0f });
+
+		rigid->CreateCapsule(15.5f, 45.5f, 0.8f);
+
+		rigid->SetDynamic(false);
+
+		// 回転同期しない
+		rigid->SetSyncRotation(false);
+
+		// 回転因子の設定
+		rigid->SetAngularFactor(btVector3(0.0f, 0.0f, 0.0f));
+
+		rigid->Transform();
+	}
+}
+
+//=============================================================================
+// PlayerIDからプレイヤーを検索
+//=============================================================================
+CPlayer* CGame::FindPlayerById(uint8_t playerId)
+{
+	auto players = FindGameObjects<CPlayer>();
+
+	for (auto player : players)
+	{
+		if (!player)
+		{
+			continue;
+		}
+
+		if (player->GetPlayerId() == playerId)
+		{
+			return player;
+		}
+	}
+
+	return nullptr;
+}
+
 CPauseManager* CGame::GetPauseManager(void)
 {
 	return m_PauseManager.get();

@@ -50,8 +50,11 @@ public:
 		};
 	}
 
-	//// プレイヤー生成
-	//void SpawnPlayer(uint8_t playerId);
+	// プレイヤー生成
+	void SpawnPlayer(uint8_t playerId);
+
+	// 指定IDのプレイヤーを検索
+	CPlayer* FindPlayerById(uint8_t playerId);
 
 	HRESULT Init(void) override;
 	void Uninit(void) override;
