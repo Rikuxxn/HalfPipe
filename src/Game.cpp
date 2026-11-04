@@ -299,21 +299,21 @@ void CGame::Update(void)
 		return;
 	}
 
-#ifdef _DEBUG
-	// テスト : スコア加算
-	if (pKeyboard->GetTrigger(DIK_I))
-	{
-		auto score = FindGameObject("Score");
-
-		if (score)
-		{
-			auto scoreRender = score->GetComponent<CScoreRenderComponent>();
-
-			// スコアを加算する
-			scoreRender->AddScore(100);
-		}
-	}
-#endif
+//#ifdef _DEBUG
+//	// テスト : スコア加算
+//	if (pKeyboard->GetTrigger(DIK_I))
+//	{
+//		auto score = FindGameObject("Score");
+//
+//		if (score)
+//		{
+//			auto scoreRender = score->GetComponent<CScoreRenderComponent>();
+//
+//			// スコアを加算する
+//			scoreRender->AddScore(100);
+//		}
+//	}
+//#endif
 
 	auto network = CManager::Instance()->GetNetworkManager();
 
