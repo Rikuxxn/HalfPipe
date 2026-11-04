@@ -112,11 +112,11 @@ HRESULT CGame::Init(void)
 	// Player生成(クライアント)
 	//============================================================
 	{
-		//auto network = CManager::Instance()->GetNetworkManager();
+		auto network = CManager::Instance()->GetNetworkManager();
 
-		//if (network)
+		if (network)
 		{
-			//for (uint8_t i = 0; i < Network::MAX_PLAYERS; ++i)
+			for (uint8_t i = 0; i < Network::MAX_PLAYERS; ++i)
 			{
 				auto player = CreateObject<CPlayer>();
 
