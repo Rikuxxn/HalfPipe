@@ -199,9 +199,9 @@ HRESULT CPlayer::Init(void)
 
 	fire3D->SetPlay(false);
 
-	fire3D->col = { 1.0f, 0.7f, 0.2f, 1.0f };
+	fire3D->col = { 0.2f, 0.2f, 0.7f, 1.0f };
 	fire3D->EmitMode = ParticleEmitMode::Loop;
-	fire3D->Type = ParticleType::Fire;
+	fire3D->Type = ParticleType::Smoke;
 	fire3D->SpawnShape = ParticleSpawnShape::Point;
 	fire3D->Radius = 3.0f;
 	fire3D->EmitRate = 1;
@@ -400,6 +400,7 @@ void CPlayer::Update(void)
 		return;
 	}
 
+
 	// 松明の先端位置
 	D3DXVECTOR3 localTipPosition(0.0f, 10.0f, 0.0f);
 
@@ -413,6 +414,21 @@ void CPlayer::Update(void)
 
 	// パーティクル取得
 	auto fire = m_ParticleObject->GetComponent<CParticleEmitterComponent>();
+
+	// パーティクルの色変更
+	if (autoMove->GetPressCount() > 0.18f)
+	{
+		fire->col = { 0.7f, 0.8f, 0.2f, 1.0f };
+	}
+	else if (autoMove->GetPressCount() > 0.09f)
+	{
+		fire->col = { 1.0f, 0.2f, 0.2f, 1.0f };
+	}
+	else
+	{
+		fire->col = { 0.0f, 0.2f, 1.0f, 1.0f };
+	}
+
 
 	if (!autoMove->IsJump() && autoMove->IsPress())
 	{
