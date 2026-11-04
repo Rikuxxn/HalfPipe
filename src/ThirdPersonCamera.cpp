@@ -19,6 +19,7 @@
 #include "Player.h"
 #include "TransformComponent.h"
 #include "CollisionGroup.h"
+#include "AutoMoveComponent.h"
 
 
 // 名前空間の使用
@@ -31,7 +32,7 @@ using namespace MathUtil;
 // コンストラクタ
 //=============================================================================
 CThirdPersonCamera::CThirdPersonCamera() :
-	m_fDistance(80.0f)
+	m_fDistance(50.0f)
 {
 
 }
@@ -56,9 +57,12 @@ void CThirdPersonCamera::Update(CameraTransform& transform)
 	{
 		// プレイヤーのトランスフォームを取得
 		auto playerTransform = pPlayer->GetComponent<CTransformComponent>();
+		// プレイヤーのトランスフォームを取得
+		auto playerAutoMove = pPlayer->GetComponent<CAutoMoveComponent>();
 
 		// プレイヤーの位置の取得
 		D3DXVECTOR3 playerPos = playerTransform->Position;
+		D3DXVECTOR3 playerRot = playerTransform->Rotation;
 
 		// マウスの状態を取得
 		DIMOUSESTATE mouseState;
@@ -122,18 +126,18 @@ void CThirdPersonCamera::Update(CameraTransform& transform)
 				transform.rotation.x = 1.3f;
 			}
 		}
-
+		D3DXVECTOR3 dir = playerAutoMove->GetMoveDirection();
 		// カメラ位置計算
-		transform.posV.x = playerPos.x + sinf(transform.rotation.y) * cosf(transform.rotation.x) * m_fDistance;
-		transform.posV.y = playerPos.y + sinf(transform.rotation.x) * m_fDistance + 80.0f;
-		transform.posV.z = playerPos.z + cosf(transform.rotation.y) * cosf(transform.rotation.x) * m_fDistance;
+		transform.posV.x = playerPos.x + m_fDistance * -dir.x;
+		transform.posV.y = playerPos.y + m_fDistance + 80.0f* -dir.y;
+		transform.posV.z = playerPos.z + m_fDistance * -dir.z;
 
 		// 注視点
 		transform.posR = playerPos;
 		transform.posR.y += 60.0f;
 
 		// カメラの位置補正処理
-		AdjustCameraPosition(transform, playerPos);
+		//AdjustCameraPosition(transform, playerPos);
 	}
 }
 

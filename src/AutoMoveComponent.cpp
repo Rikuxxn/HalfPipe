@@ -308,7 +308,6 @@ void CAutoMoveComponent::UpdateAutoMove(float deltaTime)
 	if (D3DXVec3LengthSq(&direction) > 0.0001f)
 	{
 		D3DXVec3Normalize(&direction, &direction);
-
 		// is•ûŒü‚ğ•Û‘¶
 		m_MoveDirection = direction;
 	}
