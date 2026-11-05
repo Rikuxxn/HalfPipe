@@ -301,16 +301,16 @@ void CGame::Update(void)
 	//	}
 	//}
 
-	if (network && network->IsGameFinish())
+	if (pFade->GetFade() == CFade::FADE_NONE && network && network->IsGameFinish())
 	{
-		// デルタタイムの取得
-		float dt = CManager::Instance()->GetTimeSystem()->GetDeltaTime();
+		//// デルタタイムの取得
+		//float dt = CManager::Instance()->GetTimeSystem()->GetDeltaTime();
 
-		m_fCount -= dt;
+		//m_fCount -= dt;
 
-		if (pFade->GetFade() == CFade::FADE_NONE && m_fCount <= 0.0f)
+		//if (pFade->GetFade() == CFade::FADE_NONE && m_fCount <= 0.0f)
 		{
-			m_fCount = 0.0f;
+			//m_fCount = 0.0f;
 
 			// リザルト画面に移行
 			pFade->StartFadeOut(Mode::Result);
