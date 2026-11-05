@@ -36,7 +36,11 @@ public:
     // エイム位置をランダムに設定
     void SetRandomAimPosition(void);
 
+    // エイムの位置
     D3DXVECTOR3 GetAimPosition(void) const { return m_AimPosition; }
+
+    // ターゲットの中心位置
+    D3DXVECTOR3 GetTargetCenter(void) const { return m_TargetCenter; }
 
     // 照準移動
     void MoveAim(const D3DXVECTOR3& moveDirection, float deltaTime);
