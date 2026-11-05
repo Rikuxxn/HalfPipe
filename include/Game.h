@@ -72,6 +72,8 @@ private:
 
 	// 「点」 UI
 	CGameObject* m_pPointUI;
+
+	float m_fCount;			// 画面遷移カウント
 };
 
 #endif

@@ -42,14 +42,15 @@
 #include "UIAnimationManager.h"
 #include "UIFactory.h"
 #include "UIAnimationComponent.h"
-
+#include "TimeSystem.h"
 
 
 //=============================================================================
 // コンストラクタ
 //=============================================================================
 CGame::CGame() :
-	m_pPointUI (nullptr)
+	m_pPointUI	(nullptr),
+	m_fCount	(0.0f)
 {
 	// 値のクリア
 }
@@ -300,10 +301,20 @@ void CGame::Update(void)
 	//	}
 	//}
 
-	if (pFade->GetFade() == CFade::FADE_NONE && network && network->IsGameFinish())
+	if (network && network->IsGameFinish())
 	{
-		// リザルト画面に移行
-		pFade->StartFadeOut(Mode::Result);
+		// デルタタイムの取得
+		float dt = CManager::Instance()->GetTimeSystem()->GetDeltaTime();
+
+		m_fCount -= dt;
+
+		if (pFade->GetFade() == CFade::FADE_NONE && m_fCount <= 0.0f)
+		{
+			m_fCount = 0.0f;
+
+			// リザルト画面に移行
+			pFade->StartFadeOut(Mode::Result);
+		}
 
 		return;
 	}
