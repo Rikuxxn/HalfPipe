@@ -301,6 +301,9 @@ void CGame::Update(void)
 	//	}
 	//}
 
+	// シーンの更新処理
+	CScene::Update();
+
 	if (network && network->IsGameFinish())
 	{
 		// デルタタイムの取得
@@ -318,9 +321,6 @@ void CGame::Update(void)
 
 		return;
 	}
-
-	// シーンの更新処理
-	CScene::Update();
 
 	//============================================================
 	// Client：Serverから受信したPlayer状態を反映
