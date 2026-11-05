@@ -17,7 +17,7 @@
 //*****************************************************************************
 namespace Network 
 {
-	constexpr uint8_t MAX_PLAYERS	= 3; 
+	constexpr uint8_t MAX_PLAYERS	= 2; 
 	constexpr uint16_t DEFAULT_PORT = 22333;
 	
 	//============================================================ 
