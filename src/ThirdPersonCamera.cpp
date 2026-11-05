@@ -20,6 +20,7 @@
 #include "TransformComponent.h"
 #include "CollisionGroup.h"
 #include "AutoMoveComponent.h"
+#include "AimComponent.h"
 
 
 // 名前空間の使用
@@ -57,7 +58,7 @@ void CThirdPersonCamera::Update(CameraTransform& transform)
 	{
 		// プレイヤーのトランスフォームを取得
 		auto playerTransform = pPlayer->GetComponent<CTransformComponent>();
-		// プレイヤーのトランスフォームを取得
+		// プレイヤーの自動移動を取得
 		auto playerAutoMove = pPlayer->GetComponent<CAutoMoveComponent>();
 
 		// プレイヤーの位置の取得
@@ -128,13 +129,35 @@ void CThirdPersonCamera::Update(CameraTransform& transform)
 		}
 		D3DXVECTOR3 dir = playerAutoMove->GetMoveDirection();
 		// カメラ位置計算
-		transform.posV.x = playerPos.x + m_fDistance * -dir.x;
-		transform.posV.y = playerPos.y + m_fDistance + 80.0f* -dir.y;
-		transform.posV.z = playerPos.z + m_fDistance * -dir.z;
+		//transform.posV.x = playerPos.x + m_fDistance * -dir.x;
+		//transform.posV.y = playerPos.y + m_fDistance + 80.0f* -dir.y;
+		//transform.posV.z = playerPos.z + m_fDistance * -dir.z;
 
-		// 注視点
-		transform.posR = playerPos;
-		transform.posR.y += 60.0f;
+		if (!playerAutoMove->IsJump())
+		{
+			transform.posV.x += (playerPos.x - transform.posV.x) * 0.05f;
+			transform.posV.y += ((playerPos.y + 60.0f) - transform.posV.y) * 0.05f;
+			transform.posV.z += (playerPos.z - transform.posV.z) * 0.05f;
+			// 注視点
+			transform.posR = playerPos;
+			transform.posR.y += 60.0f;
+		}
+		else
+		{
+			// プレイヤーの自動移動を取得
+			auto Aim = pPlayer->GetComponent<CAimComponent>();
+			D3DXVECTOR3 targetCenter = Aim->GetTargetCenter();
+
+			transform.posV.x += (playerPos.x - transform.posV.x) * 0.001f;
+			transform.posV.y += ((playerPos.y + 100.0f) - transform.posV.y) * 0.1f;
+			transform.posV.z += (playerPos.z - transform.posV.z) * 0.1f;
+			// 注視点
+
+			transform.posR = targetCenter;
+			transform.posR.y += 20.0f;
+		}
+
+
 
 		// カメラの位置補正処理
 		//AdjustCameraPosition(transform, playerPos);
