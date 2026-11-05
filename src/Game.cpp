@@ -253,22 +253,7 @@ void CGame::Update(void)
 		return;
 	}
 
-//#ifdef _DEBUG
-//	// テスト : スコア加算
-//	if (pKeyboard->GetTrigger(DIK_I))
-//	{
-//		auto score = FindGameObject("Score");
-//
-//		if (score)
-//		{
-//			auto scoreRender = score->GetComponent<CScoreRenderComponent>();
-//
-//			// スコアを加算する
-//			scoreRender->AddScore(100);
-//		}
-//	}
-//#endif
-
+	// ネットワークの取得
 	auto network = CManager::Instance()->GetNetworkManager();
 
 	//============================================================
@@ -376,13 +361,6 @@ void CGame::Update(void)
 			}
 		}
 	}
-
-	//if (pFade->GetFade() == CFade::FADE_NONE &&
-	//	(pJoypad->GetTrigger(CInputJoypad::JOYKEY_A) || pKeyboard->GetTrigger(DIK_RETURN)))
-	//{
-	//	// リザルト画面に移行
-	//	pFade->StartFadeOut(Mode::Result);
-	//}
 }
 //=============================================================================
 // 描画処理
