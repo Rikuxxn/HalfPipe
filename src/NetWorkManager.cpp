@@ -606,6 +606,7 @@ void CNetworkManager::OnReceive( ENetPeer* peer, ENetPacket* packet)
 		// ゲーム側でプレイヤーを削除できるように記録する
 		m_LeftPlayerId = playerId;
 		m_HasPlayerLeft = true;
+		m_IsConnected = false;
 	}
 }
 
