@@ -45,6 +45,7 @@
 #include "UIFactory.h"
 #include "UIAnimationComponent.h"
 #include "TimeSystem.h"
+#include "NetWorkManager.h"
 
 
 //*****************************************************************************
@@ -174,97 +175,6 @@ HRESULT CTitle::Init(void)
 		}
 	}
 
-	//// プレイヤーの生成
-	//{
-	//	auto player = CreateObject<CPlayer>();
-
-	//	// タグの設定
-	//	player->SetTag("Player");
-
-	//	auto playerTransform = player->AddComponent<CTransformComponent>();
-
-	//	playerTransform->Position = { 0.0f, 0.0f, 0.0f };
-
-	//	auto character = player->AddComponent<CCharacterComponent>();
-	//	character->Load("data/MOTION/motion_player.txt");
-
-	//	// 初期化処理
-	//	player->Init();
-
-	//	// リジッドボディコンポーネントの追加
-	//	auto rigid = player->AddComponent<CRigidBodyComponent>();
-
-	//	if (rigid)
-	//	{
-	//		// Stage用のCollision設定
-	//		rigid->SetCollisionFilter(
-	//			COLLISION_GROUP_PLAYER,
-	//			COLLISION_GROUP_STAGE |
-	//			COLLISION_GROUP_GHOST |
-	//			COLLISION_GROUP_ENEMY |
-	//			COLLISION_GROUP_CAMERA
-	//		);
-
-	//		// オフセット
-	//		rigid->SetColliderOffset({ 0.0f, 50.0f, 0.0f });
-
-	//		// カプセルコライダーの生成
-	//		rigid->CreateCapsule(15.5f, 45.5f, 1.0f);
-
-	//		// 動的
-	//		rigid->SetDynamic(true);
-
-	//		// 回転同期しない
-	//		rigid->SetSyncRotation(false);
-
-	//		// 回転因子の設定
-	//		rigid->SetAngularFactor(btVector3(0.0f, 0.0f, 0.0f));
-	//	}
-
-	//	// レイキャストコンポーネントの追加
-	//	player->AddComponent<CRaycastComponent>();
-	//}
-
-	//// 2Dパーティクルオブジェクトの生成
-	//auto particle2D = CreateObject();
-
-	//particle2D->SetTag("Particle2D");
-
-	//auto particle2DTransform = particle2D->AddComponent<CTransformComponent>();
-
-	//particle2DTransform->Position = { 500.0f, 200.0f, 0.0f };
-
-	//auto emitter2D = particle2D->AddComponent<CParticleEmitterComponent>();
-
-	//// 描画順の設定
-	//emitter2D->SetLayer(RenderLayer::Particle2D);
-
-	//// 放出空間の設定
-	//emitter2D->Space = ParticleSpace::Space2D;
-
-	//// エミッターのセッターにテクスチャを設定
-	//emitter2D->SetTexture("data/TEXTURE/effect000.jpg");
-
-	//emitter2D->col = { 0.0f, 1.0f, 1.0f, 1.0f };
-
-	//emitter2D->EmitMode =	ParticleEmitMode::Loop;
-
-	//emitter2D->SpawnShape = ParticleSpawnShape::Box;
-
-	//emitter2D->Radius = 10;
-
-	//emitter2D->EmitRate = 0;
-
-	//emitter2D->LifeTimeMin = 30;
-	//emitter2D->LifeTimeMax = 60;
-
-	//emitter2D->SpeedMin = 1;
-	//emitter2D->SpeedMax = 5;
-
-	//emitter2D->SizeMin = 10;
-	//emitter2D->SizeMax = 20;
-
-
 
 	// 3D雪パーティクルオブジェクトの生成
 	auto snow = CreateObject();
@@ -303,6 +213,8 @@ HRESULT CTitle::Init(void)
 	snow3D->SizeMin = 5;
 	snow3D->SizeMax = 10;
 
+	// 一回サーバーから切断する
+	CManager::Instance()->GetNetworkManager()->Disconnect();
 
 	// カメラの取得
 	CCamera* pCamera = CManager::Instance()->GetCamera();
