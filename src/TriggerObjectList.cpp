@@ -30,8 +30,7 @@
 // ゴールエリアのコンストラクタ
 //=============================================================================
 CGoalTrigger::CGoalTrigger() :
-	m_FinishUI	(nullptr),		// FinishUIオブジェクト
-	m_IsGoal	(false)			// ゴールしたかどうか
+	m_FinishUI	(nullptr)		// FinishUIオブジェクト
 {
 
 }
@@ -95,20 +94,6 @@ HRESULT CGoalTrigger::Init(void)
 void CGoalTrigger::Update(void)
 {
 	CTriggerObject::Update();
-
-	CFade* pFade = CManager::Instance()->GetFade();
-	CInputKeyboard* pKeyboard = CManager::Instance()->GetInput()->GetKeyboard();
-	CInputJoypad* pJoypad = CManager::Instance()->GetInput()->GetJoypad();
-
-	//// ゴールした　かつ　任意のボタンを押した
-	//if (m_IsGoal && pFade->GetFade() == CFade::FADE_NONE)
-	//{
-	//	if (pJoypad->GetTrigger(CInputJoypad::JOYKEY_A) || pKeyboard->GetTrigger(DIK_RETURN))
-	//	{
-	//		// リザルト画面に移行
-	//		pFade->StartFadeOut(CScene::Mode::Result);
-	//	}
-	//}
 }
 
 //=============================================================================
@@ -130,8 +115,6 @@ void CGoalTrigger::OnTriggerEnter(CGameObject* other)
 	}
 
 	auto player = scene->FindGameObject<CPlayer>("Player");
-
-	m_IsGoal = true;
 
 	if (!player || player->IsGoal())
 	{

@@ -78,8 +78,6 @@ public:
 
 private:
     CGameObject* m_FinishUI;    // FInishUIオブジェクト
-
-    bool m_IsGoal;              // ゴールしたかどうか
 };
 
 #endif
