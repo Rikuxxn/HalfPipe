@@ -285,7 +285,7 @@ void CConnect::Update(void)
 	if (network->IsJoined())
 	{
 		// 参加確定直後にプレイヤーを生成
-		if (!m_PlayerSpawned)
+		if (!m_PlayerSpawned && m_JoinRequestSent)
 		{
 			// 自分のプレイヤーを生成
 			const uint8_t localPlayerId = network->GetLocalPlayerId();
