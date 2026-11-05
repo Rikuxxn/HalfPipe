@@ -97,17 +97,17 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE /*hInstancePrev*
 		return -1;
 	}
 
-	CNetworkManager* network = CManager::Instance()->GetNetworkManager();
+	//CNetworkManager* network = CManager::Instance()->GetNetworkManager();
 
-	if (network)
-	{
-		// IPv4アドレス 
-		// 家でのPC			: 192.168.3.201
-		// 学校でのPC		: 10.70.21.139
-		// 家デスクトップPC	: 192.168.3.154
-		network->FindLANServer(22334);
-		//network->Connect("10.70.21.139", 22333);
-	}
+	//if (network)
+	//{
+	//	// IPv4アドレス 
+	//	// 家でのPC			: 192.168.3.201
+	//	// 学校でのPC		: 10.70.21.139
+	//	// 家デスクトップPC	: 192.168.3.154
+	//	network->FindLANServer(22334);
+	//	//network->Connect("10.70.21.139", 22333);
+	//}
 
 	// 分解能を設定
 	timeBeginPeriod(1);
