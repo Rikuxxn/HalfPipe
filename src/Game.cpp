@@ -202,9 +202,6 @@ void CGame::Uninit(void)
 	auto trigger = CManager::Instance()->GetTriggerObjectManager();
 	trigger->Reset();
 
-	// 一回サーバーから切断する
-	CManager::Instance()->GetNetworkManager()->Uninit();
-
 	// シーンの終了処理
 	CScene::Uninit();
 
