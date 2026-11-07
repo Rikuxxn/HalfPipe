@@ -367,6 +367,7 @@ void CGame::Update(void)
 				transform->Position		= { state.posX, state.posY,	state.posZ };
 				transform->Rotation		= { state.rotX, state.rotY,	state.rotZ };
 				transform->Quaternion	= { state.quatX, state.quatY, state.quatZ, state.quatW };
+				transform->UseQuaternion = true;
 
 				auto rigid = player->GetComponent<CRigidBodyComponent>();
 
