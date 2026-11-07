@@ -354,7 +354,7 @@ void CPlayer::Update(void)
 		{
 			network->SendPlayerTransform(
 				transform->Position,
-				transform->Quaternion);
+				transform->Rotation);
 		}
 	}
 
@@ -680,7 +680,7 @@ void CPlayer::SendPlayerTransform(void)
 		return;
 	}
 
-	network->SendPlayerTransform(transform->Position, transform->Quaternion);
+	network->SendPlayerTransform(transform->Position, transform->Rotation);
 }
 
 #ifdef _DEBUG
