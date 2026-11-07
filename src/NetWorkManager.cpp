@@ -381,12 +381,12 @@ void CNetworkManager::Disconnect(void)
 //=============================================================================
 // 更新
 //=============================================================================
- void CNetworkManager::Update(void)
- { 
+void CNetworkManager::Update(void)
+{ 
 	if (!m_Host)
 	{
 		 return; 
-	} 
+	}
 
 	ENetEvent event{};
 
@@ -411,18 +411,18 @@ void CNetworkManager::Disconnect(void)
 		break; 
 	} 
 	}
- }
+}
 
 //=============================================================================
 // 接続時
 //=============================================================================
- void CNetworkManager::OnConnect(ENetPeer* peer)
- { 
-	 if (peer == m_ServerPeer)
-	 {
-		 OutputDebugStringA("[Network] サーバーに接続しました\n");
-	 }
- }
+void CNetworkManager::OnConnect(ENetPeer* peer)
+{ 
+	if (peer == m_ServerPeer)
+	{
+		OutputDebugStringA("[Network] サーバーに接続しました\n");
+	}
+}
 
 //=============================================================================
 // 受信

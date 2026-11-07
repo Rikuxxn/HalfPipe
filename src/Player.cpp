@@ -79,28 +79,132 @@ CPlayer::~CPlayer()
 //=============================================================================
 HRESULT CPlayer::Init(void)
 {
-	// 自動移動コンポーネントの追加
-	auto autoMove = AddComponent<CAutoMoveComponent>();
-
-	// 投擲コンポーネントの追加
-	auto throwCmp = AddComponent<CThrowComponent>();
-
-	// 自動移動ポイントの読み込み
-	autoMove->LoadMovePoint("data/MovePointInfo01.json");
-
-	// 自動移動開始
-	autoMove->StartAutoMove();
-
-	// エイムコンポーネントの追加
-	auto aim = AddComponent<CAimComponent>();
-
-	if (!aim)
+	if (m_IsLocalPlayer)
 	{
-		return E_FAIL;
-	}
+		// 自動移動コンポーネントの追加
+		auto autoMove = AddComponent<CAutoMoveComponent>();
 
-	// エイムは最初は非表示
-	aim->InvisibleAim();
+		// 投擲コンポーネントの追加
+		auto throwCmp = AddComponent<CThrowComponent>();
+
+		// 自動移動ポイントの読み込み
+		autoMove->LoadMovePoint("data/MovePointInfo01.json");
+
+		// 自動移動開始
+		autoMove->StartAutoMove();
+
+		// エイムコンポーネントの追加
+		auto aim = AddComponent<CAimComponent>();
+
+		if (!aim)
+		{
+			return E_FAIL;
+		}
+
+		// エイムは最初は非表示
+		aim->InvisibleAim();
+
+		// UIアニメーションデータの読み込み
+		auto uiManager = CManager::Instance()->GetUIAnimationManager();
+
+		if (uiManager)
+		{
+			uiManager->Load("data/UIAnimation/SnowBall_Icon.json");
+		}
+
+		// 登録済みのUIデータを取得
+		UIAnimationData* data = uiManager->GetData("SnowBallIcon");
+
+		// シーンの取得
+		auto scene = CManager::Instance()->GetSceneManager()->GetScene();
+
+		if (!scene)
+		{
+			return E_FAIL;
+		}
+
+		// UI生成
+		m_pSnowBallIconUI = CUIFactory::Create(scene, *data);
+
+		// 最初は表示
+		auto sprite = m_pSnowBallIconUI->GetComponent<CSpriteRenderComponent>();
+
+		if (sprite)
+		{
+			sprite->SetIsVisible(true);
+		}
+
+		// 雪玉カウントの生成
+		auto countObject = scene->CreateObject<CGameObject>();
+
+		countObject->SetTag("SnowBallCount");
+
+		// UIコンポーネント
+		auto ui = countObject->AddComponent<CUIComponent>();
+
+		// カウント描画コンポーネント
+		auto count = countObject->AddComponent<CCountRenderComponent>();
+
+		ui->SetPosition({ 0.97f, 0.9f });
+		ui->SetScale({ 2.0f, 2.0f });
+
+		count->SetLayer(RenderLayer::UI);
+		count->SetTexture("data/TEXTURE/Num_01.png");
+		count->SetDigitSize(0.03f, 0.05f);
+		count->SetCount(throwCmp->GetCurrentThrowCount());
+		count->SetCountType(CountType::Dec);
+
+
+		// 3D炎パーティクルオブジェクトの生成
+		m_ParticleObject = scene->CreateObject();
+
+		m_ParticleObject->SetTag("Particle3D_Player");
+
+		// 松明の位置
+		auto transform = GetComponent<CTransformComponent>();
+
+		// パーティクルの位置
+		auto particle3DTransform = m_ParticleObject->AddComponent<CTransformComponent>();
+
+		// 松明の先端位置
+		D3DXVECTOR3 localTipPosition(0.0f, 10.0f, 0.0f);
+
+		// ローカルからワールドへ
+		particle3DTransform->Position = LocalToWorld(
+			localTipPosition,
+			transform->Position,
+			transform->Rotation,
+			transform->Scale
+		);
+
+		auto fire3D = m_ParticleObject->AddComponent<CParticleEmitterComponent>();
+
+		fire3D->SetLayer(RenderLayer::Particle3D);
+
+		// 放出空間の設定
+		fire3D->Space = ParticleSpace::Space3D;
+
+		// エミッターのセッターにテクスチャを設定
+		fire3D->SetTexture("data/TEXTURE/smoke.jpg");
+
+		// シェーダーの設定
+		fire3D->SetShader("data/Shader/Instancing/ParticleInstancing.fx");
+
+		fire3D->SetPlay(false);
+
+		fire3D->col = { 0.2f, 0.2f, 0.7f, 1.0f };
+		fire3D->EmitMode = ParticleEmitMode::Loop;
+		fire3D->Type = ParticleType::Smoke;
+		fire3D->SpawnShape = ParticleSpawnShape::Point;
+		fire3D->Radius = 3.0f;
+		fire3D->EmitRate = 1;
+		fire3D->LifeTimeMin = 20;
+		fire3D->LifeTimeMax = 40;
+		fire3D->SpeedMin = 0.5f;
+		fire3D->SpeedMax = 2.0f;
+		fire3D->SizeMin = 20;
+		fire3D->SizeMax = 40;
+	}
 
 	// レイキャストコンポーネントの追加
 	AddComponent<CRaycastComponent>();
@@ -110,107 +214,6 @@ HRESULT CPlayer::Init(void)
 
     // 初期状態のステートをセット
     m_stateMachine.ChangeState<CPlayerStandState>();
-
-	// UIアニメーションデータの読み込み
-	auto uiManager = CManager::Instance()->GetUIAnimationManager();
-
-	if (uiManager)
-	{
-		uiManager->Load("data/UIAnimation/SnowBall_Icon.json");
-	}
-
-	// 登録済みのUIデータを取得
-	UIAnimationData* data = uiManager->GetData("SnowBallIcon");
-
-	// シーンの取得
-	auto scene = CManager::Instance()->GetSceneManager()->GetScene();
-
-	if (!scene)
-	{
-		return E_FAIL;
-	}
-
-	// UI生成
-	m_pSnowBallIconUI = CUIFactory::Create(scene, *data);
-
-	// 最初は表示
-	auto sprite = m_pSnowBallIconUI->GetComponent<CSpriteRenderComponent>();
-
-	if (sprite)
-	{
-		sprite->SetIsVisible(true);
-	}
-
-	// 雪玉カウントの生成
-	auto countObject = scene->CreateObject<CGameObject>();
-
-	countObject->SetTag("SnowBallCount");
-
-	// UIコンポーネント
-	auto ui = countObject->AddComponent<CUIComponent>();
-
-	// カウント描画コンポーネント
-	auto score = countObject->AddComponent<CCountRenderComponent>();
-
-	ui->SetPosition({ 0.97f, 0.9f });
-	ui->SetScale({ 2.0f, 2.0f });
-
-	score->SetLayer(RenderLayer::UI);
-	score->SetTexture("data/TEXTURE/Num_01.png");
-	score->SetDigitSize(0.03f, 0.05f);
-	score->SetCount(throwCmp->GetCurrentThrowCount());
-	score->SetCountType(CountType::Dec);
-
-
-	// 3D炎パーティクルオブジェクトの生成
-	m_ParticleObject = scene->CreateObject();
-
-	m_ParticleObject->SetTag("Particle3D_Player");
-
-	// 松明の位置
-	auto transform = GetComponent<CTransformComponent>();
-
-	// パーティクルの位置
-	auto particle3DTransform = m_ParticleObject->AddComponent<CTransformComponent>();
-
-	// 松明の先端位置
-	D3DXVECTOR3 localTipPosition(0.0f, 10.0f, 0.0f);
-
-	// ローカルからワールドへ
-	particle3DTransform->Position = LocalToWorld(
-		localTipPosition,
-		transform->Position,
-		transform->Rotation,
-		transform->Scale
-	);
-
-	auto fire3D = m_ParticleObject->AddComponent<CParticleEmitterComponent>();
-
-	fire3D->SetLayer(RenderLayer::Particle3D);
-
-	// 放出空間の設定
-	fire3D->Space = ParticleSpace::Space3D;
-
-	// エミッターのセッターにテクスチャを設定
-	fire3D->SetTexture("data/TEXTURE/smoke.jpg");
-
-	// シェーダーの設定
-	fire3D->SetShader("data/Shader/Instancing/ParticleInstancing.fx");
-
-	fire3D->SetPlay(false);
-
-	fire3D->col = { 0.2f, 0.2f, 0.7f, 1.0f };
-	fire3D->EmitMode = ParticleEmitMode::Loop;
-	fire3D->Type = ParticleType::Smoke;
-	fire3D->SpawnShape = ParticleSpawnShape::Point;
-	fire3D->Radius = 3.0f;
-	fire3D->EmitRate = 1;
-	fire3D->LifeTimeMin = 20;
-	fire3D->LifeTimeMax = 40;
-	fire3D->SpeedMin = 0.5f;
-	fire3D->SpeedMax = 2.0f;
-	fire3D->SizeMin = 20;
-	fire3D->SizeMax = 40;
 
     return S_OK;
 }
@@ -361,7 +364,7 @@ void CPlayer::Update(void)
 	}
 
 	// 玉の投擲
-	if (autoMove->IsJump() && 
+	if (autoMove->IsJump() && m_IsLocalPlayer && 
 		(pKeyboard->GetTrigger(DIK_F) || pJoypad->GetTriggerR2()))
 	{
 		// 投擲コンポーネントの取得

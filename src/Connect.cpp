@@ -100,17 +100,17 @@ HRESULT CConnect::Init(void)
 	m_pSky->Init();
 
 
-	//CNetworkManager* network = CManager::Instance()->GetNetworkManager();
+	CNetworkManager* network = CManager::Instance()->GetNetworkManager();
 
-	//if (network)
-	//{
-	//	// IPv4アドレス 
-	//	// 家でのPC			: 192.168.3.201
-	//	// 学校でのPC		: 10.70.21.139
-	//	// 家デスクトップPC	: 192.168.3.154
-	//	network->FindLANServer(22334);
-	//	//network->Connect("10.70.21.139", 22333);
-	//}
+	if (network)
+	{
+		// IPv4アドレス 
+		// 家でのPC			: 192.168.3.201
+		// 学校でのPC		: 10.70.21.139
+		// 家デスクトップPC	: 192.168.3.154
+		network->FindLANServer(22334);
+		//network->Connect("10.70.21.139", 22333);
+	}
 
 	// カメラの取得
 	CCamera* pCamera = CManager::Instance()->GetCamera();
