@@ -679,9 +679,9 @@ void CNetworkManager::SendPlayerTransform(const D3DXVECTOR3& position, const D3D
 	packet.posY = position.y;
 	packet.posZ = position.z;
 
-	packet.rotX = rotation.x;
-	packet.rotY = rotation.y;
-	packet.rotZ = rotation.z;
+	packet.rotX = D3DXToRadian(rotation.x);
+	packet.rotY = D3DXToRadian(rotation.y);
+	packet.rotZ = D3DXToRadian(rotation.z);
 
 	ENetPacket* enetPacket = enet_packet_create(&packet, sizeof(packet), 0);
 
