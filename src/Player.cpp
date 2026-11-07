@@ -341,8 +341,32 @@ void CPlayer::Update(void)
 	// 入力判定の取得
 	InputData input = GatherInput();
 
+	//============================================================
+	// LocalPlayerなら入力をサーバーへ送信
+	//============================================================
+	if (m_IsLocalPlayer)
+	{
+		auto network = CManager::Instance()->GetNetworkManager();
+
+		if (network && network->IsConnected())
+		{
+			network->SendPlayerInput(
+				input.moveDir.x,
+				input.moveDir.y,
+				input.moveDir.z);
+		}
+	}
+
 	// デルタタイムの取得
 	float dt = CManager::Instance()->GetTimeSystem()->GetDeltaTime();
+
+	// ハーフパイプの面に合わせた姿勢制御
+	UpdateSurfaceAlignment(dt);
+
+	if (!m_IsLocalPlayer)
+	{
+		return;
+	}
 
 	// エイムコンポーネント取得
 	auto aim = GetComponent<CAimComponent>();
@@ -364,7 +388,7 @@ void CPlayer::Update(void)
 	}
 
 	// 玉の投擲
-	if (autoMove->IsJump() && m_IsLocalPlayer && 
+	if (autoMove->IsJump() &&
 		(pKeyboard->GetTrigger(DIK_F) || pJoypad->GetTriggerR2()))
 	{
 		// 投擲コンポーネントの取得
@@ -445,26 +469,6 @@ void CPlayer::Update(void)
 	{
 		fire->SetPlay(false);
 	}
-
-
-	//============================================================
-	// LocalPlayerなら入力をサーバーへ送信
-	//============================================================
-	if (m_IsLocalPlayer)
-	{
-		auto network = CManager::Instance()->GetNetworkManager();
-
-		if (network && network->IsConnected())
-		{
-			network->SendPlayerInput(
-				input.moveDir.x,
-				input.moveDir.y,
-				input.moveDir.z);
-		}
-	}
-
-	// ハーフパイプの面に合わせた姿勢制御
-	UpdateSurfaceAlignment(dt);
 }
 
 //=============================================================================
