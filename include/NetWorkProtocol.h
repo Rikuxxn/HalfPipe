@@ -34,6 +34,7 @@ namespace Network
 		JoinAccepted,
 		JoinRejected,
 		GameStart,
+		PlayerGoal,
 		GameFinish,
 		PlayerLeft
 	}; 
@@ -111,13 +112,22 @@ namespace Network
 	};
 
 	//============================================================
+	// ゴール
+	// クライアント → サーバー
+	//============================================================
+	struct PlayerGoalPacket
+	{
+		PacketHeader header;
+		uint8_t playerId;
+	};
+
+	//============================================================
 	// ゲーム終了
 	// サーバー → 全クライアント
 	//============================================================
 	struct GameFinishPacket
 	{
 		PacketHeader header;
-		uint8_t playerId;
 	};
 
 	//============================================================

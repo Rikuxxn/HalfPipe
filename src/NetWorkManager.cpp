@@ -758,16 +758,16 @@ void CNetworkManager::SendJoinRequest(D3DXVECTOR3 pos,D3DXVECTOR3 rot)
 //=============================================================================
 // ÉSÅ[ÉãîªíËëóêM
 //=============================================================================
-void CNetworkManager::SendPlayerGoal()
+void CNetworkManager::SendPlayerGoal(void)
 {
 	if (!m_Host || !m_ServerPeer || !m_IsJoined)
 	{
 		return;
 	}
 
-	Network::GameFinishPacket packet{};
+	Network::PlayerGoalPacket  packet{};
 
-	packet.header.type = Network::PacketType::GameFinish;
+	packet.header.type = Network::PacketType::PlayerGoal;
 	packet.header.size = sizeof(packet);
 	packet.playerId = m_LocalPlayerId;
 

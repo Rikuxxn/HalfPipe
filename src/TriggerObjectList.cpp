@@ -114,7 +114,7 @@ void CGoalTrigger::OnTriggerEnter(CGameObject* other)
 		return;
 	}
 
-	auto player = scene->FindGameObject<CPlayer>("Player");
+	auto player = dynamic_cast<CPlayer*>(other);
 
 	if (!player || player->IsGoal())
 	{
