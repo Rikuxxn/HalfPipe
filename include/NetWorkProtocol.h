@@ -155,9 +155,14 @@ namespace Network
 		float posY;
 		float posZ;
 
-		float rotX;
-		float rotY;
-		float rotZ;
+		//float rotX;
+		//float rotY;
+		//float rotZ;
+
+		float quatX;
+		float quatY;
+		float quatZ;
+		float quatW;
 	};
 
 	//============================================================ 

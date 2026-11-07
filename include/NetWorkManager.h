@@ -49,7 +49,7 @@ public:
 	// ‘—M (“ü—Í‚Æ’¼Ú)
 	//============================================================ 
 	void SendPlayerInput(float moveX, float moveY, float moveZ); 
-	void SendPlayerTransform(const D3DXVECTOR3& position, const D3DXVECTOR3& rotation);
+	void SendPlayerTransform(const D3DXVECTOR3& position, const D3DXQUATERNION& quaternion);
 
 	//============================================================ 
 	// î•ñ 

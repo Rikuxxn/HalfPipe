@@ -663,7 +663,7 @@ void CNetworkManager::SendPlayerInput(float moveX, float moveY, float moveZ)
 //=============================================================================
 // プレイヤートランスフォームを送る
 //=============================================================================
-void CNetworkManager::SendPlayerTransform(const D3DXVECTOR3& position, const D3DXVECTOR3& rotation)
+void CNetworkManager::SendPlayerTransform(const D3DXVECTOR3& position, const D3DXQUATERNION& quaternion)
 {
 	if (!m_ServerPeer)
 	{
@@ -679,9 +679,14 @@ void CNetworkManager::SendPlayerTransform(const D3DXVECTOR3& position, const D3D
 	packet.posY = position.y;
 	packet.posZ = position.z;
 
-	packet.rotX = rotation.x;
-	packet.rotY = rotation.y;
-	packet.rotZ = rotation.z;
+	//packet.rotX = rotation.x;
+	//packet.rotY = rotation.y;
+	//packet.rotZ = rotation.z;
+
+	packet.quatX = quaternion.x;
+	packet.quatY = quaternion.y;
+	packet.quatZ = quaternion.z;
+	packet.quatW = quaternion.w;
 
 	ENetPacket* enetPacket = enet_packet_create(&packet, sizeof(packet), 0);
 
