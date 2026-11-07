@@ -158,6 +158,11 @@ namespace Network
 		float rotX;
 		float rotY;
 		float rotZ;
+
+		float quatX;
+		float quatY;
+		float quatZ;
+		float quatW;
 	};
 
 	//============================================================ 
@@ -172,6 +177,10 @@ namespace Network
 		float rotX;
 		float rotY;
 		float rotZ;
+		float quatX;
+		float quatY;
+		float quatZ;
+		float quatW;
 		float velocityX;
 		float velocityY; 
 		float velocityZ; 

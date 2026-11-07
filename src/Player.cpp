@@ -343,6 +343,12 @@ void CPlayer::Update(void)
 
 	auto transform = GetComponent<CTransformComponent>();
 
+	// デルタタイムの取得
+	float dt = CManager::Instance()->GetTimeSystem()->GetDeltaTime();
+
+	// ハーフパイプの面に合わせた姿勢制御
+	UpdateSurfaceAlignment(dt);
+
 	//============================================================
 	// LocalPlayerなら入力をサーバーへ送信
 	//============================================================
@@ -354,15 +360,10 @@ void CPlayer::Update(void)
 		{
 			network->SendPlayerTransform(
 				transform->Position,
-				transform->Rotation);
+				transform->Rotation,
+				transform->Quaternion);
 		}
 	}
-
-	// デルタタイムの取得
-	float dt = CManager::Instance()->GetTimeSystem()->GetDeltaTime();
-
-	// ハーフパイプの面に合わせた姿勢制御
-	UpdateSurfaceAlignment(dt);
 
 	if (!m_IsLocalPlayer)
 	{
@@ -680,7 +681,7 @@ void CPlayer::SendPlayerTransform(void)
 		return;
 	}
 
-	network->SendPlayerTransform(transform->Position, transform->Rotation);
+	network->SendPlayerTransform(transform->Position, transform->Rotation, transform->Quaternion);
 }
 
 #ifdef _DEBUG
