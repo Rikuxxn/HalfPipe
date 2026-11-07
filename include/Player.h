@@ -56,6 +56,8 @@ public:
     bool IsNetworkControlled(void) const { return m_NetworkControlled; }
     void SetNetworkInput(const InputData& input) { m_NetworkInput = input; }
 
+    void SendPlayerTransform(void);
+
     // ÉvÉåÉCÉÑÅ[ID
     void SetPlayerId(uint8_t id) { m_PlayerId = id; }
     uint8_t GetPlayerId(void) const { return m_PlayerId; }

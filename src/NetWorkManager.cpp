@@ -661,6 +661,37 @@ void CNetworkManager::SendPlayerInput(float moveX, float moveY, float moveZ)
 }
 
 //=============================================================================
+// プレイヤートランスフォームを送る
+//=============================================================================
+void CNetworkManager::SendPlayerTransform(const D3DXVECTOR3& position, const D3DXVECTOR3& rotation)
+{
+	if (!m_ServerPeer)
+	{
+		return;
+	}
+
+	Network::PlayerTransformPacket packet{};
+
+	packet.header.type = Network::PacketType::PlayerTransform;
+	packet.header.size = sizeof(packet);
+
+	packet.posX = position.x;
+	packet.posY = position.y;
+	packet.posZ = position.z;
+
+	packet.rotX = rotation.x;
+	packet.rotY = rotation.y;
+	packet.rotZ = rotation.z;
+
+	ENetPacket* enetPacket = enet_packet_create(&packet, sizeof(packet), 0);
+
+	if (enetPacket)
+	{
+		enet_peer_send(m_ServerPeer, 0, enetPacket);
+	}
+}
+
+//=============================================================================
 // 参加要求送信
 //=============================================================================
 void CNetworkManager::SendJoinRequest(D3DXVECTOR3 pos,D3DXVECTOR3 rot)

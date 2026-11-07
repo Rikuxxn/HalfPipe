@@ -341,6 +341,8 @@ void CPlayer::Update(void)
 	// 入力判定の取得
 	InputData input = GatherInput();
 
+	auto transform = GetComponent<CTransformComponent>();
+
 	//============================================================
 	// LocalPlayerなら入力をサーバーへ送信
 	//============================================================
@@ -350,10 +352,9 @@ void CPlayer::Update(void)
 
 		if (network && network->IsConnected())
 		{
-			network->SendPlayerInput(
-				input.moveDir.x,
-				input.moveDir.y,
-				input.moveDir.z);
+			network->SendPlayerTransform(
+				transform->Position,
+				transform->Rotation);
 		}
 	}
 
@@ -412,8 +413,6 @@ void CPlayer::Update(void)
 
 		Count->SetCount(throwCmp->GetCurrentThrowCount());
 	}
-
-	auto transform = GetComponent<CTransformComponent>();
 
 	if (!transform || !m_ParticleObject)
 	{
@@ -660,6 +659,28 @@ void CPlayer::UpdateNetworkMotion(bool isMoving)
 		// 待機モーション
 		character->PlayMotion(0, 10);
 	}
+}
+
+//=============================================================================
+// トランスフォームを送る
+//=============================================================================
+void CPlayer::SendPlayerTransform(void)
+{
+	auto network = CManager::Instance()->GetNetworkManager();
+
+	if (!network || !network->IsConnected())
+	{
+		return;
+	}
+
+	auto transform = GetComponent<CTransformComponent>();
+
+	if (!transform)
+	{
+		return;
+	}
+
+	network->SendPlayerTransform(transform->Position, transform->Rotation);
 }
 
 #ifdef _DEBUG

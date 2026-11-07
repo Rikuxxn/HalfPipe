@@ -26,7 +26,8 @@ namespace Network
 	enum class PacketType : uint8_t
 	{ 
 		Welcome = 1,
-		PlayerInput, 
+		PlayerInput,
+		PlayerTransform,
 		Snapshot, 
 		Disconnect,
 		JoinRequest,
@@ -142,6 +143,23 @@ namespace Network
 		uint32_t sequence; 
 	}; 
 	
+	//============================================================
+	// プレイヤートランスフォーム
+	// クライアント → サーバー
+	//============================================================ 
+	struct PlayerTransformPacket
+	{
+		PacketHeader header;
+
+		float posX;
+		float posY;
+		float posZ;
+
+		float rotX;
+		float rotY;
+		float rotZ;
+	};
+
 	//============================================================ 
 	// プレイヤー状態
 	//============================================================ 
