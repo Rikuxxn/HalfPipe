@@ -507,7 +507,7 @@ void CGame::SpawnPlayer(uint8_t playerId)
 
 		rigid->CreateCapsule(15.5f, 45.5f, 0.8f);
 
-		rigid->SetDynamic(false);
+		rigid->SetDynamic(true);
 
 		// ‰ñ“]“¯Šú‚µ‚È‚¢
 		rigid->SetSyncRotation(false);
