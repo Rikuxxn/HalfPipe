@@ -344,38 +344,58 @@ bool CNetworkManager::FindLANServer(uint16_t port)
 //=============================================================================
 void CNetworkManager::Disconnect(void)
 {
-	if (!m_Host)
+	if (m_Host && m_ServerPeer)
 	{
-		return;
-	}
-
-	if (m_ServerPeer)
-	{
-		// サーバーに切断を通知する
+		// サーバーに切断を通知
 		enet_peer_disconnect(m_ServerPeer, 0);
 
 		ENetEvent event{};
 
-		// 切断イベントを待つ
-		while (enet_host_service(m_Host, &event, 100) > 0)
+		// 最大1秒間、切断イベントを待つ
+		int elapsed = 0;
+
+		while (elapsed < 1000)
 		{
-			if (event.type == ENET_EVENT_TYPE_RECEIVE)
+			int result = enet_host_service(m_Host, &event, 100);
+
+			if (result > 0)
 			{
-				enet_packet_destroy(event.packet);
+				if (event.type == ENET_EVENT_TYPE_RECEIVE)
+				{
+					enet_packet_destroy(event.packet);
+				}
+				else if (event.type == ENET_EVENT_TYPE_DISCONNECT)
+				{
+					break;
+				}
 			}
-			else if (event.type == ENET_EVENT_TYPE_DISCONNECT)
-			{
-				break;
-			}
+
+			elapsed += 100;
 		}
 
-		// 相手から応答がない場合も接続を終了する
-		if (m_ServerPeer)
-		{
-			enet_peer_reset(m_ServerPeer);
-			m_ServerPeer = nullptr;
-		}
+		// 応答がなくてもPeerをリセット
+		enet_peer_reset(m_ServerPeer);
+
+		m_ServerPeer = nullptr;
 	}
+
+	// 接続状態をリセット
+	m_IsConnected = false;
+	m_IsJoined = false;
+	m_IsGameReady = false;
+	m_IsGameFinish = false;
+
+	m_LocalPlayerId = 255;
+
+	// プレイヤー状態をリセット
+	for (uint8_t i = 0; i < Network::MAX_PLAYERS; ++i)
+	{
+		m_HasPlayerState[i] = false;
+		m_PlayerStates[i] = {};
+		//m_PlayerGoalReached[i] = false;
+	}
+
+	OutputDebugStringA("[Network] サーバーから切断しました\n");
 }
 
 //=============================================================================
@@ -614,17 +634,28 @@ void CNetworkManager::OnReceive( ENetPeer* peer, ENetPacket* packet)
 //=============================================================================
 void CNetworkManager::OnDisconnect(ENetPeer* peer)
 {
-	if (peer == m_ServerPeer)
+	if (peer != m_ServerPeer)
 	{
-		m_ServerPeer = nullptr;
-		m_IsConnected = false;
-		m_IsJoined = false;
-		m_IsGameReady = false;
-		m_IsGameFinish = false;
-
-		m_LocalPlayerId = 255;
-		OutputDebugStringA("[Network] サーバーから切断されました\n");
+		return;
 	}
+
+	m_ServerPeer = nullptr;
+
+	m_IsConnected = false;
+	m_IsJoined = false;
+	m_IsGameReady = false;
+	m_IsGameFinish = false;
+
+	m_LocalPlayerId = 255;
+
+	for (uint8_t i = 0; i < Network::MAX_PLAYERS; ++i)
+	{
+		m_HasPlayerState[i] = false;
+		m_PlayerStates[i] = {};
+		//m_PlayerGoalReached[i] = false;
+	}
+
+	OutputDebugStringA("[Network] サーバーから切断されました\n");
 }
 
 //=============================================================================
@@ -820,4 +851,25 @@ bool CNetworkManager::ConsumePlayerLeft(uint8_t& playerId)
 	m_HasPlayerLeft = false;
 
 	return true;
+}
+
+//=============================================================================
+// ゲーム参加状態のリセット
+//=============================================================================
+void CNetworkManager::ResetGameSession(void)
+{
+	// ゲーム状態
+	m_IsGameReady = false;
+	m_IsGameFinish = false;
+
+	// ローカルプレイヤーID
+	m_LocalPlayerId = 255;
+
+	// プレイヤー状態
+	for (uint8_t i = 0; i < Network::MAX_PLAYERS; ++i)
+	{
+		m_HasPlayerState[i] = false;
+		m_PlayerStates[i] = {};
+		//m_PlayerGoalReached[i] = false;
+	}
 }

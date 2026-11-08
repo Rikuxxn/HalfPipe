@@ -213,8 +213,8 @@ HRESULT CTitle::Init(void)
 	snow3D->SizeMin = 5;
 	snow3D->SizeMax = 10;
 
-	//// 一回サーバーから切断する
-	//CManager::Instance()->GetNetworkManager()->Disconnect();
+	// 一回サーバーから切断する
+	CManager::Instance()->GetNetworkManager()->Disconnect();
 
 	// カメラの取得
 	CCamera* pCamera = CManager::Instance()->GetCamera();

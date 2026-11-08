@@ -73,6 +73,7 @@ public:
 	bool IsJoined(void) const {	return m_IsJoined; }
 
 	void ResetJoinState(void) {	m_IsJoined = false;	}
+	void ResetGameSession(void);
 
 private:
 
