@@ -206,7 +206,7 @@ bool CNetworkManager::FindLANServer(uint16_t port)
 	sockaddr_in broadcastAddress{};
 
 	broadcastAddress.sin_family = AF_INET;
-	broadcastAddress.sin_port = htons(22334);
+	broadcastAddress.sin_port = htons(22335);
 	broadcastAddress.sin_addr.s_addr = htonl(INADDR_BROADCAST);
 
 	//broadcastAddress.sin_family = AF_INET;
@@ -344,58 +344,68 @@ bool CNetworkManager::FindLANServer(uint16_t port)
 //=============================================================================
 void CNetworkManager::Disconnect(void)
 {
-	if (m_Host && m_ServerPeer)
-	{
-		// サーバーに切断を通知
-		enet_peer_disconnect(m_ServerPeer, 0);
+    if (m_Host)
+    {
+        if (m_ServerPeer)
+        {
+            // サーバーに切断を通知
+            enet_peer_disconnect(m_ServerPeer, 0);
 
-		ENetEvent event{};
+            ENetEvent event{};
 
-		// 最大1秒間、切断イベントを待つ
-		int elapsed = 0;
+            // 最大1秒間、切断イベントを待つ
+            int elapsed = 0;
 
-		while (elapsed < 1000)
-		{
-			int result = enet_host_service(m_Host, &event, 100);
+            while (elapsed < 1000)
+            {
+                int result = enet_host_service(
+                    m_Host,
+                    &event,
+                    100);
 
-			if (result > 0)
-			{
-				if (event.type == ENET_EVENT_TYPE_RECEIVE)
-				{
-					enet_packet_destroy(event.packet);
-				}
-				else if (event.type == ENET_EVENT_TYPE_DISCONNECT)
-				{
-					break;
-				}
-			}
+                if (result > 0)
+                {
+                    if (event.type == ENET_EVENT_TYPE_RECEIVE)
+                    {
+                        enet_packet_destroy(event.packet);
+                    }
+                    else if (event.type == ENET_EVENT_TYPE_DISCONNECT)
+                    {
+                        break;
+                    }
+                }
 
-			elapsed += 100;
-		}
+                elapsed += 100;
+            }
 
-		// 応答がなくてもPeerをリセット
-		enet_peer_reset(m_ServerPeer);
+            // Peerをリセット
+            enet_peer_reset(m_ServerPeer);
+            m_ServerPeer = nullptr;
+        }
 
-		m_ServerPeer = nullptr;
-	}
+        // ENetHostを破棄
+        enet_host_destroy(m_Host);
+        m_Host = nullptr;
+    }
 
-	// 接続状態をリセット
-	m_IsConnected = false;
-	m_IsJoined = false;
-	m_IsGameReady = false;
-	m_IsGameFinish = false;
+    // 接続状態をリセット
+    m_IsConnected = false;
+    m_IsJoined = false;
+    m_IsGameReady = false;
+    m_IsGameFinish = false;
 
-	m_LocalPlayerId = 255;
+    m_LocalPlayerId = 255;
 
-	// プレイヤー状態をリセット
-	for (uint8_t i = 0; i < Network::MAX_PLAYERS; ++i)
-	{
-		m_HasPlayerState[i] = false;
+    // プレイヤー状態をリセット
+    for (uint8_t i = 0; i < Network::MAX_PLAYERS; ++i)
+    {
 		m_PlayerStates[i] = {};
-		//m_PlayerGoalReached[i] = false;
-	}
+        m_HasPlayerState[i] = false;
 
-	OutputDebugStringA("[Network] サーバーから切断しました\n");
+        m_PlayerStates[i] = {};
+    }
+
+    OutputDebugStringA("[Network] サーバーから切断しました\n");
 }
 
 //=============================================================================
