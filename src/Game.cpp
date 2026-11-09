@@ -49,8 +49,10 @@
 // コンストラクタ
 //=============================================================================
 CGame::CGame() :
-	m_pPointUI	(nullptr),
-	m_fCount	(3.0f)
+	m_pPointUI		(nullptr),
+	m_nReadyCount	(0),
+	m_fCount		(3.0f),
+	m_IsGameStart	(false)
 {
 	// 値のクリア
 }
@@ -123,6 +125,8 @@ HRESULT CGame::Init(void)
 			for (uint8_t id : playerIds)
 			{
 				SpawnPlayer(id);
+
+				m_nReadyCount++;
 			}
 		}
 	}
@@ -304,11 +308,11 @@ void CGame::Update(void)
 	// シーンの更新処理
 	CScene::Update();
 
+	// デルタタイムの取得
+	float dt = CManager::Instance()->GetTimeSystem()->GetDeltaTime();
+
 	if (network && network->IsGameFinish())
 	{
-		// デルタタイムの取得
-		float dt = CManager::Instance()->GetTimeSystem()->GetDeltaTime();
-
 		m_fCount -= dt;
 
 		if (pFade->GetFade() == CFade::FADE_NONE && m_fCount <= 0.0f)
@@ -320,6 +324,20 @@ void CGame::Update(void)
 		}
 
 		return;
+	}
+
+	// 人数がそろって、一定時間経過したら
+	if (m_nReadyCount >= Network::MAX_PLAYERS && !m_IsGameStart)
+	{
+		m_fCount -= dt;
+
+		if (m_fCount <= 0.0f)
+		{
+			m_fCount = 3.0f;
+			m_IsGameStart = true;
+
+			// プレイヤーの自動移動を開始
+		}
 	}
 
 	//============================================================

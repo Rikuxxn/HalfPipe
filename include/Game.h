@@ -73,7 +73,9 @@ private:
 	// 「点」 UI
 	CGameObject* m_pPointUI;
 
+	int m_nReadyCount;		// 準備カウント
 	float m_fCount;			// 画面遷移カウント
+	bool m_IsGameStart;		// ゲーム開始フラグ
 };
 
 #endif
