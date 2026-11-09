@@ -523,7 +523,22 @@ void CGame::SpawnPlayer(uint8_t playerId)
 	// キャラクター
 	auto character = player->AddComponent<CCharacterComponent>();
 
-	character->Load("data/MOTION/motion_player.txt");
+	// IDによって、色を変える
+	switch (playerId)
+	{
+	case 0:
+		character->Load("data/MOTION/motion_player.txt");
+		break;
+	case 1:
+		character->Load("data/MOTION/motion_player_blue.txt");
+		break;
+	case 2:
+		character->Load("data/MOTION/motion_player_green.txt");
+		break;
+	case 3:
+		character->Load("data/MOTION/motion_player_yellow.txt");
+		break;
+	}
 
 	player->Init();
 

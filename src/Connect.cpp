@@ -424,6 +424,7 @@ void CConnect::SpawnPlayer(uint8_t playerId)
 	// キャラクター
 	auto character = player->AddComponent<CCharacterComponent>();
 
+	// IDによって、色を変える
 	switch (playerId)
 	{
 	case 0:
