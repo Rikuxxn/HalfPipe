@@ -205,17 +205,6 @@ HRESULT CPlayer::Init(void)
 		fire3D->SpeedMax = 2.0f;
 		fire3D->SizeMin = 20;
 		fire3D->SizeMax = 40;
-
-		// カメラの取得
-		CCamera* pCamera = CManager::Instance()->GetCamera();
-
-#ifdef _DEBUG
-		// カメラの初期位置を設定しておく
-		pCamera->SetCamMode(CCamera::MODE_THIRD_PERSON);
-#else
-		// カメラの初期位置を設定しておく
-		pCamera->SetCamMode(CCamera::MODE_THIRD_PERSON);
-#endif
 	}
 
 	// レイキャストコンポーネントの追加
