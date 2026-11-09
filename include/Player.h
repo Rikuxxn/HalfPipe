@@ -27,6 +27,7 @@ public:
     HRESULT Init            (void) override;
     HRESULT ConnectInit     (void);
     void    Update          (void) override;
+    void    SetIsAutoMove   (bool flag);
 
 #ifdef _DEBUG
     // Imguiのデバッグ描画

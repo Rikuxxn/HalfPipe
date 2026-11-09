@@ -61,7 +61,8 @@ CPlayer::CPlayer() :
     m_IsGrounded		(false),				// 接地中か
     m_WasGrounded		(false),				// 前フレームの接地状態
     m_AlignToSurface	(true),					// 面に姿勢を合わせるか
-	m_ParticleObject	(nullptr)				// パーティクル
+	m_ParticleObject	(nullptr),				// パーティクル
+	m_bAutoMove			(false)
 {
 
 }
@@ -90,8 +91,8 @@ HRESULT CPlayer::Init(void)
 		// 自動移動ポイントの読み込み
 		autoMove->LoadMovePoint("data/MovePointInfo01.json");
 
-		// 自動移動開始
-		autoMove->StartAutoMove();
+		// 最初は自動移動停止
+		autoMove->StopAutoMove();
 
 		// エイムコンポーネントの追加
 		auto aim = AddComponent<CAimComponent>();
@@ -682,6 +683,25 @@ void CPlayer::SendPlayerTransform(void)
 	}
 
 	network->SendPlayerTransform(transform->Position, transform->Rotation, transform->Quaternion);
+}
+
+//=============================================================================
+// 自動移動するかどうか
+//=============================================================================
+void CPlayer::SetIsAutoMove(bool flag)
+{
+	if (m_bAutoMove == flag)
+	{
+		return;
+	}
+
+	m_bAutoMove = flag;
+
+	// 自動移動コンポーネントの追加
+	auto autoMove = GetComponent<CAutoMoveComponent>();
+
+	// 自動移動開始
+	autoMove->StartAutoMove();
 }
 
 #ifdef _DEBUG
