@@ -52,9 +52,9 @@ void CThirdPersonCamera::Update(CameraTransform& transform)
 	auto scene = CManager::Instance()->GetSceneManager()->GetScene();
 
 	// プレイヤーの取得
-	auto pPlayer = scene->FindGameObject("Player");
+	auto pPlayer = scene->FindGameObject<CPlayer>("Player");
 
-	if (pPlayer != nullptr)
+	if (pPlayer != nullptr && pPlayer->IsLocalPlayer())
 	{
 		// プレイヤーのトランスフォームを取得
 		auto playerTransform = pPlayer->GetComponent<CTransformComponent>();
