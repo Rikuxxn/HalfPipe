@@ -52,7 +52,24 @@ void CThirdPersonCamera::Update(CameraTransform& transform)
 	auto scene = CManager::Instance()->GetSceneManager()->GetScene();
 
 	// プレイヤーの取得
-	auto pPlayer = scene->FindGameObject<CPlayer>("Player");
+	CPlayer* pPlayer = nullptr;
+
+	// ローカルプレイヤーを検索
+	for (auto& object : scene->GetObjects())
+	{
+		auto player = dynamic_cast<CPlayer*>(object.get());
+
+		if (player && player->IsLocalPlayer())
+		{
+			pPlayer = player;
+			break;
+		}
+	}
+
+	if (!pPlayer)
+	{
+		return;
+	}
 
 	if (pPlayer != nullptr && pPlayer->IsLocalPlayer())
 	{
