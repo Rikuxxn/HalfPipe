@@ -417,12 +417,7 @@ void CConnect::SpawnPlayer(uint8_t playerId)
 	// トランスフォームコンポーネントの追加
 	auto transform = player->AddComponent<CTransformComponent>();
 
-	transform->Position =
-	{
-		static_cast<float>(playerId * 60.0f - 30.0f),
-		640.0f,
-		-2250.0f
-	};
+	transform->Position = GetSpawnPosition(playerId);
 
 	transform->Rotation = { 0.0f, D3DXToRadian(180.0f), 0.0f };
 

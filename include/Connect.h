@@ -36,9 +36,9 @@ public:
 	{
 		return 
 		{
-			static_cast<float>(playerId * 60.0f - 30.0f),
+			static_cast<float>(playerId * -100.0f + 70.0f),
 			640.0f,
-			-2250.0f
+			-2150.0f
 		};
 	}
 
