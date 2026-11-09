@@ -323,7 +323,7 @@ void CGame::Update(void)
 			pFade->StartFadeOut(Mode::Result);
 		}
 
-		return;
+		//return;
 	}
 
 	// l”‚ª‚»‚ë‚Á‚ÄAˆê’èŠÔŒo‰ß‚µ‚½‚ç
