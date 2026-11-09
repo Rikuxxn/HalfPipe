@@ -321,20 +321,17 @@ void CPlayer::Update(void)
     CGameObject::Update();
 
 #ifdef _DEBUG
-	if (m_IsLocalPlayer)
+	if (pCamera->GetMode() == CCamera::MODE_EDIT &&
+		pKeyboard->GetTrigger(DIK_C) == true)
 	{
-		if (pCamera->GetMode() == CCamera::MODE_EDIT &&
-			pKeyboard->GetTrigger(DIK_C) == true)
-		{
-			// 三人称カメラ
-			pCamera->SetCamMode(CCamera::MODE_THIRD_PERSON);
-		}
-		else if (pCamera->GetMode() == CCamera::MODE_THIRD_PERSON &&
-			pKeyboard->GetTrigger(DIK_C) == true)
-		{
-			// エディターカメラ
-			pCamera->SetCamMode(CCamera::MODE_EDIT);
-		}
+		// 三人称カメラ
+		pCamera->SetCamMode(CCamera::MODE_THIRD_PERSON);
+	}
+	else if (pCamera->GetMode() == CCamera::MODE_THIRD_PERSON &&
+		pKeyboard->GetTrigger(DIK_C) == true)
+	{
+		// エディターカメラ
+		pCamera->SetCamMode(CCamera::MODE_EDIT);
 	}
 #endif
 
