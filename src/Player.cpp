@@ -275,12 +275,9 @@ HRESULT CPlayer::ConnectInit(void)
 	auto uiID = IDIcon->AddComponent<CUIComponent>();
 
 	auto& uiTransform = uiID->GetTransform();
-	uiTransform.Position = { 0.22f, 0.62f };
+	uiTransform.Position = { 0.26f, 0.32f };
 	uiTransform.Alpha = 1.0f;
-	uiTransform.Scale = { 0.002f, 0.002f };
-
-	//uiID->SetPosition({ 0.5f, 0.5f });
-	//uiID->SetScale({ 0.1f, 0.1f });
+	uiTransform.Scale = { 0.001f, 0.001f };
 
 	// スプライトコンポーネントに追加
 	auto spriteID = IDIcon->AddComponent<CSpriteRenderComponent>();
@@ -289,10 +286,7 @@ HRESULT CPlayer::ConnectInit(void)
 	spriteID->SetLayer(RenderLayer::UI);
 
 	// テクスチャの設定
-	spriteID->SetTexture("data/TEXTURE/Timing.png");
-
-	//// サイズの設定
-	//spriteID->SetSize(0.3f, 0.3f);
+	spriteID->SetTexture("data/TEXTURE/Players.png");
 
 	if (uiID)
 	{
