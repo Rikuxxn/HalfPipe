@@ -320,21 +320,6 @@ void CPlayer::Update(void)
     // ゲームオブジェクトの更新
     CGameObject::Update();
 
-#ifdef _DEBUG
-	if (pCamera->GetMode() == CCamera::MODE_EDIT &&
-		pKeyboard->GetTrigger(DIK_C) == true)
-	{
-		// 三人称カメラ
-		pCamera->SetCamMode(CCamera::MODE_THIRD_PERSON);
-	}
-	else if (pCamera->GetMode() == CCamera::MODE_THIRD_PERSON &&
-		pKeyboard->GetTrigger(DIK_C) == true)
-	{
-		// エディターカメラ
-		pCamera->SetCamMode(CCamera::MODE_EDIT);
-	}
-#endif
-
     // ステートマシン更新
     m_stateMachine.Update();
 
@@ -369,6 +354,21 @@ void CPlayer::Update(void)
 	{
 		return;
 	}
+
+#ifdef _DEBUG
+	if (pCamera->GetMode() == CCamera::MODE_EDIT &&
+		pKeyboard->GetTrigger(DIK_C) == true)
+	{
+		// 三人称カメラ
+		pCamera->SetCamMode(CCamera::MODE_THIRD_PERSON);
+	}
+	else if (pCamera->GetMode() == CCamera::MODE_THIRD_PERSON &&
+		pKeyboard->GetTrigger(DIK_C) == true)
+	{
+		// エディターカメラ
+		pCamera->SetCamMode(CCamera::MODE_EDIT);
+	}
+#endif
 
 	// エイムコンポーネント取得
 	auto aim = GetComponent<CAimComponent>();
