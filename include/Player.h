@@ -109,6 +109,7 @@ private:
     bool            m_IsGrounded;           // 接地中か
     bool            m_WasGrounded;          // 前フレームの接地状態
     bool            m_AlignToSurface;       // 面に姿勢を合わせるか
+    bool            m_bAutoMove;            // 自動移動フラグ
 };
 
 #endif
