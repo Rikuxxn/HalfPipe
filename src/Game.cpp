@@ -326,19 +326,19 @@ void CGame::Update(void)
 		return;
 	}
 
-	// 人数がそろって、一定時間経過したら
-	if (m_nReadyCount >= Network::MAX_PLAYERS && !m_IsGameStart)
-	{
-		m_fCount -= dt;
+	//// 人数がそろって、一定時間経過したら
+	//if (m_nReadyCount >= Network::MAX_PLAYERS && !m_IsGameStart)
+	//{
+	//	m_fCount -= dt;
 
-		if (m_fCount <= 0.0f)
-		{
-			m_fCount = 3.0f;
-			m_IsGameStart = true;
+	//	if (m_fCount <= 0.0f)
+	//	{
+	//		m_fCount = 3.0f;
+	//		m_IsGameStart = true;
 
-			// プレイヤーの自動移動を開始
-		}
-	}
+	//		// プレイヤーの自動移動を開始
+	//	}
+	//}
 
 	//============================================================
 	// Client：Serverから受信したPlayer状態を反映
