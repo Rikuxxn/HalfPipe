@@ -327,7 +327,7 @@ void CGame::Update(void)
 	}
 
 	// l”‚ª‚»‚ë‚Á‚ÄAˆê’èŽžŠÔŒo‰ß‚µ‚½‚ç
-	if (/*m_nReadyCount >= Network::MAX_PLAYERS && */!m_IsGameStart)
+	if (m_nReadyCount >= Network::MAX_PLAYERS && !m_IsGameStart)
 	{
 		m_fCount -= dt;
 
