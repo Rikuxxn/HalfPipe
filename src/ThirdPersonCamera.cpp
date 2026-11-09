@@ -52,20 +52,14 @@ void CThirdPersonCamera::Update(CameraTransform& transform)
 	auto scene = CManager::Instance()->GetSceneManager()->GetScene();
 
 	// プレイヤーの取得
-	auto players = scene->FindGameObjects<CPlayer>();
+	auto pPlayer = scene->FindGameObject<CPlayer>("Player");
 
-	for (auto player : players)
+	if (pPlayer != nullptr && pPlayer->IsLocalPlayer())
 	{
-		if (!player || !player->IsLocalPlayer())
-		{
-			break;
-		}
-
 		// プレイヤーのトランスフォームを取得
-		auto playerTransform = player->GetComponent<CTransformComponent>();
-
+		auto playerTransform = pPlayer->GetComponent<CTransformComponent>();
 		// プレイヤーの自動移動を取得
-		auto playerAutoMove = player->GetComponent<CAutoMoveComponent>();
+		auto playerAutoMove = pPlayer->GetComponent<CAutoMoveComponent>();
 
 		// プレイヤーの位置の取得
 		D3DXVECTOR3 playerPos = playerTransform->Position;
@@ -134,7 +128,6 @@ void CThirdPersonCamera::Update(CameraTransform& transform)
 			}
 		}
 		D3DXVECTOR3 dir = playerAutoMove->GetMoveDirection();
-
 		// カメラ位置計算
 		//transform.posV.x = playerPos.x + m_fDistance * -dir.x;
 		//transform.posV.y = playerPos.y + m_fDistance + 80.0f* -dir.y;
@@ -145,16 +138,14 @@ void CThirdPersonCamera::Update(CameraTransform& transform)
 			transform.posV.x += (playerPos.x - transform.posV.x) * 0.05f;
 			transform.posV.y += ((playerPos.y + 60.0f) - transform.posV.y) * 0.05f;
 			transform.posV.z += (playerPos.z - transform.posV.z) * 0.05f;
-
 			// 注視点
 			transform.posR = playerPos;
 			transform.posR.y += 60.0f;
 		}
 		else
 		{
-			// プレイヤーのエイムを取得
-			auto Aim = player->GetComponent<CAimComponent>();
-
+			// プレイヤーの自動移動を取得
+			auto Aim = pPlayer->GetComponent<CAimComponent>();
 			D3DXVECTOR3 targetCenter = Aim->GetTargetCenter();
 
 			transform.posV.x += (playerPos.x - transform.posV.x) * 0.001f;
@@ -166,118 +157,11 @@ void CThirdPersonCamera::Update(CameraTransform& transform)
 			transform.posR.y += 20.0f;
 		}
 
+
+
 		// カメラの位置補正処理
 		//AdjustCameraPosition(transform, playerPos);
 	}
-
-	//if (pPlayer != nullptr && pPlayer->IsLocalPlayer())
-	//{
-	//	// プレイヤーのトランスフォームを取得
-	//	auto playerTransform = pPlayer->GetComponent<CTransformComponent>();
-	//	// プレイヤーの自動移動を取得
-	//	auto playerAutoMove = pPlayer->GetComponent<CAutoMoveComponent>();
-
-	//	// プレイヤーの位置の取得
-	//	D3DXVECTOR3 playerPos = playerTransform->Position;
-	//	D3DXVECTOR3 playerRot = playerTransform->Rotation;
-
-	//	// マウスの状態を取得
-	//	DIMOUSESTATE mouseState;
-
-	//	// マウスカーソルを非表示にする
-	//	pInputMouse->SetCursorVisibility(false);
-
-	//	// ゲームパッド右スティックカメラ操作
-	//	if (pStick != nullptr)
-	//	{
-	//		// 右スティックの値を取得
-	//		float stickX = pStick->Gamepad.sThumbRX;
-	//		float stickY = pStick->Gamepad.sThumbRY;
-
-	//		// デッドゾーン処理
-	//		const float DEADZONE = 10922.0f;
-	//		if (fabsf(stickX) < DEADZONE)
-	//		{
-	//			stickX = 0.0f;
-	//		}
-	//		if (fabsf(stickY) < DEADZONE)
-	//		{
-	//			stickY = 0.0f;
-	//		}
-
-	//		// 正規化
-	//		stickX /= 32768.0f;
-	//		stickY /= 32768.0f;
-
-	//		// カメラ回転の更新
-	//		CameraWithGamepad(transform, stickX, stickY);
-	//	}
-	//	if (pInputMouse->GetMouseState(&mouseState))
-	//	{
-	//		// 前フレームのカーソル位置を記録する静的変数
-	//		static POINT prevCursorPos = { SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 };
-
-	//		// 現在のマウスの位置の取得
-	//		POINT cursorPos;
-	//		GetCursorPos(&cursorPos);
-
-	//		// マウス感度
-	//		const float mouseSensitivity = 0.003f;
-
-	//		float deltaX = (float)(cursorPos.x - prevCursorPos.x) * mouseSensitivity;
-	//		float deltaY = (float)(cursorPos.y - prevCursorPos.y) * mouseSensitivity;
-
-	//		prevCursorPos = { SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 };
-	//		SetCursorPos(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
-
-	//		transform.rotation.y += deltaX;
-	//		transform.rotation.x += deltaY;
-
-	//		// 上下回転制限
-	//		if (transform.rotation.x < -1.3f)
-	//		{
-	//			transform.rotation.x = -1.3f;
-	//		}
-	//		if (transform.rotation.x > 1.3f)
-	//		{
-	//			transform.rotation.x = 1.3f;
-	//		}
-	//	}
-	//	D3DXVECTOR3 dir = playerAutoMove->GetMoveDirection();
-	//	// カメラ位置計算
-	//	//transform.posV.x = playerPos.x + m_fDistance * -dir.x;
-	//	//transform.posV.y = playerPos.y + m_fDistance + 80.0f* -dir.y;
-	//	//transform.posV.z = playerPos.z + m_fDistance * -dir.z;
-
-	//	if (!playerAutoMove->IsJump())
-	//	{
-	//		transform.posV.x += (playerPos.x - transform.posV.x) * 0.05f;
-	//		transform.posV.y += ((playerPos.y + 60.0f) - transform.posV.y) * 0.05f;
-	//		transform.posV.z += (playerPos.z - transform.posV.z) * 0.05f;
-	//		// 注視点
-	//		transform.posR = playerPos;
-	//		transform.posR.y += 60.0f;
-	//	}
-	//	else
-	//	{
-	//		// プレイヤーの自動移動を取得
-	//		auto Aim = pPlayer->GetComponent<CAimComponent>();
-	//		D3DXVECTOR3 targetCenter = Aim->GetTargetCenter();
-
-	//		transform.posV.x += (playerPos.x - transform.posV.x) * 0.001f;
-	//		transform.posV.y += ((playerPos.y + 100.0f) - transform.posV.y) * 0.1f;
-	//		transform.posV.z += (playerPos.z - transform.posV.z) * 0.1f;
-	//		// 注視点
-
-	//		transform.posR = targetCenter;
-	//		transform.posR.y += 20.0f;
-	//	}
-
-
-
-	//	// カメラの位置補正処理
-	//	//AdjustCameraPosition(transform, playerPos);
-	//}
 }
 
 //=============================================================================
