@@ -176,16 +176,16 @@ HRESULT CGame::Init(void)
 		}
 	}
 
-	// カメラの取得
-	CCamera* pCamera = CManager::Instance()->GetCamera();
-
-#ifdef _DEBUG
-	// カメラの初期位置を設定しておく
-	pCamera->SetCamMode(CCamera::MODE_THIRD_PERSON);
-#else
-	// カメラの初期位置を設定しておく
-	pCamera->SetCamMode(CCamera::MODE_THIRD_PERSON);
-#endif
+//	// カメラの取得
+//	CCamera* pCamera = CManager::Instance()->GetCamera();
+//
+//#ifdef _DEBUG
+//	// カメラの初期位置を設定しておく
+//	pCamera->SetCamMode(CCamera::MODE_EDIT);
+//#else
+//	// カメラの初期位置を設定しておく
+//	pCamera->SetCamMode(CCamera::MODE_THIRD_PERSON);
+//#endif
 
 	return S_OK;
 }
@@ -518,6 +518,19 @@ void CGame::SpawnPlayer(uint8_t playerId)
 
 		rigid->Transform();
 	}
+
+
+	// カメラの取得
+	CCamera* pCamera = CManager::Instance()->GetCamera();
+
+#ifdef _DEBUG
+	// カメラの初期位置を設定しておく
+	pCamera->SetCamMode(CCamera::MODE_THIRD_PERSON);
+#else
+	// カメラの初期位置を設定しておく
+	pCamera->SetCamMode(CCamera::MODE_THIRD_PERSON);
+#endif
+
 }
 
 //=============================================================================
