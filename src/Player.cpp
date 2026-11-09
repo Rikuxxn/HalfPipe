@@ -314,9 +314,6 @@ void CPlayer::Update(void)
 	CInputKeyboard* pKeyboard = CManager::Instance()->GetInput()->GetKeyboard();
 	CInputJoypad* pJoypad = CManager::Instance()->GetInput()->GetJoypad();
 
-	// カメラの取得
-	CCamera* pCamera = CManager::Instance()->GetCamera();
-
     // ゲームオブジェクトの更新
     CGameObject::Update();
 
@@ -354,6 +351,9 @@ void CPlayer::Update(void)
 	{
 		return;
 	}
+
+	// カメラの取得
+	CCamera* pCamera = CManager::Instance()->GetCamera();
 
 #ifdef _DEBUG
 	if (pCamera->GetMode() == CCamera::MODE_EDIT &&
