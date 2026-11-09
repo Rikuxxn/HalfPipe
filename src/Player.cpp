@@ -275,7 +275,7 @@ HRESULT CPlayer::ConnectInit(void)
 	auto uiID = IDIcon->AddComponent<CUIComponent>();
 
 	auto& uiTransform = uiID->GetTransform();
-	uiTransform.Position = { m_PlayerId * 0.26f + 0.3f, 0.32f };
+	uiTransform.Position = { m_PlayerId * 0.26f + 0.26f, 0.32f };
 	uiTransform.Alpha = 1.0f;
 	uiTransform.Scale = { 0.001f, 0.001f };
 
