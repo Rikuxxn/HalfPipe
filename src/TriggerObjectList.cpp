@@ -123,22 +123,25 @@ void CGoalTrigger::OnTriggerEnter(CGameObject* other)
 
 	player->SetGoal(true);
 
-	// 2Dレンダーコンポーネントの取得
-	auto sprite = m_FinishUI->GetComponent<CSpriteRenderComponent>();
-
-	// 表示する
-	if (sprite)
+	if (player->IsLocalPlayer())
 	{
-		sprite->SetIsVisible(true);
-	}
+		// 2Dレンダーコンポーネントの取得
+		auto sprite = m_FinishUI->GetComponent<CSpriteRenderComponent>();
 
-	// UIアニメーションコンポーネントの取得
-	auto anim = m_FinishUI->GetComponent<CUIAnimationComponent>();
+		// 表示する
+		if (sprite)
+		{
+			sprite->SetIsVisible(true);
+		}
 
-	// アニメーション再生
-	if (anim)
-	{
-		anim->Play();
+		// UIアニメーションコンポーネントの取得
+		auto anim = m_FinishUI->GetComponent<CUIAnimationComponent>();
+
+		// アニメーション再生
+		if (anim)
+		{
+			anim->Play();
+		}
 	}
 
 	// 自分のプレイヤーがゴールした場合だけサーバーへ通知
