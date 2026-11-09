@@ -83,6 +83,9 @@ private:
     // 雪玉アイコン UI
     CGameObject* m_pSnowBallIconUI;
 
+    // IDアイコンUI
+    CGameObject* m_pIDIconUI;
+
     CGameObject* m_ParticleObject;// パーティクル
 
     D3DXVECTOR3 m_rotDest;          // 目標の向き

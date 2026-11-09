@@ -53,6 +53,7 @@ using namespace MatrixUtil;
 //=============================================================================
 CPlayer::CPlayer() :
 	m_pSnowBallIconUI	(nullptr),				// 雪玉アイコンUI
+	m_pIDIconUI			(nullptr),				// IDアイコンUI
 	m_rotDest			(INIT_VEC3),			// 目標の向き
 	m_bIsMoving			(false),				// 移動しているか
 	m_bControlFlag		(true),					// 移動許可フラグ
@@ -105,6 +106,9 @@ HRESULT CPlayer::Init(void)
 		// エイムは最初は非表示
 		aim->InvisibleAim();
 
+		// シーンの取得
+		auto scene = CManager::Instance()->GetSceneManager()->GetScene();
+
 		// UIアニメーションデータの読み込み
 		auto uiManager = CManager::Instance()->GetUIAnimationManager();
 
@@ -115,9 +119,6 @@ HRESULT CPlayer::Init(void)
 
 		// 登録済みのUIデータを取得
 		UIAnimationData* data = uiManager->GetData("SnowBallIcon");
-
-		// シーンの取得
-		auto scene = CManager::Instance()->GetSceneManager()->GetScene();
 
 		if (!scene)
 		{
@@ -253,6 +254,65 @@ HRESULT CPlayer::ConnectInit(void)
 	// 初期状態のステートをセット
 	m_stateMachine.ChangeState<CPlayerStandState>();
 
+	//=============================================
+	// プレイヤーIDアイコンUI
+	//=============================================
+
+	// シーンの取得
+	auto scene = CManager::Instance()->GetSceneManager()->GetScene();
+
+	if (!scene)
+	{
+		return E_FAIL;
+	}
+
+	// タイトルロゴオブジェクトの生成
+	auto IDIcon = scene->CreateObject();
+
+	IDIcon->SetTag("IDIcon");
+
+	// UIコンポーネント
+	auto uiID = IDIcon->AddComponent<CUIComponent>();
+
+	auto& uiTransform = uiID->GetTransform();
+	uiTransform.Position = { 0.22f, 0.62f };
+	uiTransform.Alpha = 1.0f;
+	uiTransform.Scale = { 0.002f, 0.002f };
+
+	//uiID->SetPosition({ 0.5f, 0.5f });
+	//uiID->SetScale({ 0.1f, 0.1f });
+
+	// スプライトコンポーネントに追加
+	auto spriteID = IDIcon->AddComponent<CSpriteRenderComponent>();
+
+	// 描画順の設定
+	spriteID->SetLayer(RenderLayer::UI);
+
+	// テクスチャの設定
+	spriteID->SetTexture("data/TEXTURE/Timing.png");
+
+	//// サイズの設定
+	//spriteID->SetSize(0.3f, 0.3f);
+
+	if (uiID)
+	{
+		switch (m_PlayerId)
+		{
+		case 0:
+			uiID->SetUVFrame(0, 4);
+			break;
+		case 1:
+			uiID->SetUVFrame(1, 4);
+			break;
+		case 2:
+			uiID->SetUVFrame(2, 4);
+			break;
+		case 3:
+			uiID->SetUVFrame(3, 4);
+			break;
+		}
+	}
+
 	// UIアニメーションデータの読み込み
 	auto uiManager = CManager::Instance()->GetUIAnimationManager();
 
@@ -263,14 +323,6 @@ HRESULT CPlayer::ConnectInit(void)
 
 	// 登録済みのUIデータを取得
 	UIAnimationData* data = uiManager->GetData("SnowBallIcon");
-
-	// シーンの取得
-	auto scene = CManager::Instance()->GetSceneManager()->GetScene();
-
-	if (!scene)
-	{
-		return E_FAIL;
-	}
 
 	// UI生成
 	m_pSnowBallIconUI = CUIFactory::Create(scene, *data);
