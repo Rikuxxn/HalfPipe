@@ -277,9 +277,9 @@ HRESULT CPlayer::ConnectInit(void)
 	auto uiID = IDIcon->AddComponent<CUIComponent>();
 
 	auto& uiTransform = uiID->GetTransform();
-	uiTransform.Position = { m_PlayerId * 0.26f + 0.26f, 0.32f };
+	uiTransform.Position = { m_PlayerId * 0.28f + 0.28f, 0.32f };
 	uiTransform.Alpha = 1.0f;
-	uiTransform.Scale = { 0.001f, 0.001f };
+	uiTransform.Scale = { 0.0007f, 0.0007f };
 
 	// スプライトコンポーネントに追加
 	auto spriteID = IDIcon->AddComponent<CSpriteRenderComponent>();
@@ -318,7 +318,7 @@ HRESULT CPlayer::ConnectInit(void)
 	auto uiReady = m_pReadyUI->AddComponent<CUIComponent>();
 
 	auto& readyTransform = uiReady->GetTransform();
-	readyTransform.Position = { m_PlayerId * 0.26f + 0.26f, 0.68f };
+	readyTransform.Position = { m_PlayerId * 0.26f + 0.26f, 0.73f };
 	readyTransform.Alpha = 1.0f;
 	readyTransform.Scale = { 0.0016f, 0.001f };
 
@@ -446,7 +446,7 @@ void CPlayer::Update(void)
 	}
 #endif
 
-	if (!m_IsReady && 
+	if (!m_IsReady && m_pReadyUI && 
 		(pKeyboard->GetTrigger(DIK_RETURN) || pJoypad->GetTrigger(CInputJoypad::JOYKEY_A)))
 	{
 		// 準備UIの取得
@@ -461,7 +461,7 @@ void CPlayer::Update(void)
 		// 準備完了状態
 		m_IsReady = true;
 	}
-	else if (m_IsReady && (pKeyboard->GetTrigger(DIK_BACKSPACE) || pJoypad->GetTrigger(CInputJoypad::JOYKEY_B)))
+	else if (m_IsReady && m_pReadyUI && (pKeyboard->GetTrigger(DIK_BACKSPACE) || pJoypad->GetTrigger(CInputJoypad::JOYKEY_B)))
 	{
 		// 準備UIの取得
 		auto readyUI = m_pReadyUI->GetComponent<CUIComponent>();
