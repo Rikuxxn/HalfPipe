@@ -62,6 +62,9 @@ private:
 
 	std::unique_ptr<CSky>	m_pSky;
 
+	// 参加 UI
+	CGameObject* m_pJoinUI;
+
 	float m_fCount;			// 画面遷移カウント
 
 	bool m_JoinRequestSent; // 参加要求を送ったか

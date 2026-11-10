@@ -38,6 +38,7 @@
 #include "TriggerObjectEditor.h"
 #include "NetWorkManager.h"
 #include "TimeSystem.h"
+#include <UIComponent.h>
 
 
 
@@ -45,6 +46,7 @@
 // コンストラクタ
 //=============================================================================
 CConnect::CConnect() : 
+	m_pJoinUI			(nullptr),
 	m_JoinRequestSent	(false),
 	m_PlayerSpawned		(false),
 	m_fCount			(3.0f)
@@ -99,17 +101,43 @@ HRESULT CConnect::Init(void)
 	m_pSky = std::make_unique<CSky>();
 	m_pSky->Init();
 
+	//==================================
+	// 参加 UIオブジェクトの生成
+	//==================================
+	{
+		// タイトルロゴオブジェクトの生成
+		m_pJoinUI = CreateObject();
+
+		m_pJoinUI->SetTag("JoinUI");
+
+		// UIコンポーネント
+		auto uiID = m_pJoinUI->AddComponent<CUIComponent>();
+
+		auto& uiTransform = uiID->GetTransform();
+		uiTransform.Position = { 0.52f, 0.8f };
+		uiTransform.Alpha = 1.0f;
+		uiTransform.Scale = { 0.0018f, 0.001f };
+
+		// スプライトコンポーネントに追加
+		auto spriteID = m_pJoinUI->AddComponent<CSpriteRenderComponent>();
+
+		// 描画順の設定
+		spriteID->SetLayer(RenderLayer::UI);
+
+		// テクスチャの設定
+		spriteID->SetTexture("data/TEXTURE/Connect.png");
+
+		if (uiID)
+		{
+			uiID->SetUVFrame(0, 3);
+		}
+	}
 
 	CNetworkManager* network = CManager::Instance()->GetNetworkManager();
 
 	if (network)
 	{
-		// IPv4アドレス 
-		// 家でのPC			: 192.168.3.201
-		// 学校でのPC		: 10.70.21.139
-		// 家デスクトップPC	: 192.168.3.154
 		network->FindLANServer(22334);
-		//network->Connect("10.70.21.139", 22333);
 	}
 
 	// カメラの取得
@@ -178,6 +206,13 @@ void CConnect::Update(void)
 
 	// シーンの更新処理
 	CScene::Update();
+
+	if (m_PlayerSpawned && m_pJoinUI)
+	{
+		auto spriteUI = m_pJoinUI->GetComponent<CSpriteRenderComponent>();
+
+		spriteUI->SetIsVisible(false);
+	}
 
 	//============================================================
 	// Client：Serverから受信したPlayer状態を反映
