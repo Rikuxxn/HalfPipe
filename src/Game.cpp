@@ -326,7 +326,7 @@ void CGame::Update(void)
 		//return;
 	}
 
-	// 人数がそろって、一定時間経過したら
+	//// 人数がそろって、一定時間経過したら
 	//if (m_nReadyCount >= Network::MAX_PLAYERS && !m_IsGameStart)
 	//{
 	//	m_fCount -= dt;
@@ -513,9 +513,9 @@ void CGame::SpawnPlayer(uint8_t playerId)
 
 	transform->Position =
 	{
-		-400.0f,
-		580.0f,
-		-1330.0f
+		-133.0f,
+		598.0f,
+		-1998.0f
 	};
 
 	transform->Rotation = { 0.0f, D3DXToRadian(180.0f), 0.0f };
