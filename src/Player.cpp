@@ -95,7 +95,7 @@ HRESULT CPlayer::Init(void)
 		autoMove->LoadMovePoint("data/MovePointInfo01.json");
 
 		// 最初は自動移動停止
-		autoMove->StartAutoMove();
+		autoMove->StopAutoMove();
 
 		// エイムコンポーネントの追加
 		auto aim = AddComponent<CAimComponent>();
