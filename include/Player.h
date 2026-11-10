@@ -86,6 +86,9 @@ private:
     // IDアイコンUI
     CGameObject* m_pIDIconUI;
 
+    // 準備UI
+    CGameObject* m_pReadyUI;
+
     CGameObject* m_ParticleObject;// パーティクル
 
     D3DXVECTOR3 m_rotDest;          // 目標の向き
@@ -113,6 +116,8 @@ private:
     bool            m_WasGrounded;          // 前フレームの接地状態
     bool            m_AlignToSurface;       // 面に姿勢を合わせるか
     bool            m_bAutoMove;            // 自動移動フラグ
+
+    bool m_IsReady; // 準備フラグ
 };
 
 #endif

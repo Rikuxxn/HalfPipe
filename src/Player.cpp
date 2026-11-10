@@ -54,6 +54,7 @@ using namespace MatrixUtil;
 CPlayer::CPlayer() :
 	m_pSnowBallIconUI	(nullptr),				// 雪玉アイコンUI
 	m_pIDIconUI			(nullptr),				// IDアイコンUI
+	m_pReadyUI			(nullptr),				// 準備UI
 	m_rotDest			(INIT_VEC3),			// 目標の向き
 	m_bIsMoving			(false),				// 移動しているか
 	m_bControlFlag		(true),					// 移動許可フラグ
@@ -63,7 +64,8 @@ CPlayer::CPlayer() :
     m_WasGrounded		(false),				// 前フレームの接地状態
     m_AlignToSurface	(true),					// 面に姿勢を合わせるか
 	m_ParticleObject	(nullptr),				// パーティクル
-	m_bAutoMove			(false)
+	m_bAutoMove			(false),
+	m_IsReady			(false)
 {
 
 }
@@ -307,6 +309,33 @@ HRESULT CPlayer::ConnectInit(void)
 		}
 	}
 
+	// 準備UIオブジェクトの生成
+	m_pReadyUI = scene->CreateObject();
+
+	m_pReadyUI->SetTag("ReadyUI");
+
+	// UIコンポーネント
+	auto uiReady = m_pReadyUI->AddComponent<CUIComponent>();
+
+	auto& readyTransform = uiReady->GetTransform();
+	readyTransform.Position = { m_PlayerId * 0.26f + 0.26f, 0.68f };
+	readyTransform.Alpha = 1.0f;
+	readyTransform.Scale = { 0.0016f, 0.001f };
+
+	// スプライトコンポーネントに追加
+	auto spriteReady = m_pReadyUI->AddComponent<CSpriteRenderComponent>();
+
+	// 描画順の設定
+	spriteReady->SetLayer(RenderLayer::UI);
+
+	// テクスチャの設定
+	spriteReady->SetTexture("data/TEXTURE/Connect.png");
+
+	if (uiReady)
+	{
+		uiReady->SetUVFrame(1, 3);
+	}
+
 	// UIアニメーションデータの読み込み
 	auto uiManager = CManager::Instance()->GetUIAnimationManager();
 
@@ -416,6 +445,36 @@ void CPlayer::Update(void)
 		pCamera->SetCamMode(CCamera::MODE_EDIT);
 	}
 #endif
+
+	if (!m_IsReady && 
+		(pKeyboard->GetTrigger(DIK_RETURN) || pJoypad->GetTrigger(CInputJoypad::JOYKEY_A)))
+	{
+		// 準備UIの取得
+		auto readyUI = m_pReadyUI->GetComponent<CUIComponent>();
+
+		// 準備完了
+		if (readyUI)
+		{
+			readyUI->SetUVFrame(2, 3);
+		}
+
+		// 準備完了状態
+		m_IsReady = true;
+	}
+	else if (m_IsReady && (pKeyboard->GetTrigger(DIK_BACKSPACE) || pJoypad->GetTrigger(CInputJoypad::JOYKEY_B)))
+	{
+		// 準備UIの取得
+		auto readyUI = m_pReadyUI->GetComponent<CUIComponent>();
+
+		// 準備OK (完了前)
+		if (readyUI)
+		{
+			readyUI->SetUVFrame(1, 3);
+		}
+
+		// 準備完了状態解除
+		m_IsReady = false;
+	}
 
 	// エイムコンポーネント取得
 	auto aim = GetComponent<CAimComponent>();
