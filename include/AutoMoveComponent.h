@@ -123,6 +123,8 @@ public:
     // ’·‰Ÿ‚µ‚µ‚Ä‚¢‚éŠÔ‚ğæ“¾
     float GetPressCount(void) { return m_fPressCount; }
 
+    float GetSplineCount(void) { return m_CurrentTime; }
+
     void SaveMovePoint(const char* filename);
     void LoadMovePoint(const char* filename);
 
