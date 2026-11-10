@@ -324,7 +324,7 @@ void CAutoMoveComponent::UpdateAutoMove(float deltaTime)
 		return;
 	}
 
-	m_fDeltaSpeed = m_Jump ? 0.008f : m_fBasicSpeed;
+	m_fDeltaSpeed = m_Jump ? DELTA_JUMP : m_fBasicSpeed;
 
 	// ŠÔ‚ği‚ß‚é
 	m_CurrentTime += m_fDeltaSpeed;

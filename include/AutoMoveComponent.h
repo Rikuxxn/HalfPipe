@@ -123,7 +123,7 @@ public:
     // ’·‰Ÿ‚µ‚µ‚Ä‚¢‚éŽžŠÔ‚ðŽæ“¾
     float GetPressCount(void) { return m_fPressCount; }
 
-    float GetSplineCount(void) { return m_CurrentTime; }
+    float GetSplineDelta(void) { return DELTA_JUMP; }
 
     void SaveMovePoint(const char* filename);
     void LoadMovePoint(const char* filename);
@@ -211,6 +211,8 @@ private:
     bool m_ReleaseZone;
 
     bool m_Jump;
+
+    static constexpr float DELTA_JUMP = 0.008f;
 
     CJumpTiming::TIMING m_Timing;
 

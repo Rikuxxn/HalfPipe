@@ -150,18 +150,17 @@ void CThirdPersonCamera::Update(CameraTransform& transform)
 		//transform.posV.y = playerPos.y + m_fDistance + 80.0f* -dir.y;
 		//transform.posV.z = playerPos.z + m_fDistance * -dir.z;
 
-		float fCurrentTime = playerAutoMove->GetSplineCount();
-		static int nTimeCount;
-		if (fCurrentTime > 0.5f&& playerAutoMove->IsJump())
+		float fCurrentTime = playerAutoMove->GetSplineDelta();
+		static float nTimeCount = 0.0f;
+		static bool bJumpUp = false;
+		nTimeCount += fCurrentTime;
+		if (!playerAutoMove->IsJump())
 		{
-			nTimeCount++;
-		}
-		else if (!playerAutoMove->IsJump())
-		{
-			nTimeCount = 0;
+			nTimeCount = 0.0f;
+			bJumpUp=false;
 		}
 
-		if (!playerAutoMove->IsJump()|| nTimeCount>1&& fCurrentTime>0.75f)
+		if (!playerAutoMove->IsJump())
 		{
 			// プレイヤーの自動移動を取得
 			auto Aim = pPlayer->GetComponent<CAimComponent>();
@@ -175,6 +174,19 @@ void CThirdPersonCamera::Update(CameraTransform& transform)
 			transform.posR.y += 60.0f;
 
 
+		}
+		else if (nTimeCount >1.5f)
+		{
+			// プレイヤーの自動移動を取得
+			auto Aim = pPlayer->GetComponent<CAimComponent>();
+			D3DXVECTOR3 targetCenter = Aim->GetTargetCenter();
+
+			transform.posV.x += (playerPos.x - transform.posV.x) * 0.05f;
+			transform.posV.y += ((playerPos.y + 60.0f) - transform.posV.y) * 0.05f;
+			transform.posV.z += (playerPos.z - transform.posV.z) * 0.05f;
+			// 注視点
+			transform.posR = playerPos;
+			transform.posR.y += 60.0f;
 		}
 		else
 		{
