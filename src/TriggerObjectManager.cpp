@@ -99,8 +99,10 @@ void CTriggerObjectManager::Uninit(void)
 //=============================================================================
 void CTriggerObjectManager::Update(void)
 {
+#ifdef _DEBUG
     // トリガーオブジェクトエディタの更新処理
     m_pTriggerObjectEditor->Update();
+#endif
 }
 
 //=============================================================================

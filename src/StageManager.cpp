@@ -96,8 +96,10 @@ void CStageManager::Uninit(void)
 //=============================================================================
 void CStageManager::Update(void)
 {
+#ifdef _DEBUG
     // ステージエディタの更新処理
     m_pStageEditor->Update();
+#endif
 }
 
 

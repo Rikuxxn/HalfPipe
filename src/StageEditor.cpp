@@ -84,6 +84,7 @@ HRESULT CStageEditor::Init(void)
     m_SelectedObject = nullptr;
     m_PrevSelectedObject = nullptr;
 
+#ifdef _DEBUG
     // デバイスの取得
     auto device = CManager::Instance()->GetRenderer()->GetDevice();
 
@@ -95,7 +96,7 @@ HRESULT CStageEditor::Init(void)
 
     // サムネイルの生成
     GenerateThumbnails();
-
+#endif
     return S_OK;
 }
 

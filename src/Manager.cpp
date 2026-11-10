@@ -337,11 +337,13 @@ void CManager::Update(void)
 	// シーンマネージャーの更新
 	m_pSceneManager->Update();
 
+#ifdef _DEBUG
 	// ステージマネージャーの更新処理
 	m_pStageManager->Update();
 
 	// トリガーオブジェクトマネージャーの更新処理
 	m_pTriggerObjectManager->Update();
+#endif
 
 	// UIアニメーションエディターの更新処理
 	m_pUIAnimationEditor->Update();

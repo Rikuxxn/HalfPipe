@@ -56,8 +56,10 @@ HRESULT CTriggerObjectEditor::Init(void)
     m_SelectedObject = nullptr;
     m_PrevSelectedObject = nullptr;
 
+#ifdef _DEBUG
     // トリガーリストの読み込み
     LoadTriggerList("data/trigger_list.json");
+#endif
 
 	return S_OK;
 }
