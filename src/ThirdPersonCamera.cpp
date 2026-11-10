@@ -150,29 +150,29 @@ void CThirdPersonCamera::Update(CameraTransform& transform)
 		//transform.posV.y = playerPos.y + m_fDistance + 80.0f* -dir.y;
 		//transform.posV.z = playerPos.z + m_fDistance * -dir.z;
 
-		if (!playerAutoMove->IsJump())
-		{
+		//if (!playerAutoMove->IsJump())
+		//{
 			transform.posV.x += (playerPos.x - transform.posV.x) * 0.05f;
 			transform.posV.y += ((playerPos.y + 60.0f) - transform.posV.y) * 0.05f;
 			transform.posV.z += (playerPos.z - transform.posV.z) * 0.05f;
 			// 注視点
 			transform.posR = playerPos;
 			transform.posR.y += 60.0f;
-		}
-		else
-		{
-			// プレイヤーの自動移動を取得
-			auto Aim = pPlayer->GetComponent<CAimComponent>();
-			D3DXVECTOR3 targetCenter = Aim->GetTargetCenter();
+		//}
+		//else
+		//{
+			//// プレイヤーの自動移動を取得
+			//auto Aim = pPlayer->GetComponent<CAimComponent>();
+			//D3DXVECTOR3 targetCenter = Aim->GetTargetCenter();
 
-			transform.posV.x += (playerPos.x - transform.posV.x) * 0.001f;
-			transform.posV.y += ((playerPos.y + 100.0f) - transform.posV.y) * 0.1f;
-			transform.posV.z += (playerPos.z - transform.posV.z) * 0.1f;
-			// 注視点
+			//transform.posV.x += (playerPos.x - transform.posV.x) * 0.001f;
+			//transform.posV.y += ((playerPos.y + 100.0f) - transform.posV.y) * 0.1f;
+			//transform.posV.z += (playerPos.z - transform.posV.z) * 0.1f;
+			//// 注視点
 
-			transform.posR = targetCenter;
-			transform.posR.y += 20.0f;
-		}
+			//transform.posR = targetCenter;
+			//transform.posR.y += 20.0f;
+		//}
 
 
 
