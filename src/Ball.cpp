@@ -56,7 +56,7 @@ HRESULT CBall::Init(void)
     model->SetLayer(RenderLayer::Model);
 
     // ƒ{[ƒ‹ƒ‚ƒfƒ‹‚Ì“Ç‚Ýž‚Ý
-    if (FAILED(model->Load("data/MODELS/tomas.x")))
+    if (FAILED(model->Load("data/MODELS/rock_01.x")))
     {
         return E_FAIL;
     }
