@@ -1230,6 +1230,9 @@ void CRiftBlock::Update(void)
 		return;
 	}
 
+#ifdef _DEBUG
+
+#else
 	auto transform = GetComponent<CTransformComponent>();
 	auto rigid = GetComponent<CRigidBodyComponent>();
 
@@ -1300,6 +1303,9 @@ void CRiftBlock::Update(void)
 
 	// Bullet‘¤‚ÌÀ•W‚ð“¯Šú
 	rigid->Transform();
+
+#endif
+
 }
 
 //=============================================================================
