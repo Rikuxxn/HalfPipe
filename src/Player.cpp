@@ -414,7 +414,7 @@ void CPlayer::Update(void)
 	// サーバーへ準備完了を送信
 	auto network = CManager::Instance()->GetNetworkManager();
 
-	if (!m_IsReady && m_pReadyUI && !network->IsGameReady()
+	if (!m_IsReady && m_pReadyUI && !network->IsGameReady() && 
 		(pKeyboard->GetTrigger(DIK_RETURN) || pJoypad->GetTrigger(CInputJoypad::JOYKEY_A)))
 	{
 		// 準備UIの取得
