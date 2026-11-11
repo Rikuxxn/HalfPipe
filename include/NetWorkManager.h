@@ -12,6 +12,7 @@
 //*****************************************************************************
 #include "NetworkProtocol.h"
 #include <enet.h>
+#include <queue>
 
 //*****************************************************************************
 // 通信マネージャークラス (クライアント)
@@ -24,7 +25,13 @@ public:
 	
 	bool Init	(void);
 	void Uninit	(void);
-		
+	
+	struct PlayerReadyInfo
+	{
+		uint8_t playerId = 255;
+		bool isReady = false;
+	};
+
 	//============================================================ 
 	// クライアントからサーバーに接続
 	//============================================================ 
@@ -74,6 +81,9 @@ public:
 
 	void ResetJoinState(void) {	m_IsJoined = false;	}
 	void ResetGameSession(void);
+	bool IsPlayerReady(uint8_t playerId) const;
+	void SendPlayerReady(bool isReady);
+	bool PopPlayerReady(PlayerReadyInfo& info);
 
 private:
 
@@ -96,6 +106,9 @@ private:
 	bool						m_IsGameReady;
 	bool						m_IsGameFinish;
 	bool						m_HasPlayerLeft;
+	bool						m_PlayerReady[Network::MAX_PLAYERS] = {};
+
+	std::queue<PlayerReadyInfo> m_PlayerReadyQueue;
 };
 
 #endif

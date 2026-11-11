@@ -460,6 +460,14 @@ void CPlayer::Update(void)
 
 		// 準備完了状態
 		m_IsReady = true;
+
+		// サーバーへ準備完了を送信
+		auto network = CManager::Instance()->GetNetworkManager();
+
+		if (network)
+		{
+			network->SendPlayerReady(true);
+		}
 	}
 	else if (m_IsReady && m_pReadyUI && (pKeyboard->GetTrigger(DIK_BACKSPACE) || pJoypad->GetTrigger(CInputJoypad::JOYKEY_B)))
 	{
@@ -474,6 +482,14 @@ void CPlayer::Update(void)
 
 		// 準備完了状態解除
 		m_IsReady = false;
+
+		// サーバーへ準備待ちを送信
+		auto network = CManager::Instance()->GetNetworkManager();
+
+		if (network)
+		{
+			network->SendPlayerReady(false);
+		}
 	}
 
 	// エイムコンポーネント取得
@@ -807,6 +823,35 @@ void CPlayer::SetIsAutoMove(bool flag)
 
 	// 自動移動開始
 	autoMove->StartAutoMove();
+}
+
+//=============================================================================
+// 準備状態の設定
+//=============================================================================
+void CPlayer::SetReady(bool isReady)
+{
+	m_IsReady = isReady;
+
+	if (!m_pReadyUI)
+	{
+		return;
+	}
+
+	auto readyUI = m_pReadyUI->GetComponent<CUIComponent>();
+
+	if (!readyUI)
+	{
+		return;
+	}
+
+	if (isReady)
+	{
+		readyUI->SetUVFrame(2, 3);
+	}
+	else
+	{
+		readyUI->SetUVFrame(1, 3);
+	}
 }
 
 #ifdef _DEBUG

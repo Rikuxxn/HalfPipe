@@ -58,6 +58,7 @@ public:
     void SetNetworkInput(const InputData& input) { m_NetworkInput = input; }
 
     void SendPlayerTransform(void);
+    void SetReady(bool isReady);
 
     // ƒvƒŒƒCƒ„[ID
     void SetPlayerId(uint8_t id) { m_PlayerId = id; }

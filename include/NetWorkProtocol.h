@@ -33,6 +33,7 @@ namespace Network
 		JoinRequest,
 		JoinAccepted,
 		JoinRejected,
+		PlayerReady,
 		GameStart,
 		PlayerGoal,
 		GameFinish,
@@ -100,6 +101,17 @@ namespace Network
 	{
 		PacketHeader header;
 		uint8_t reason;
+	};
+
+	//============================================================
+	// èÄîı
+	// 
+	//============================================================
+	struct PlayerReadyPacket
+	{
+		PacketHeader header;
+		uint8_t playerId = 255;
+		bool isReady = false;
 	};
 
 	//============================================================

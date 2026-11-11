@@ -403,6 +403,8 @@ void CNetworkManager::Disconnect(void)
         m_HasPlayerState[i] = false;
 
         m_PlayerStates[i] = {};
+
+		m_PlayerReady[i] = false;
     }
 
     OutputDebugStringA("[Network] サーバーから切断しました\n");
@@ -579,6 +581,32 @@ void CNetworkManager::OnReceive( ENetPeer* peer, ENetPacket* packet)
 			OutputDebugStringA("[Network] サーバーが満員です\n");
 		}
 	}
+	else if (header.type == Network::PacketType::PlayerReady)
+	{
+		if (packet->dataLength < sizeof(Network::PlayerReadyPacket))
+		{
+			return;
+		}
+
+		Network::PlayerReadyPacket readyPacket{};
+		std::memcpy(&readyPacket, packet->data, sizeof(readyPacket));
+
+		const uint8_t playerId = readyPacket.playerId;
+
+		if (playerId >= Network::MAX_PLAYERS)
+		{
+			return;
+		}
+
+		// プレイヤーの準備状態を保存
+		m_PlayerReady[readyPacket.playerId] = readyPacket.isReady;
+
+		// ゲーム側に通知するためのキューに入れる
+		m_PlayerReadyQueue.push({
+			readyPacket.playerId,
+			readyPacket.isReady
+			});
+	}
 	else if (header.type == Network::PacketType::GameStart)
 	{
 		if (packet->dataLength < sizeof(Network::GameStartPacket))
@@ -662,6 +690,7 @@ void CNetworkManager::OnDisconnect(ENetPeer* peer)
 	{
 		m_HasPlayerState[i] = false;
 		m_PlayerStates[i] = {};
+		m_PlayerReady[i] = false;
 		//m_PlayerGoalReached[i] = false;
 	}
 
@@ -880,6 +909,58 @@ void CNetworkManager::ResetGameSession(void)
 	{
 		m_HasPlayerState[i] = false;
 		m_PlayerStates[i] = {};
+		m_PlayerReady[i] = false;
 		//m_PlayerGoalReached[i] = false;
 	}
+}
+
+//=============================================================================
+// 準備完了か
+//=============================================================================
+bool CNetworkManager::IsPlayerReady(uint8_t playerId) const
+{
+	if (playerId >= Network::MAX_PLAYERS)
+	{
+		return false;
+	}
+
+	return m_PlayerReady[playerId];
+}
+
+//=============================================================================
+// プレイヤーの準備状態を送信
+//=============================================================================
+void CNetworkManager::SendPlayerReady(bool isReady)
+{
+	if (!m_IsConnected || !m_IsJoined)
+	{
+		return;
+	}
+
+	Network::PlayerReadyPacket packet;
+	packet.isReady = isReady;
+
+	ENetPacket* enetPacket = enet_packet_create(
+		&packet,
+		sizeof(packet),
+		ENET_PACKET_FLAG_RELIABLE
+	);
+
+	enet_peer_send(m_ServerPeer, 0, enetPacket);
+}
+
+//=============================================================================
+// 準備状態をキューから取り出す
+//=============================================================================
+bool CNetworkManager::PopPlayerReady(PlayerReadyInfo& info)
+{
+	if (m_PlayerReadyQueue.empty())
+	{
+		return false;
+	}
+
+	info = m_PlayerReadyQueue.front();
+	m_PlayerReadyQueue.pop();
+
+	return true;
 }

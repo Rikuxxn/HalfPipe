@@ -214,6 +214,23 @@ void CConnect::Update(void)
 		spriteUI->SetIsVisible(false);
 	}
 
+	// 準備状態の設定
+	if (network)
+	{
+		CNetworkManager::PlayerReadyInfo info;
+
+		while (network->PopPlayerReady(info))
+		{
+			// 該当するプレイヤーを取得
+			auto player = FindPlayerById(info.playerId);
+
+			if (player)
+			{
+				player->SetReady(info.isReady);
+			}
+		}
+	}
+
 	//============================================================
 	// Client：Serverから受信したPlayer状態を反映
 	//============================================================
@@ -331,22 +348,22 @@ void CConnect::Update(void)
 			m_PlayerSpawned = true;
 		}
 
-		// 最大人数がそろったら遷移
-		if (network->IsGameReady())
-		{
-			// デルタタイムの取得
-			float dt = CManager::Instance()->GetTimeSystem()->GetDeltaTime();
+		//// 最大人数がそろったら遷移
+		//if (network->IsGameReady())
+		//{
+		//	// デルタタイムの取得
+		//	float dt = CManager::Instance()->GetTimeSystem()->GetDeltaTime();
 
-			m_fCount -= dt;
+		//	m_fCount -= dt;
 
-			if (pFade->GetFade() == CFade::FADE_NONE && m_fCount <= 0.0f)
-			{
-				m_fCount = 0.0f;
+		//	if (pFade->GetFade() == CFade::FADE_NONE && m_fCount <= 0.0f)
+		//	{
+		//		m_fCount = 0.0f;
 
-				// ゲーム画面に移行
-				pFade->StartFadeOut(Mode::Game);
-			}
-		}
+		//		// ゲーム画面に移行
+		//		pFade->StartFadeOut(Mode::Game);
+		//	}
+		//}
 
 		return;
 	}
