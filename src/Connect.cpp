@@ -273,6 +273,9 @@ void CConnect::Update(void)
 					continue;
 				}
 
+				// サーバーから受信済みの準備状態を反映
+				player->SetReady(network->IsPlayerReady(playerId));
+
 				// 自分のプレイヤーはローカル側で制御
 				if (player->IsLocalPlayer())
 				{
@@ -346,6 +349,15 @@ void CConnect::Update(void)
 
 			// 生成済みにする 
 			m_PlayerSpawned = true;
+
+			// プレイヤーを取得
+			CPlayer* player = FindPlayerById(localPlayerId);
+
+			if (player)
+			{
+				// 準備状態を反映
+				player->SetReady(network->IsPlayerReady(localPlayerId));
+			}
 		}
 
 		//// 最大人数がそろったら遷移
