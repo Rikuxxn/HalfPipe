@@ -75,7 +75,15 @@ CPlayer::CPlayer() :
 //=============================================================================
 CPlayer::~CPlayer()
 {
+	if (m_pIDIconUI)
+	{
+		m_pIDIconUI->Destroy();
+	}
 
+	if (m_pReadyUI)
+	{
+		m_pReadyUI->Destroy();
+	}
 }
 
 //=============================================================================
@@ -269,12 +277,12 @@ HRESULT CPlayer::ConnectInit(void)
 	}
 
 	// タイトルロゴオブジェクトの生成
-	auto IDIcon = scene->CreateObject();
+	m_pIDIconUI = scene->CreateObject();
 
-	IDIcon->SetTag("IDIcon");
+	m_pIDIconUI->SetTag("IDIcon");
 
 	// UIコンポーネント
-	auto uiID = IDIcon->AddComponent<CUIComponent>();
+	auto uiID = m_pIDIconUI->AddComponent<CUIComponent>();
 
 	auto& uiTransform = uiID->GetTransform();
 	uiTransform.Position = { m_PlayerId * 0.28f + 0.28f, 0.32f };
@@ -282,7 +290,7 @@ HRESULT CPlayer::ConnectInit(void)
 	uiTransform.Scale = { 0.0007f, 0.0007f };
 
 	// スプライトコンポーネントに追加
-	auto spriteID = IDIcon->AddComponent<CSpriteRenderComponent>();
+	auto spriteID = m_pIDIconUI->AddComponent<CSpriteRenderComponent>();
 
 	// 描画順の設定
 	spriteID->SetLayer(RenderLayer::UI);
@@ -335,49 +343,6 @@ HRESULT CPlayer::ConnectInit(void)
 	{
 		uiReady->SetUVFrame(1, 3);
 	}
-
-	// UIアニメーションデータの読み込み
-	auto uiManager = CManager::Instance()->GetUIAnimationManager();
-
-	if (uiManager)
-	{
-		uiManager->Load("data/UIAnimation/SnowBall_Icon.json");
-	}
-
-	// 登録済みのUIデータを取得
-	UIAnimationData* data = uiManager->GetData("SnowBallIcon");
-
-	// UI生成
-	m_pSnowBallIconUI = CUIFactory::Create(scene, *data);
-
-	// 最初は表示
-	auto sprite = m_pSnowBallIconUI->GetComponent<CSpriteRenderComponent>();
-
-	if (sprite)
-	{
-		sprite->SetIsVisible(false);
-	}
-
-	// 雪玉カウントの生成
-	auto countObject = scene->CreateObject<CGameObject>();
-
-	countObject->SetTag("SnowBallCount");
-
-	// UIコンポーネント
-	auto ui = countObject->AddComponent<CUIComponent>();
-
-	// カウント描画コンポーネント
-	auto score = countObject->AddComponent<CCountRenderComponent>();
-
-	ui->SetPosition({ 0.97f, 0.9f });
-	ui->SetScale({ 2.0f, 2.0f });
-
-	score->SetLayer(RenderLayer::UI);
-	score->SetTexture("data/TEXTURE/Num_01.png");
-	score->SetDigitSize(0.03f, 0.05f);
-	score->SetCount(throwCmp->GetCurrentThrowCount());
-	score->SetCountType(CountType::Dec);
-	score->SetIsVisible(false);
 
 	return S_OK;
 }
@@ -529,12 +494,15 @@ void CPlayer::Update(void)
 		// 雪玉カウントの取得
 		auto countObject = scene->FindGameObject("SnowBallCount");
 
-		// カウント描画コンポーネント
-		auto Count = countObject->GetComponent<CCountRenderComponent>();
+		if (countObject)
+		{
+			// カウント描画コンポーネント
+			auto Count = countObject->GetComponent<CCountRenderComponent>();
 
-		auto throwCmp = GetComponent<CThrowComponent>();
+			auto throwCmp = GetComponent<CThrowComponent>();
 
-		Count->SetCount(throwCmp->GetCurrentThrowCount());
+			Count->SetCount(throwCmp->GetCurrentThrowCount());
+		}
 	}
 
 	if (!transform || !m_ParticleObject)
@@ -564,20 +532,22 @@ void CPlayer::Update(void)
 	// パーティクル取得
 	auto fire = m_ParticleObject->GetComponent<CParticleEmitterComponent>();
 
-	// パーティクルの色変更
-	if (autoMove->GetPressCount() > 0.18f)
+	if (fire)
 	{
-		fire->col = { 0.7f, 0.8f, 0.2f, 1.0f };
+		// パーティクルの色変更
+		if (autoMove->GetPressCount() > 0.18f)
+		{
+			fire->col = { 0.7f, 0.8f, 0.2f, 1.0f };
+		}
+		else if (autoMove->GetPressCount() > 0.09f)
+		{
+			fire->col = { 1.0f, 0.2f, 0.2f, 1.0f };
+		}
+		else
+		{
+			fire->col = { 0.4f, 0.4f, 0.8f, 1.0f };
+		}
 	}
-	else if (autoMove->GetPressCount() > 0.09f)
-	{
-		fire->col = { 1.0f, 0.2f, 0.2f, 1.0f };
-	}
-	else
-	{
-		fire->col = { 0.4f, 0.4f, 0.8f, 1.0f };
-	}
-
 
 	if (!autoMove->IsJump() && autoMove->IsPress())
 	{
@@ -589,7 +559,10 @@ void CPlayer::Update(void)
 	}
 	else
 	{
-		fire->SetPlay(false);
+		if (fire)
+		{
+			fire->SetPlay(false);
+		}
 	}
 }
 
