@@ -937,16 +937,22 @@ void CNetworkManager::SendPlayerReady(bool isReady)
 		return;
 	}
 
-	Network::PlayerReadyPacket packet;
+	Network::PlayerReadyPacket packet{};
+
+	packet.header.type = Network::PacketType::PlayerReady;
+	packet.header.size = sizeof(packet);
+
 	packet.isReady = isReady;
 
-	ENetPacket* enetPacket = enet_packet_create(
+	ENetPacket* sendPacket = enet_packet_create(
 		&packet,
 		sizeof(packet),
-		ENET_PACKET_FLAG_RELIABLE
-	);
+		ENET_PACKET_FLAG_RELIABLE);
 
-	enet_peer_send(m_ServerPeer, 0, enetPacket);
+	if (sendPacket)
+	{
+		enet_peer_send(m_ServerPeer, 0, sendPacket);
+	}
 }
 
 //=============================================================================
