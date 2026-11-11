@@ -411,7 +411,10 @@ void CPlayer::Update(void)
 	}
 #endif
 
-	if (!m_IsReady && m_pReadyUI && 
+	// サーバーへ準備完了を送信
+	auto network = CManager::Instance()->GetNetworkManager();
+
+	if (!m_IsReady && m_pReadyUI && !network->IsGameReady()
 		(pKeyboard->GetTrigger(DIK_RETURN) || pJoypad->GetTrigger(CInputJoypad::JOYKEY_A)))
 	{
 		// 準備UIの取得
@@ -426,15 +429,12 @@ void CPlayer::Update(void)
 		// 準備完了状態
 		m_IsReady = true;
 
-		// サーバーへ準備完了を送信
-		auto network = CManager::Instance()->GetNetworkManager();
-
 		if (network)
 		{
 			network->SendPlayerReady(true);
 		}
 	}
-	else if (m_IsReady && m_pReadyUI && (pKeyboard->GetTrigger(DIK_BACKSPACE) || pJoypad->GetTrigger(CInputJoypad::JOYKEY_B)))
+	else if (m_IsReady && m_pReadyUI && !network->IsGameReady() && (pKeyboard->GetTrigger(DIK_BACKSPACE) || pJoypad->GetTrigger(CInputJoypad::JOYKEY_B)))
 	{
 		// 準備UIの取得
 		auto readyUI = m_pReadyUI->GetComponent<CUIComponent>();
