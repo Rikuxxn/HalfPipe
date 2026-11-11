@@ -360,22 +360,22 @@ void CConnect::Update(void)
 			}
 		}
 
-		//// 最大人数がそろったら遷移
-		//if (network->IsGameReady())
-		//{
-		//	// デルタタイムの取得
-		//	float dt = CManager::Instance()->GetTimeSystem()->GetDeltaTime();
+		// 最大人数がそろったら遷移
+		if (network->IsGameReady())
+		{
+			// デルタタイムの取得
+			float dt = CManager::Instance()->GetTimeSystem()->GetDeltaTime();
 
-		//	m_fCount -= dt;
+			m_fCount -= dt;
 
-		//	if (pFade->GetFade() == CFade::FADE_NONE && m_fCount <= 0.0f)
-		//	{
-		//		m_fCount = 0.0f;
+			if (pFade->GetFade() == CFade::FADE_NONE && m_fCount <= 0.0f)
+			{
+				m_fCount = 0.0f;
 
-		//		// ゲーム画面に移行
-		//		pFade->StartFadeOut(Mode::Game);
-		//	}
-		//}
+				// ゲーム画面に移行
+				pFade->StartFadeOut(Mode::Game);
+			}
+		}
 
 		return;
 	}

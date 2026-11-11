@@ -909,7 +909,7 @@ void CNetworkManager::ResetGameSession(void)
 	{
 		m_HasPlayerState[i] = false;
 		m_PlayerStates[i] = {};
-		m_PlayerReady[i] = false;
+		//m_PlayerReady[i] = false;
 		//m_PlayerGoalReached[i] = false;
 	}
 }
