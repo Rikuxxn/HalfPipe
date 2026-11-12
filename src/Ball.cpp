@@ -138,6 +138,8 @@ void CBall::Update(void)
     if (m_ElapsedTime >= 1.0f)
     {
         m_Sprain = false;
+        // •¨—‘¬“x‚ğİ’è
+        rigid->SetPhysicsVelocity(D3DXVECTOR3(0.0f, -1000.0f, 0.0f));
     }
 
     //// õ–½‚ğ’´‚¦‚½‚çíœ
