@@ -47,6 +47,7 @@ public:
         RainRed,    // 赤ライン
         RainYellow, // 黄色ライン
         Podium,     // 表彰台
+        CollectBox, // 玉を溜める用のかご
 
         Max
     };

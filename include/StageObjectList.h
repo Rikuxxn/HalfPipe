@@ -15,6 +15,7 @@
 
 // 前方宣言
 class CPointCircleBlock;
+class CCollectBoxBlock;
 
 
 //*****************************************************************************
@@ -141,6 +142,10 @@ public:
     HRESULT Init(void) override;
     void Update(void) override;
 
+    CCollectBoxBlock* CreateCollectBox(
+        const D3DXVECTOR3& position,
+        float scale);
+
     CPointCircleBlock* CreatePointCircle(
         const D3DXVECTOR3& position,
         float scale,
@@ -166,17 +171,15 @@ public:
         return StageObjectType::Basket;
     }
 
-    //ColliderShape GetColliderShape(void) const override
-    //{
-    //    return ColliderShape::Box;
-    //}
-
     GhostShape GetGhostShape(void) const override
     {
         return GhostShape::Box;
     }
 
 private:
+
+    // 溜めるかご位置・回転を更新
+    void UpdateCollectBox(void);
 
     // 得点サークルの位置・回転を更新
     void UpdatePointCircles(void);
@@ -190,6 +193,9 @@ private:
     // バスケットの中心位置
     D3DXVECTOR3 m_CenterPosition;
     D3DXVECTOR3 m_CenterRotation;
+
+    // 見えない溜める用かご
+    std::vector<CCollectBoxBlock*> m_CollectBox;
 
     // 得点サークル
     std::vector<CPointCircleBlock*> m_PointCircles;
@@ -550,6 +556,31 @@ public:
     ColliderShape GetColliderShape(void) const override
     {
         return ColliderShape::Box;
+    }
+
+private:
+};
+
+//*****************************************************************************
+// 溜めるかごブロッククラス
+//*****************************************************************************
+class CCollectBoxBlock : public CStageObject
+{
+public:
+    CCollectBoxBlock();
+    ~CCollectBoxBlock();
+
+    HRESULT Init(void) override;
+    void Update(void) override;
+
+    StageObjectType GetType(void) const override
+    {
+        return StageObjectType::CollectBox;
+    }
+
+    ColliderShape GetColliderShape(void) const override
+    {
+        return ColliderShape::TriangleMesh;
     }
 
 private:

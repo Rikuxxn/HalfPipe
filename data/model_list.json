@@ -110,5 +110,12 @@
     "name": "Podium",
     "contact_type": "Rigid",
     "filepath": "data/MODELS/podium.x"
+  },
+  {
+    "type": 16,
+    "category": "Invisible",
+    "name": "CollectBox",
+    "contact_type": "Rigid",
+    "filepath": "data/MODELS/basketCollision.x"
   }
 ]

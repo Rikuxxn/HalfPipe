@@ -81,7 +81,8 @@ HRESULT CBall::Init(void)
     // 衝突フィルター
     rigid->SetCollisionFilter(
         COLLISION_GROUP_BALL,
-        //COLLISION_GROUP_STAGE |
+        COLLISION_GROUP_STAGE |
+        COLLISION_GROUP_BALL |
         //COLLISION_GROUP_PLAYER |
         //COLLISION_GROUP_ENEMY |
         COLLISION_GROUP_GHOST
@@ -139,12 +140,12 @@ void CBall::Update(void)
         m_Sprain = false;
     }
 
-    // 寿命を超えたら削除
-    if (m_ElapsedTime >= m_LifeTime)
-    {
-        // ボール削除
-        this->Destroy();
-    }
+    //// 寿命を超えたら削除
+    //if (m_ElapsedTime >= m_LifeTime)
+    //{
+    //    // ボール削除
+    //    this->Destroy();
+    //}
 }
 
 //=============================================================================

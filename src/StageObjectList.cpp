@@ -297,6 +297,7 @@ CBasketBlock::CBasketBlock() :
 //=============================================================================
 CBasketBlock::~CBasketBlock()
 {
+	m_CollectBox.clear();
 	m_PointCircles.clear();
 	m_TexPoly.clear();
 }
@@ -325,8 +326,8 @@ HRESULT CBasketBlock::Init(void)
 		transform->Scale
 	);
 
-	// 得点サークルの高さの間隔
-	const float heightOffset = 30.0f;
+	// 溜めるかごの生成
+	CreateCollectBox(m_CenterPosition, 22.0f);
 
 	// 50点：中心
 	CreatePointCircle(m_CenterPosition, 1.8f, 50);
@@ -373,11 +374,70 @@ void CBasketBlock::Update(void)
 	// ステージオブジェクトの更新
 	CStageObject::Update();
 
+	// 溜めるかごの更新
+	UpdateCollectBox();
+
 	// 得点サークルをかごに追従させる
 	UpdatePointCircles();
 
 	// テクスチャ用板ポリをかごに追従させる
 	UpdateTexPoly();
+}
+
+//=============================================================================
+// 溜めるかご更新処理
+//=============================================================================
+void CBasketBlock::UpdateCollectBox(void)
+{
+	auto transform = GetComponent<CTransformComponent>();
+
+	if (!transform)
+	{
+		return;
+	}
+
+	// かごの中心となるローカル座標
+	D3DXVECTOR3 localCenter(0.0f, 40.0f, 0.0f);
+
+	// 現在の位置・回転・拡縮からワールド座標を計算
+	m_CenterPosition = MatrixUtil::LocalToWorld(
+		localCenter,
+		transform->Position,
+		transform->Rotation,
+		transform->Scale
+	);
+
+	m_CenterRotation = transform->Rotation;
+
+	// 得点サークルの高さを設定
+	const D3DXVECTOR3 offsets[] =
+	{
+		D3DXVECTOR3(0.0f, m_HeightOffset, 0.0f),	// 50点
+		D3DXVECTOR3(0.0f, 0.0f, 0.0f),				// 30点 
+		D3DXVECTOR3(0.0f, -m_HeightOffset, 0.0f)	// 10点
+	};
+
+	// 溜めるかごを更新
+	for (size_t i = 0; i < m_CollectBox.size(); ++i)
+	{
+		auto* circle = m_CollectBox[i];
+
+		if (!circle)
+		{
+			continue;
+		}
+
+		auto circleTransform = circle->GetComponent<CTransformComponent>();
+
+		if (!circleTransform)
+		{
+			continue;
+		}
+
+		// 中心位置に高さのオフセットを加える 
+		circleTransform->Position = m_CenterPosition + offsets[i];
+		circleTransform->SetRotation(m_CenterRotation);
+	}
 }
 
 //=============================================================================
@@ -493,6 +553,100 @@ void CBasketBlock::UpdateTexPoly(void)
 }
 
 //=============================================================================
+// 溜めるかご生成処理
+//=============================================================================
+CCollectBoxBlock* CBasketBlock::CreateCollectBox(
+	const D3DXVECTOR3& position, float scale)
+{
+	// シーン取得
+	auto scene = CManager::Instance()->GetSceneManager()->GetScene();
+
+	if (!scene)
+	{
+		return nullptr;
+	}
+
+	// 溜めるかごオブジェクトの生成
+	auto obj = scene->CreateObject<CCollectBoxBlock>();
+
+	if (!obj)
+	{
+		return nullptr;
+	}
+
+	// トランスフォームコンポーネントの取得
+	auto transform = obj->AddComponent<CTransformComponent>();
+
+	if (!transform)
+	{
+		return nullptr;
+	}
+
+	transform->Position = position;
+	transform->Scale = D3DXVECTOR3(scale, scale * 0.7f, scale);
+
+	obj->SetTag("CollectBox");
+	obj->SetGroupName("CollectBoxes");
+
+	// モデル描画
+	auto model = obj->AddComponent<CXModelRenderComponent>();
+
+	if (!model)
+	{
+		return nullptr;
+	}
+
+	model->SetLayer(RenderLayer::Model);
+	model->Load("data/MODELS/basketCollision.x");
+	model->SetVisible(false);
+
+	// 剛体
+	auto rigid = obj->AddComponent<CRigidBodyComponent>();
+
+	if (!rigid)
+	{
+		return nullptr;
+	}
+
+	rigid->SetCollisionFilter(
+		COLLISION_GROUP_STAGE,
+		COLLISION_GROUP_STAGE |
+		COLLISION_GROUP_PLAYER |
+		COLLISION_GROUP_GHOST |
+		COLLISION_GROUP_ENEMY |
+		COLLISION_GROUP_CAMERA | 
+		COLLISION_GROUP_BALL
+	);
+
+	rigid->SetDynamic(false);
+
+	// モデルサイズ取得
+	D3DXVECTOR3 modelSize = model->GetModelSize();
+	
+	if (!model)
+	{
+		return nullptr;
+	}
+
+	auto resource = model->GetModel();
+
+	if (resource)
+	{
+		auto triangleMesh = resource->CreateBulletTriangleMesh();
+
+		rigid->CreateTriangleMesh(triangleMesh);
+	}
+
+	// 当たり判定更新
+	rigid->UpdateFromScale(transform->Scale);
+
+	// 溜めるかごを保存
+	m_CollectBox.push_back(obj);
+
+	return obj;
+}
+
+//=============================================================================
 // 得点サークル生成処理
 //=============================================================================
 CPointCircleBlock* CBasketBlock::CreatePointCircle(
@@ -542,34 +696,6 @@ CPointCircleBlock* CBasketBlock::CreatePointCircle(
 	model->SetLayer(RenderLayer::Model);
 	model->Load("data/MODELS/PointCircle.x");
 	model->SetVisible(false);
-
-	//// 剛体
-	//auto rigid = obj->AddComponent<CRigidBodyComponent>();
-
-	//if (!rigid)
-	//{
-	//	return nullptr;
-	//}
-
-	//rigid->SetCollisionFilter(
-	//	COLLISION_GROUP_STAGE,
-	//	COLLISION_GROUP_STAGE |
-	//	COLLISION_GROUP_PLAYER |
-	//	COLLISION_GROUP_GHOST |
-	//	COLLISION_GROUP_ENEMY |
-	//	COLLISION_GROUP_CAMERA
-	//);
-
-	//rigid->SetDynamic(false);
-
-	//// モデルサイズ取得
-	//D3DXVECTOR3 modelSize = model->GetModelSize();
-	//
-	//// シリンダーコライダーの生成
-	//rigid->CreateCylinder(modelSize, 1.0f);
-
-	//// 当たり判定更新
-	//rigid->UpdateFromScale(transform->Scale);
 
 	//-----------------------------------------
 	// ゴーストオブジェクトの生成
@@ -1641,6 +1767,28 @@ HRESULT CPodiumBlock::Init(void)
 }
 
 void CPodiumBlock::Update(void)
+{
+	// ステージオブジェクトの更新
+	CStageObject::Update();
+}
+
+CCollectBoxBlock::CCollectBoxBlock()
+{
+
+}
+
+CCollectBoxBlock::~CCollectBoxBlock()
+{
+
+}
+
+HRESULT CCollectBoxBlock::Init(void)
+{
+
+	return S_OK;
+}
+
+void CCollectBoxBlock::Update(void)
 {
 	// ステージオブジェクトの更新
 	CStageObject::Update();
