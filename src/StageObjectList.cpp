@@ -397,7 +397,7 @@ void CBasketBlock::UpdateCollectBox(void)
 	}
 
 	// かごの中心となるローカル座標
-	D3DXVECTOR3 localCenter(0.0f, 40.0f, 0.0f);
+	D3DXVECTOR3 localCenter(0.0f, 45.0f, 0.0f);
 
 	// 現在の位置・回転・拡縮からワールド座標を計算
 	m_CenterPosition = MatrixUtil::LocalToWorld(
@@ -598,7 +598,7 @@ CCollectBoxBlock* CBasketBlock::CreateCollectBox(
 
 	model->SetLayer(RenderLayer::Model);
 	model->Load("data/MODELS/basketCollision.x");
-	model->SetVisible(false);
+	model->SetVisible(true);
 
 	// 剛体
 	auto rigid = obj->AddComponent<CRigidBodyComponent>();
