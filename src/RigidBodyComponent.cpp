@@ -443,6 +443,19 @@ void CRigidBodyComponent::SetPhysicsVelocity(const D3DXVECTOR3& velocity)
 }
 
 //=============================================================================
+// •¨—‰ñ“]‘¬“x‚ğİ’è
+//=============================================================================
+void CRigidBodyComponent::SetPhysicsAngularVelocity(const D3DXVECTOR3& velocity)
+{
+	if (!m_Body)
+	{
+		return;
+	}
+
+	m_Body->setAngularVelocity(btVector3(velocity.x, velocity.y, velocity.z));
+}
+
+//=============================================================================
 // •¨—‘¬“x‚ğæ“¾
 //=============================================================================
 D3DXVECTOR3 CRigidBodyComponent::GetPhysicsVelocity(void) const

@@ -598,7 +598,7 @@ CCollectBoxBlock* CBasketBlock::CreateCollectBox(
 
 	model->SetLayer(RenderLayer::Model);
 	model->Load("data/MODELS/basketCollision.x");
-	model->SetVisible(true);
+	model->SetVisible(false);
 
 	// „‘Ì
 	auto rigid = obj->AddComponent<CRigidBodyComponent>();

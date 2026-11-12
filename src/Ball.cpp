@@ -45,6 +45,8 @@ HRESULT CBall::Init(void)
         return E_FAIL;
     }
 
+    transform->Scale = { 1.5f,1.5f,1.5f };
+
     // モデル描画
     auto model = AddComponent<CXModelRenderComponent>();
 
@@ -57,7 +59,7 @@ HRESULT CBall::Init(void)
     model->SetLayer(RenderLayer::Model);
 
     // ボールモデルの読み込み
-    if (FAILED(model->Load("data/MODELS/rock_01.x")))
+    if (FAILED(model->Load("data/MODELS/ball.x")))
     {
         return E_FAIL;
     }
@@ -150,7 +152,7 @@ void CBall::Update(void)
         if (isSprain && !m_isPrevSprain)
         {
             // 物理速度を設定
-            rigid->SetPhysicsVelocity(D3DXVECTOR3(0.0f, -500.0f, 0.0f));
+            rigid->SetPhysicsVelocity(D3DXVECTOR3(0.0f, -700.0f, 0.0f));
         }
 
         // スプラインだったかを記録
@@ -179,6 +181,9 @@ void CBall::Throw(const D3DXVECTOR3& AimPos, const D3DXVECTOR3& PlayerPos)
 
     // 物理速度の設定
     rigid->SetPhysicsVelocity(dirA);
+
+    // 物理回転速度の設定
+    rigid->SetPhysicsAngularVelocity({ 30.0f, 0.0f, 30.0f });
 
     // タイマー初期化
     m_ElapsedTime = 0.0f;

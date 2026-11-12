@@ -73,6 +73,9 @@ public:
         m_CollisionMask = mask;
     }
 
+    // ‰ñ“]
+    void SetPhysicsAngularVelocity(const D3DXVECTOR3& velocity);
+
     // ˆÚ“®
     void SetPhysicsVelocity(const D3DXVECTOR3& velocity);
     void MovePhysics(const D3DXVECTOR3& moveDir, float speed, float acceleration, float deceleration, float deltaTime);
