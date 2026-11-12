@@ -82,68 +82,68 @@ void CThirdPersonCamera::Update(CameraTransform& transform)
 		D3DXVECTOR3 playerPos = playerTransform->Position;
 		D3DXVECTOR3 playerRot = playerTransform->Rotation;
 
-		// マウスの状態を取得
-		DIMOUSESTATE mouseState;
+		//// マウスの状態を取得
+		//DIMOUSESTATE mouseState;
 
-		// マウスカーソルを非表示にする
-		pInputMouse->SetCursorVisibility(false);
+		//// マウスカーソルを非表示にする
+		//pInputMouse->SetCursorVisibility(false);
 
-		// ゲームパッド右スティックカメラ操作
-		if (pStick != nullptr)
-		{
-			// 右スティックの値を取得
-			float stickX = pStick->Gamepad.sThumbRX;
-			float stickY = pStick->Gamepad.sThumbRY;
+		//// ゲームパッド右スティックカメラ操作
+		//if (pStick != nullptr)
+		//{
+		//	// 右スティックの値を取得
+		//	float stickX = pStick->Gamepad.sThumbRX;
+		//	float stickY = pStick->Gamepad.sThumbRY;
 
-			// デッドゾーン処理
-			const float DEADZONE = 10922.0f;
-			if (fabsf(stickX) < DEADZONE)
-			{
-				stickX = 0.0f;
-			}
-			if (fabsf(stickY) < DEADZONE)
-			{
-				stickY = 0.0f;
-			}
+		//	// デッドゾーン処理
+		//	const float DEADZONE = 10922.0f;
+		//	if (fabsf(stickX) < DEADZONE)
+		//	{
+		//		stickX = 0.0f;
+		//	}
+		//	if (fabsf(stickY) < DEADZONE)
+		//	{
+		//		stickY = 0.0f;
+		//	}
 
-			// 正規化
-			stickX /= 32768.0f;
-			stickY /= 32768.0f;
+		//	// 正規化
+		//	stickX /= 32768.0f;
+		//	stickY /= 32768.0f;
 
-			// カメラ回転の更新
-			CameraWithGamepad(transform, stickX, stickY);
-		}
-		if (pInputMouse->GetMouseState(&mouseState))
-		{
-			// 前フレームのカーソル位置を記録する静的変数
-			static POINT prevCursorPos = { SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 };
+		//	// カメラ回転の更新
+		//	CameraWithGamepad(transform, stickX, stickY);
+		//}
+		//if (pInputMouse->GetMouseState(&mouseState))
+		//{
+		//	// 前フレームのカーソル位置を記録する静的変数
+		//	static POINT prevCursorPos = { SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 };
 
-			// 現在のマウスの位置の取得
-			POINT cursorPos;
-			GetCursorPos(&cursorPos);
+		//	// 現在のマウスの位置の取得
+		//	POINT cursorPos;
+		//	GetCursorPos(&cursorPos);
 
-			// マウス感度
-			const float mouseSensitivity = 0.003f;
+		//	// マウス感度
+		//	const float mouseSensitivity = 0.003f;
 
-			float deltaX = (float)(cursorPos.x - prevCursorPos.x) * mouseSensitivity;
-			float deltaY = (float)(cursorPos.y - prevCursorPos.y) * mouseSensitivity;
+		//	float deltaX = (float)(cursorPos.x - prevCursorPos.x) * mouseSensitivity;
+		//	float deltaY = (float)(cursorPos.y - prevCursorPos.y) * mouseSensitivity;
 
-			prevCursorPos = { SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 };
-			SetCursorPos(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
+		//	prevCursorPos = { SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 };
+		//	SetCursorPos(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
 
-			transform.rotation.y += deltaX;
-			transform.rotation.x += deltaY;
+		//	transform.rotation.y += deltaX;
+		//	transform.rotation.x += deltaY;
 
-			// 上下回転制限
-			if (transform.rotation.x < -1.3f)
-			{
-				transform.rotation.x = -1.3f;
-			}
-			if (transform.rotation.x > 1.3f)
-			{
-				transform.rotation.x = 1.3f;
-			}
-		}
+		//	// 上下回転制限
+		//	if (transform.rotation.x < -1.3f)
+		//	{
+		//		transform.rotation.x = -1.3f;
+		//	}
+		//	if (transform.rotation.x > 1.3f)
+		//	{
+		//		transform.rotation.x = 1.3f;
+		//	}
+		//}
 		D3DXVECTOR3 dir = playerAutoMove->GetMoveDirection();
 		// カメラ位置計算
 		//transform.posV.x = playerPos.x + m_fDistance * -dir.x;

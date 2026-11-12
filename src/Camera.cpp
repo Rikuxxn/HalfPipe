@@ -25,8 +25,10 @@
 #include "DirectionCamera.h"
 #include "MovieCamera.h"
 #include "FixedCamera.h"
+#include "MathConstants.h"
 
 
+// 名前空間の使用
 namespace CameraParam
 {
 	const D3DXVECTOR3 DEFAULT_POS_V{ 0.0f, 80.0f, -540.0f };
@@ -35,14 +37,9 @@ namespace CameraParam
 	const D3DXVECTOR3 DEFAULT_ROT{ 0.0f, D3DX_PI, 0.0f };
 	const D3DXVECTOR3 GAME_POS_R{ 0.0f, -55.8f, -30.0f };
 
-	constexpr float GAME_ROT_X				= 0.89f;
-	constexpr float GAME_ROT_Y				= D3DX_PI;
-	constexpr float DIRECTION_DISTANCE		= 520.0f;
-	constexpr float PLAYER_EYE				= 60.0f;
-	constexpr float HIT_POINT				= 10.0f;
-	constexpr float OFFSET_PLAYER_DISTANCE	= 20.0f;
 }
 
+using namespace MathConst;
 
 //=============================================================================
 // コンストラクタ

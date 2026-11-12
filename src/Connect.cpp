@@ -114,7 +114,7 @@ HRESULT CConnect::Init(void)
 		auto uiID = m_pJoinUI->AddComponent<CUIComponent>();
 
 		auto& uiTransform = uiID->GetTransform();
-		uiTransform.Position = { 0.52f, 0.8f };
+		uiTransform.Position = { 0.52f, 0.87f };
 		uiTransform.Alpha = 1.0f;
 		uiTransform.Scale = { 0.0018f, 0.001f };
 
