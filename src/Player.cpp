@@ -337,7 +337,7 @@ HRESULT CPlayer::ConnectInit(void)
 	spriteReady->SetLayer(RenderLayer::UI);
 
 	// テクスチャの設定
-	spriteReady->SetTexture("data/TEXTURE/Connect.png");
+	spriteReady->SetTexture("data/TEXTURE/Connect_2.png");
 
 	if (uiReady)
 	{
