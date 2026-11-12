@@ -26,7 +26,8 @@ CBall::CBall() :
     m_ElapsedTime   (0.0f),     // 経過時間
 	m_IsThrown      (false),    // ボールを投げたか
     m_HasScored     (false),
-    m_Sprain        (false)
+    m_Sprain        (false),
+    m_isPrevSprain  (false)     // 直前にスプラインだったか
 {
 
 }
@@ -138,16 +139,23 @@ void CBall::Update(void)
     if (m_ElapsedTime >= 1.0f)
     {
         m_Sprain = false;
-        // 物理速度を設定
-        rigid->SetPhysicsVelocity(D3DXVECTOR3(0.0f, -1000.0f, 0.0f));
     }
 
-    //// 寿命を超えたら削除
-    //if (m_ElapsedTime >= m_LifeTime)
-    //{
-    //    // ボール削除
-    //    this->Destroy();
-    //}
+    //=============================================
+    // スプライン終了後、一度だけ物理速度を設定
+    //=============================================
+    {
+        bool isSprain = !m_Sprain;
+
+        if (isSprain && !m_isPrevSprain)
+        {
+            // 物理速度を設定
+            rigid->SetPhysicsVelocity(D3DXVECTOR3(0.0f, -500.0f, 0.0f));
+        }
+
+        // スプラインだったかを記録
+        m_isPrevSprain = isSprain;
+    }
 }
 
 //=============================================================================

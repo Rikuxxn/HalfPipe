@@ -53,6 +53,9 @@ private:
     bool m_HasScored;
 
     bool m_Sprain;
+
+    // 直前にスプラインだったか
+    bool m_isPrevSprain;
 };
 
 #endif
