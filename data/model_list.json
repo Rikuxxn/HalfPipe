@@ -3,96 +3,112 @@
     "type": 0,
     "category": "Model",
     "name": "Floor",
+    "contact_type": "Rigid",
     "filepath": "data/MODELS/floor_01.x"
   },
   {
     "type": 1,
     "category": "Model",
     "name": "Wall",
+    "contact_type": "Rigid",
     "filepath": "data/MODELS/wall_01.x"
   },
   {
     "type": 2,
     "category": "Model",
     "name": "Torch",
+    "contact_type": "Rigid",
     "filepath": "data/MODELS/torch.x"
   },
   {
     "type": 3,
     "category": "Model",
     "name": "HalfPipe",
+    "contact_type": "Rigid",
     "filepath": "data/MODELS/halfpipe.x"
   },
   {
     "type": 4,
     "category": "Model",
     "name": "Basket",
+    "contact_type": "Ghost",
     "filepath": "data/MODELS/basket.x"
   },
   {
     "type": 5,
     "category": "Model",
     "name": "Right",
+    "contact_type": "Rigid",
     "filepath": "data/MODELS/right.x"
   },
   {
     "type": 6,
     "category": "Model",
     "name": "SignBoard",
+    "contact_type": "Rigid",
     "filepath": "data/MODELS/signboard.x"
   },
   {
     "type": 7,
     "category": "Model",
     "name": "RiftPole",
+    "contact_type": "Rigid",
     "filepath": "data/MODELS/riftpole.x"
   },
   {
     "type": 8,
     "category": "Model",
     "name": "PointCircle",
+    "contact_type": "Rigid",
     "filepath": "data/MODELS/PointCircle.x"
   },
   {
     "type": 9,
     "category": "Model",
     "name": "GateBanner",
+    "contact_type": "Rigid",
     "filepath": "data/MODELS/gate_banner.x"
   },
   {
     "type": 10,
     "category": "Model",
     "name": "Rift",
+    "contact_type": "Rigid",
     "filepath": "data/MODELS/rift.x"
   },
   {
     "type": 11,
     "category": "Model",
     "name": "RainGray",
+    "contact_type": "Rigid",
     "filepath": "data/MODELS/rainGray.x"
   },
   {
     "type": 12,
     "category": "Model",
     "name": "RainOrange",
+    "contact_type": "Rigid",
     "filepath": "data/MODELS/rainOrange.x"
   },
   {
     "type": 13,
     "category": "Model",
     "name": "RainRed",
+    "contact_type": "Rigid",
     "filepath": "data/MODELS/rainRed.x"
   },
   {
     "type": 14,
     "category": "Model",
     "name": "RainYellow",
+    "contact_type": "Rigid",
     "filepath": "data/MODELS/rainYellow.x"
   },
   {
     "type": 15,
     "category": "Model",
     "name": "Podium",
+    "contact_type": "Rigid",
     "filepath": "data/MODELS/podium.x"
   }
 ]

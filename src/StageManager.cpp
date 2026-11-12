@@ -157,7 +157,8 @@ CStageObject* CStageManager::CreateObject(CStageObject::StageObjectType type, co
     // 剛体生成
     //-----------------------------------------
 
-    if (enablePhysics && (info->Category == "Model" || info->Category == "Invisible"))
+    if (enablePhysics && info->ContactType == "Rigid" && 
+        (info->Category == "Model" || info->Category == "Invisible"))
     {
         obj->SetGroupName("StageObject");
 
@@ -236,6 +237,43 @@ CStageObject* CStageManager::CreateObject(CStageObject::StageObjectType type, co
 
                 rigid->CreateTriangleMesh(triangleMesh);
             }
+        }
+        break;
+        }
+    }
+    else if (enablePhysics && info->ContactType == "Ghost" && (info->Category == "Model" || info->Category == "Invisible"))
+    {
+        //-----------------------------------------
+        // ゴーストオブジェクトの生成
+        //-----------------------------------------
+
+        // ゴーストオブジェクトコンポーネントの追加
+        auto ghost = obj->AddComponent<CGhostObjectComponent>();
+
+        // ゴーストの衝突フィルター
+        ghost->SetCollisionFilter(
+            COLLISION_GROUP_GHOST,
+            COLLISION_GROUP_PLAYER |
+            COLLISION_GROUP_STAGE |
+            COLLISION_GROUP_ENEMY
+        );
+
+        // モデルのサイズを取得
+        D3DXVECTOR3 modelSize = model->GetModelSize();
+
+        // ゴーストの生成
+        switch (obj->GetGhostShape())
+        {
+        case CStageObject::GhostShape::Box:
+        {
+            // ボックストリガーを生成
+            ghost->CreateBox(modelSize);
+        }
+        break;
+        case CStageObject::GhostShape::Cylinder:
+        {
+            // シリンダートリガーを生成
+            ghost->CreateCylinder(modelSize);
         }
         break;
         }

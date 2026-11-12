@@ -166,9 +166,14 @@ public:
         return StageObjectType::Basket;
     }
 
-    ColliderShape GetColliderShape(void) const override
+    //ColliderShape GetColliderShape(void) const override
+    //{
+    //    return ColliderShape::Box;
+    //}
+
+    GhostShape GetGhostShape(void) const override
     {
-        return ColliderShape::Box;
+        return GhostShape::Box;
     }
 
 private:

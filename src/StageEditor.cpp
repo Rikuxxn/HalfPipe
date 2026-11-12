@@ -993,6 +993,10 @@ void CStageEditor::LoadModelList(const char* filename)
         info.Type = (CStageObject::StageObjectType)data["type"];
         info.Category = data["category"];
         info.Name = data["name"];
+        if (data.contains("contact_type"))
+        {
+            info.ContactType = data["contact_type"];
+        }
         if (data.contains("filepath"))
         {
             info.FilePath = data["filepath"];

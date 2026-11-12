@@ -61,6 +61,15 @@ public:
         TriangleMesh
     };
 
+    // ゴーストの種類
+    enum class GhostShape
+    {
+        Box,
+        Sphere,
+        Capsule,
+        Cylinder
+    };
+
     virtual HRESULT Init(void) override { return S_OK; }
     virtual void Update(void) override;
 
@@ -68,7 +77,10 @@ public:
     virtual StageObjectType GetType(void) const = 0;
 
     // コライダーの種類
-    virtual ColliderShape GetColliderShape(void) const = 0;
+    virtual ColliderShape GetColliderShape(void) const { return ColliderShape::Box; }
+
+    // ゴーストの種類
+    virtual GhostShape GetGhostShape(void) const { return GhostShape::Box; }
 
     // オブジェクト情報の保存・読み込み(共通部分)
     virtual void SaveToJson(json& j);

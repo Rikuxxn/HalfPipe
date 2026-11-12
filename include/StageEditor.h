@@ -30,6 +30,7 @@ private:
         CStageObject::StageObjectType   Type;       // 種類
         std::string                     Category;   // カテゴリー
         std::string                     Name;       // 名前
+        std::string                     ContactType;// 接触タイプ (剛体 / ゴースト)
         std::string                     FilePath;   // ファイルパス
     };
 

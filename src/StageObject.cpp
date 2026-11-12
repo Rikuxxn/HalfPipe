@@ -11,7 +11,7 @@
 #include "StageObject.h"
 #include "TransformComponent.h"
 #include "RigidBodyComponent.h"
-
+#include "GhostObjectComponent.h"
 
 //=============================================================================
 // デストラクタ
@@ -47,7 +47,11 @@ void CStageObject::SaveToJson(json& j)
     j["rot"]    = { degRot.x, degRot.y, degRot.z };
     j["scale"]  = { transform->Scale.x, transform->Scale.y, transform->Scale.z };
     //j["collider_size"] = { m_colliderSize.x, m_colliderSize.y, m_colliderSize.z };
-    j["is_dynamic"] = rigid->IsDynamic();
+
+	if (rigid)
+	{
+		j["is_dynamic"] = rigid->IsDynamic();
+	}
 }
 
 //=============================================================================
@@ -76,18 +80,32 @@ void CStageObject::LoadFromJson(const json& j)
 
 	transform->Scale = { j["scale"][0], j["scale"][1], j["scale"][2] };
 
-	if (j.contains("is_dynamic"))
-	{
-		rigid->SetDynamic(j["is_dynamic"]);
-	}
-
 	if (rigid)
 	{
+		if (j.contains("is_dynamic"))
+		{
+			rigid->SetDynamic(j["is_dynamic"]);
+		}
+
 		// 当たり判定更新
 		rigid->UpdateFromScale(transform->Scale);
 
 		// 位置更新
 		rigid->Transform(); 
+	}
+	else
+	{
+		// ゴーストオブジェクトコンポーネントの取得
+		auto ghost = GetComponent<CGhostObjectComponent>();
+
+		if (ghost)
+		{
+			// 当たり判定更新
+			ghost->UpdateFromScale(transform->Scale);
+
+			// 位置更新
+			ghost->Transform();
+		}
 	}
 
 	//if (b.contains("collider_size"))
