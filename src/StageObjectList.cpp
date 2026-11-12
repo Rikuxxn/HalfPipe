@@ -326,26 +326,36 @@ HRESULT CBasketBlock::Init(void)
 		transform->Scale
 	);
 
+	m_CenterRotation = transform->Rotation;
+
 	// 溜めるかごの生成
 	CreateCollectBox(m_CenterPosition, 22.0f);
 
+	// 得点サークルの高さを設定
+	const D3DXVECTOR3 offsets[] =
+	{
+		D3DXVECTOR3(0.0f, m_HeightOffset, 0.0f),	// 50点
+		D3DXVECTOR3(0.0f, 0.0f, 0.0f),				// 30点 
+		D3DXVECTOR3(0.0f, -m_HeightOffset, 0.0f)	// 10点
+	};
+
 	// 50点：中心
-	CreatePointCircle(m_CenterPosition, 1.8f, 50);
+	CreatePointCircle(m_CenterPosition + offsets[0], 1.8f, 50);
 
 	// 30点：中間
-	CreatePointCircle(m_CenterPosition, 5.6f, 30);
+	CreatePointCircle(m_CenterPosition + offsets[1], 5.6f, 30);
 
 	// 10点：外側
-	CreatePointCircle(m_CenterPosition, 9.0f, 10);
+	CreatePointCircle(m_CenterPosition + offsets[2], 9.0f, 10);
 
 	// テクスチャ用板ポリの生成
-	CreateTexPoly(m_CenterPosition, 1.3f, "data/TEXTURE/Target_50.png", DX::RED);
+	CreateTexPoly(m_CenterPosition + offsets[0], 1.3f, "data/TEXTURE/Target_50.png", DX::RED);
 
 	// テクスチャ用板ポリの生成
-	CreateTexPoly(m_CenterPosition, 4.2f, "data/TEXTURE/Target_30.png", DX::GREEN);
+	CreateTexPoly(m_CenterPosition + offsets[1], 4.2f, "data/TEXTURE/Target_30.png", DX::GREEN);
 
 	// テクスチャ用板ポリの生成
-	CreateTexPoly(m_CenterPosition, 7.4f, "data/TEXTURE/Target_10.png", DX::WHITE);
+	CreateTexPoly(m_CenterPosition + offsets[2], 7.4f, "data/TEXTURE/Target_10.png", DX::WHITE);
 
 	//=============================================================================
 	// エイム対象の設定
@@ -377,11 +387,11 @@ void CBasketBlock::Update(void)
 	// 溜めるかごの更新
 	UpdateCollectBox();
 
-	// 得点サークルをかごに追従させる
-	UpdatePointCircles();
+	//// 得点サークルをかごに追従させる
+	//UpdatePointCircles();
 
-	// テクスチャ用板ポリをかごに追従させる
-	UpdateTexPoly();
+	//// テクスチャ用板ポリをかごに追従させる
+	//UpdateTexPoly();
 }
 
 //=============================================================================
@@ -678,6 +688,7 @@ CPointCircleBlock* CBasketBlock::CreatePointCircle(
 
 	transform->Position = position;
 	transform->Scale = D3DXVECTOR3(scale, scale, scale);
+	transform->SetRotation(m_CenterRotation);
 
 	obj->SetTag("PointCircle");
 	obj->SetGroupName("PointCircles");
@@ -776,7 +787,7 @@ CGameObject* CBasketBlock::CreateTexPoly(const D3DXVECTOR3 pos, float scale, con
 	{
 		transform->Position = pos;
 		transform->Scale = D3DXVECTOR3(scale, scale, scale);
-		transform->Rotation = { 0.0f, 0.0f, 0.0f };
+		transform->SetRotation(m_CenterRotation);
 	}
 
 	// テクスチャ用板ポリを保存
