@@ -360,7 +360,7 @@ void CConnect::Update(void)
 			}
 		}
 
-		// 最大人数がそろったら遷移
+		// 全員が準備完了になったら
 		if (network->IsGameReady())
 		{
 			// デルタタイムの取得
