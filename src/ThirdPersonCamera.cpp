@@ -154,6 +154,19 @@ void CThirdPersonCamera::Update(CameraTransform& transform)
 		static float nTimeCount = 0.0f;
 		static bool bJumpUp = false;
 		nTimeCount += fCurrentTime;
+
+		float dirX = playerPos.x - transform.posV.x;
+		float dirZ = playerPos.z - transform.posV.z;
+		float rotY = atan2f(dirX,dirZ);
+		if (rotY > 0.0f)
+		{
+			transform.rotation.y = -D3DX_PI * 0.5f;
+		}
+		else
+		{
+			transform.rotation.y = D3DX_PI * 0.5f;
+		}
+
 		if (!playerAutoMove->IsJump())
 		{
 			nTimeCount = 0.0f;
@@ -162,11 +175,7 @@ void CThirdPersonCamera::Update(CameraTransform& transform)
 
 		if (!playerAutoMove->IsJump())
 		{
-			// プレイヤーの自動移動を取得
-			auto Aim = pPlayer->GetComponent<CAimComponent>();
-			D3DXVECTOR3 targetCenter = Aim->GetTargetCenter();
-
-			transform.posV.x += (playerPos.x - transform.posV.x) * 0.05f;
+			transform.posV.x += (dirX) * 0.05f;
 			transform.posV.y += ((playerPos.y + 60.0f) - transform.posV.y) * 0.05f;
 			transform.posV.z += (playerPos.z - transform.posV.z) * 0.05f;
 			// 注視点
@@ -177,16 +186,13 @@ void CThirdPersonCamera::Update(CameraTransform& transform)
 		}
 		else if (nTimeCount >1.5f)
 		{
-			// プレイヤーの自動移動を取得
-			auto Aim = pPlayer->GetComponent<CAimComponent>();
-			D3DXVECTOR3 targetCenter = Aim->GetTargetCenter();
-
-			transform.posV.x += (playerPos.x - transform.posV.x) * 0.05f;
+			transform.posV.x += (dirX) * 0.05f;
 			transform.posV.y += ((playerPos.y + 60.0f) - transform.posV.y) * 0.05f;
 			transform.posV.z += (playerPos.z - transform.posV.z) * 0.05f;
 			// 注視点
 			transform.posR = playerPos;
 			transform.posR.y += 60.0f;
+
 		}
 		else
 		{
@@ -194,9 +200,9 @@ void CThirdPersonCamera::Update(CameraTransform& transform)
 			auto Aim = pPlayer->GetComponent<CAimComponent>();
 			D3DXVECTOR3 targetCenter = Aim->GetTargetCenter();
 
-			transform.posV.x += (playerPos.x - transform.posV.x) * 0.001f;
+			transform.posV.x += (dirX) * 0.001f;
 			transform.posV.y += ((playerPos.y + 100.0f) - transform.posV.y) * 0.1f;
-			transform.posV.z += (playerPos.z - transform.posV.z) * 0.1f;
+			transform.posV.z += (dirZ) * 0.1f;
 			// 注視点
 
 			transform.posR = targetCenter;
