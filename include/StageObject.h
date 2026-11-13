@@ -48,6 +48,7 @@ public:
         RainYellow, // 黄色ライン
         Podium,     // 表彰台
         CollectBox, // 玉を溜める用のかご
+        Lodge,      // ロッジ
 
         Max
     };
