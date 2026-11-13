@@ -368,7 +368,7 @@ HRESULT CBasketBlock::Init(void)
 	}
 
 	// 得点サークルの中心位置をローカル座標で指定
-	aimTarget->SetLocalCenter(D3DXVECTOR3(0.0f, CIRCLE_OFFSET_Y, 0.0f));
+	aimTarget->SetLocalCenter(localCenter);
 
 	// エイム可能な半径
 	aimTarget->SetAimRadius(m_AimRadius);
