@@ -301,8 +301,9 @@ void CAimComponent::CreateAimMarker(void)
 
     if (sprite)
     {
+        sprite->SetTexture("data/TEXTURE/TimingCircle.png");
         sprite->SetSize(80.0f, 80.0f);
-        sprite->SetColor(D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
+        sprite->SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
         sprite->SetIsVisible(true);
     }
 
