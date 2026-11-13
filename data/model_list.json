@@ -117,5 +117,12 @@
     "name": "CollectBox",
     "contact_type": "Rigid",
     "filepath": "data/MODELS/basketCollision.x"
+  },
+  {
+    "type": 17,
+    "category": "Model",
+    "name": "Lodge",
+    "contact_type": "Rigid",
+    "filepath": "data/MODELS/lodge.x"
   }
 ]
