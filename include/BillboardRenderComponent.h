@@ -19,11 +19,13 @@ class CBillboardRenderComponent : public CRenderComponent
 {
 protected:
 
-    ComPtr<IDirect3DVertexBuffer9>  m_pVtxBuff;  // 頂点バッファ
-    D3DXMATRIX		                m_mtxWorld;	 // ワールドマトリックス
-    D3DXCOLOR                       m_Color;     // 色
-    float                           m_Width;     // 幅
-    float                           m_Height;    // 高さ
+    ComPtr<IDirect3DVertexBuffer9>  m_pVtxBuff;     // 頂点バッファ
+    D3DXMATRIX		                m_mtxWorld;	    // ワールドマトリックス
+    D3DXCOLOR                       m_Color;        // 色
+    float                           m_Width;        // 幅
+    float                           m_Height;       // 高さ
+    D3DXVECTOR2                     m_UVPosition;   // UV位置
+    D3DXVECTOR2                     m_UVSize;       // UVサイズ
 
 private:
 
@@ -85,6 +87,11 @@ public:
         m_UV.right = right;
         m_UV.bottom = bottom;
     }
+
+    // 指定したフレームを表示
+    // @param frameIndex : 何枚目を表示するか
+    // @param frameCount : そのテクスチャの枚数
+    void SetUVFrame(int frameIndex, int frameCount);
 
     void SetIsVisible(bool visible) { m_isVisible = visible; }
 

@@ -407,8 +407,8 @@ void CConnect::Draw(void)
 	CCamera* pCamera = CManager::Instance()->GetCamera();
 
 	// ƒJƒƒ‰‚ÌÝ’è
-	pCamera->SetPosV({ 0.0f, 680.0f, -2050.0f });
-	pCamera->SetPosR({ 0.0f, 680.0f, -2350.0f });
+	pCamera->SetPosV({ 0.0f, 660.0f, -2050.0f });
+	pCamera->SetPosR({ 0.0f, 660.0f, -2350.0f });
 	pCamera->SetRot({ 0.0f, 0.0f, 0.0f });
 }
 

@@ -37,6 +37,8 @@
 #include <SpriteRenderComponent.h>
 #include "CountRenderComponent.h"
 #include <ParticleRenderer3D.h>
+#include "BillboardRenderComponent.h"
+#include "Renderer.h"
 //#include "FBXManager.h"
 //#include "FBXModelComponent.h"
 
@@ -281,22 +283,34 @@ HRESULT CPlayer::ConnectInit(void)
 
 	m_pIDIconUI->SetTag("IDIcon");
 
-	// UIコンポーネント
-	auto uiID = m_pIDIconUI->AddComponent<CUIComponent>();
+	// ビルボードレンダーコンポーネント
+	auto uiID = m_pIDIconUI->AddComponent<CBillboardRenderComponent>();
+	auto uiIDTransform = m_pIDIconUI->AddComponent<CTransformComponent>();
 
-	auto& uiTransform = uiID->GetTransform();
-	uiTransform.Position = { m_PlayerId * 0.28f + 0.28f, 0.32f };
-	uiTransform.Alpha = 1.0f;
-	uiTransform.Scale = { 0.0007f, 0.0007f };
+	auto playerTransform = GetComponent<CTransformComponent>();
 
-	// スプライトコンポーネントに追加
-	auto spriteID = m_pIDIconUI->AddComponent<CSpriteRenderComponent>();
+	// 生成位置(オフセット)
+	uiIDTransform->Position = playerTransform->Position + D3DXVECTOR3(0.0f, 70.0f, 0.0f );
+
+	// デバイスの取得
+	auto device = CManager::Instance()->GetRenderer()->GetDevice();
+
+	// 色の設定
+	uiID->SetColor(ColorConst::DX::WHITE);
+
+	// サイズの設定
+	uiID->SetSize(20.0f, 13.0f);
+
+	//-------------------------------------------------------------------------
+	// ビルボード行列
+	//-------------------------------------------------------------------------
+	uiID->SetBillboardTransform(device, uiIDTransform->Position);
 
 	// 描画順の設定
-	spriteID->SetLayer(RenderLayer::UI);
+	uiID->SetLayer(RenderLayer::UI);
 
 	// テクスチャの設定
-	spriteID->SetTexture("data/TEXTURE/Players.png");
+	uiID->SetTexture("data/TEXTURE/Players.png");
 
 	if (uiID)
 	{
@@ -317,6 +331,42 @@ HRESULT CPlayer::ConnectInit(void)
 		}
 	}
 
+	//// UIコンポーネント
+	//auto uiID = m_pIDIconUI->AddComponent<CUIComponent>();
+
+	//auto& uiTransform = uiID->GetTransform();
+	//uiTransform.Position = { m_PlayerId * 0.28f + 0.28f, 0.32f };
+	//uiTransform.Alpha = 1.0f;
+	//uiTransform.Scale = { 0.0007f, 0.0007f };
+
+	//// スプライトコンポーネントに追加
+	//auto spriteID = m_pIDIconUI->AddComponent<CSpriteRenderComponent>();
+
+	//// 描画順の設定
+	//spriteID->SetLayer(RenderLayer::UI);
+
+	//// テクスチャの設定
+	//spriteID->SetTexture("data/TEXTURE/Players.png");
+
+	//if (uiID)
+	//{
+	//	switch (m_PlayerId)
+	//	{
+	//	case 0:
+	//		uiID->SetUVFrame(0, 4);
+	//		break;
+	//	case 1:
+	//		uiID->SetUVFrame(1, 4);
+	//		break;
+	//	case 2:
+	//		uiID->SetUVFrame(2, 4);
+	//		break;
+	//	case 3:
+	//		uiID->SetUVFrame(3, 4);
+	//		break;
+	//	}
+	//}
+
 	// 準備UIオブジェクトの生成
 	m_pReadyUI = scene->CreateObject();
 
@@ -326,9 +376,9 @@ HRESULT CPlayer::ConnectInit(void)
 	auto uiReady = m_pReadyUI->AddComponent<CUIComponent>();
 
 	auto& readyTransform = uiReady->GetTransform();
-	readyTransform.Position = { m_PlayerId * 0.26f + 0.26f, 0.73f };
+	readyTransform.Position = { m_PlayerId * 0.2f + 0.14f, 0.73f };
 	readyTransform.Alpha = 1.0f;
-	readyTransform.Scale = { 0.0016f, 0.001f };
+	readyTransform.Scale = { 0.0016f, 0.0008f };
 
 	// スプライトコンポーネントに追加
 	auto spriteReady = m_pReadyUI->AddComponent<CSpriteRenderComponent>();

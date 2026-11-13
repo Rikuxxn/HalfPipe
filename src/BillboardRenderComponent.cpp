@@ -30,7 +30,9 @@ CBillboardRenderComponent::CBillboardRenderComponent() :
     m_Width     (100.0f),
     m_Height    (100.0f),
     m_Color     (ColorConst::DX::WHITE),
-    m_isVisible (true)
+    m_isVisible (true),
+    m_UVPosition({0.0f, 0.0f}),
+    m_UVSize    ({1.0f, 1.0f})
 {
     m_UV.left   = 0;
     m_UV.top    = 0;
@@ -140,13 +142,23 @@ void CBillboardRenderComponent::SetBillboardVertex(VERTEX_3D* vertex, float /*ra
         vertex[i].col = m_Color;
     }
 
-    //-------------------------------------------------------------------------
-    // UV
-    //-------------------------------------------------------------------------
-    vertex[0].tex = D3DXVECTOR2(0.0f, 0.0f);
-    vertex[1].tex = D3DXVECTOR2(1.0f, 0.0f);
-    vertex[2].tex = D3DXVECTOR2(0.0f, 1.0f);
-    vertex[3].tex = D3DXVECTOR2(1.0f, 1.0f);
+    //---------------------------------
+    // UV座標の設定
+    //---------------------------------
+
+    // UVの開始位置
+    float u0 = m_UVPosition.x;
+    float v0 = m_UVPosition.y;
+
+    // UVの終了位置
+    float u1 = u0 + m_UVSize.x;
+    float v1 = v0 + m_UVSize.y;
+
+    // 頂点UVの設定
+    vertex[0].tex = { u0, v0 };
+    vertex[1].tex = { u1, v0 };
+    vertex[2].tex = { u0, v1 };
+    vertex[3].tex = { u1, v1 };
 }
 
 //=============================================================================
@@ -264,4 +276,33 @@ void CBillboardRenderComponent::EndBillboardDraw(IDirect3DDevice9* device)
     // ライト有効
     //-------------------------------------------------------------------------
     device->SetRenderState(D3DRS_LIGHTING, TRUE);
+}
+
+//=============================================================================
+// UVフレームの設定
+//=============================================================================
+void CBillboardRenderComponent::SetUVFrame(int frameIndex, int frameCount)
+{
+    // フレーム数のチェック
+    if (frameCount <= 0)
+    {
+        return;
+    }
+
+    // インデックスのチェック
+    if (frameIndex < 0 || frameIndex >= frameCount)
+    {
+        return;
+    }
+
+    // 1フレーム分のUVサイズ
+    float frameHeight = 1.0f / static_cast<float>(frameCount);
+
+    // UVの開始位置
+    m_UVPosition.x = 0.0f;
+    m_UVPosition.y = frameHeight * frameIndex;
+
+    // UVのサイズ
+    m_UVSize.x = 1.0f;
+    m_UVSize.y = frameHeight;
 }
