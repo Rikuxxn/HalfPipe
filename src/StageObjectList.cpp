@@ -1804,3 +1804,25 @@ void CCollectBoxBlock::Update(void)
 	// ステージオブジェクトの更新
 	CStageObject::Update();
 }
+
+CLodgeBlock::CLodgeBlock()
+{
+
+}
+
+CLodgeBlock::~CLodgeBlock()
+{
+
+}
+
+HRESULT CLodgeBlock::Init(void)
+{
+
+	return S_OK;
+}
+
+void CLodgeBlock::Update(void)
+{
+	// ステージオブジェクトの更新
+	CStageObject::Update();
+}

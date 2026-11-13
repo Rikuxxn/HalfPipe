@@ -586,4 +586,29 @@ public:
 private:
 };
 
+//*****************************************************************************
+// ロッジブロッククラス
+//*****************************************************************************
+class CLodgeBlock : public CStageObject
+{
+public:
+    CLodgeBlock();
+    ~CLodgeBlock();
+
+    HRESULT Init(void) override;
+    void Update(void) override;
+
+    StageObjectType GetType(void) const override
+    {
+        return StageObjectType::Lodge;
+    }
+
+    ColliderShape GetColliderShape(void) const override
+    {
+        return ColliderShape::Box;
+    }
+
+private:
+};
+
 #endif
