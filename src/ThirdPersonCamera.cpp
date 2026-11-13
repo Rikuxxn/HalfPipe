@@ -159,7 +159,7 @@ void CThirdPersonCamera::Update(CameraTransform& transform)
 		float dirZ = playerPos.z - transform.posV.z;
 		float rotY = atan2f(dirX,dirZ);
 
-		transform.rotation.y = rotY > 0.0f ? -D3DX_PI * 0.5f : D3DX_PI * 0.5f;
+		transform.rotation.y = rotY > -0.065f ? -D3DX_PI * 0.5f : D3DX_PI * 0.5f;
 
 		if (!playerAutoMove->IsJump())
 		{
@@ -171,7 +171,7 @@ void CThirdPersonCamera::Update(CameraTransform& transform)
 		{
 			transform.posV.x += (dirX) * 0.05f;
 			transform.posV.y += ((playerPos.y + 60.0f) - transform.posV.y) * 0.05f;
-			transform.posV.z += (playerPos.z - transform.posV.z) * 0.05f;
+			transform.posV.z += (dirZ) * 0.05f;
 			// íçéãì_
 			transform.posR = playerPos;
 			transform.posR.y += 60.0f;
@@ -182,7 +182,7 @@ void CThirdPersonCamera::Update(CameraTransform& transform)
 		{
 			transform.posV.x += (dirX) * 0.05f;
 			transform.posV.y += ((playerPos.y + 60.0f) - transform.posV.y) * 0.05f;
-			transform.posV.z += (playerPos.z - transform.posV.z) * 0.05f;
+			transform.posV.z += (dirZ) * 0.05f;
 			// íçéãì_
 			transform.posR = playerPos;
 			transform.posR.y += 60.0f;
@@ -196,7 +196,7 @@ void CThirdPersonCamera::Update(CameraTransform& transform)
 
 			transform.posV.x += (dirX) * 0.001f;
 			transform.posV.y += ((playerPos.y + 100.0f) - transform.posV.y) * 0.1f;
-			transform.posV.z += (dirZ) * 0.1f;
+			transform.posV.z += (dirZ) * 0.001f;
 			// íçéãì_
 
 			transform.posR = targetCenter;
