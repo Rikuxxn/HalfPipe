@@ -331,42 +331,6 @@ HRESULT CPlayer::ConnectInit(void)
 		}
 	}
 
-	//// UIコンポーネント
-	//auto uiID = m_pIDIconUI->AddComponent<CUIComponent>();
-
-	//auto& uiTransform = uiID->GetTransform();
-	//uiTransform.Position = { m_PlayerId * 0.28f + 0.28f, 0.32f };
-	//uiTransform.Alpha = 1.0f;
-	//uiTransform.Scale = { 0.0007f, 0.0007f };
-
-	//// スプライトコンポーネントに追加
-	//auto spriteID = m_pIDIconUI->AddComponent<CSpriteRenderComponent>();
-
-	//// 描画順の設定
-	//spriteID->SetLayer(RenderLayer::UI);
-
-	//// テクスチャの設定
-	//spriteID->SetTexture("data/TEXTURE/Players.png");
-
-	//if (uiID)
-	//{
-	//	switch (m_PlayerId)
-	//	{
-	//	case 0:
-	//		uiID->SetUVFrame(0, 4);
-	//		break;
-	//	case 1:
-	//		uiID->SetUVFrame(1, 4);
-	//		break;
-	//	case 2:
-	//		uiID->SetUVFrame(2, 4);
-	//		break;
-	//	case 3:
-	//		uiID->SetUVFrame(3, 4);
-	//		break;
-	//	}
-	//}
-
 	// 準備UIオブジェクトの生成
 	m_pReadyUI = scene->CreateObject();
 
@@ -376,7 +340,7 @@ HRESULT CPlayer::ConnectInit(void)
 	auto uiReady = m_pReadyUI->AddComponent<CUIComponent>();
 
 	auto& readyTransform = uiReady->GetTransform();
-	readyTransform.Position = { m_PlayerId * 0.2f + 0.14f, 0.73f };
+	readyTransform.Position = { m_PlayerId * 0.25f + 0.14f, 0.73f };
 	readyTransform.Alpha = 1.0f;
 	readyTransform.Scale = { 0.0016f, 0.0008f };
 
