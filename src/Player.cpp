@@ -39,6 +39,10 @@
 #include <ParticleRenderer3D.h>
 #include "BillboardRenderComponent.h"
 #include "Renderer.h"
+#include <ParticleVelocityModule.h>
+#include <ParticleGravityModule.h>
+#include <ParticleSizeModule.h>
+#include <ParticleColorModule.h>
 //#include "FBXManager.h"
 //#include "FBXModelComponent.h"
 
@@ -191,33 +195,68 @@ HRESULT CPlayer::Init(void)
 			transform->Scale
 		);
 
-		auto fire3D = m_ParticleObject->AddComponent<CParticleEmitterComponent>();
+		//=====================================
+		// パーティクル設定
+		//=====================================
 
-		fire3D->SetLayer(RenderLayer::Particle3D);
+		auto emitter = m_ParticleObject->AddComponent<CParticleEmitterComponent>();
 
-		// 放出空間の設定
-		fire3D->Space = ParticleSpace::Space3D;
+		emitter->SetLayer(RenderLayer::Particle3D);
 
-		// エミッターのセッターにテクスチャを設定
-		fire3D->SetTexture("data/TEXTURE/smoke.jpg");
+		emitter->Space = ParticleSpace::Space3D;
 
-		// シェーダーの設定
-		fire3D->SetShader("data/Shader/Instancing/ParticleInstancing.fx");
+		emitter->SetTexture("data/TEXTURE/smoke.jpg");
 
-		fire3D->SetPlay(false);
+		emitter->SetShader("data/Shader/Instancing/ParticleInstancing.fx");
 
-		fire3D->col = { 0.2f, 0.2f, 0.7f, 1.0f };
-		fire3D->EmitMode = ParticleEmitMode::Loop;
-		fire3D->Type = ParticleType::Smoke;
-		fire3D->SpawnShape = ParticleSpawnShape::Point;
-		fire3D->Radius = 3.0f;
-		fire3D->EmitRate = 1;
-		fire3D->LifeTimeMin = 20;
-		fire3D->LifeTimeMax = 40;
-		fire3D->SpeedMin = 0.5f;
-		fire3D->SpeedMax = 2.0f;
-		fire3D->SizeMin = 20;
-		fire3D->SizeMax = 40;
+		emitter->SetPlay(false);
+
+		// 発生設定
+		emitter->EmitMode = ParticleEmitMode::Loop;
+		emitter->SpawnShape = ParticleSpawnShape::Point;
+		emitter->EmitRate = 1;
+
+		// 寿命
+		emitter->LifeTimeMin = 20;
+		emitter->LifeTimeMax = 40;
+
+		// サイズ
+		emitter->SizeMin = 20;
+		emitter->SizeMax = 40;
+
+		// 色
+		emitter->col = { 0.2f, 0.2f, 0.7f, 1.0f };
+
+
+		//=====================================
+		// モジュール設定
+		//=====================================
+
+		// 初速度
+		auto velocity = emitter->AddModule<CParticleVelocityModule>();
+
+		velocity->VelocityMin = { -0.3f, 0.5f, -0.3f };
+		velocity->VelocityMax = { 0.3f, 2.0f,  0.3f };
+
+
+		// 重力・移動
+		auto gravity = emitter->AddModule<CParticleGravityModule>();
+
+		gravity->Gravity = { 0.0f, 0.01f, 0.0f };
+
+
+		// サイズ変化
+		auto size = emitter->AddModule<CParticleSizeModule>();
+
+		size->StartSize = 20.0f;
+		size->EndSize = 40.0f;
+
+
+		// 色変化
+		auto color = emitter->AddModule<CParticleColorModule>();
+
+		color->StartColor = { 0.2f, 0.2f, 0.7f, 0.7f };
+		color->EndColor = { 0.2f, 0.2f, 0.7f, 0.0f };
 	}
 
 	// レイキャストコンポーネントの追加
@@ -548,18 +587,21 @@ void CPlayer::Update(void)
 
 	if (fire)
 	{
+		// カラーモジュール取得
+		auto color = fire->GetModule<CParticleColorModule>();
+
 		// パーティクルの色変更
 		if (autoMove->GetPressCount() > 0.18f)
 		{
-			fire->col = { 0.7f, 0.8f, 0.2f, 1.0f };
+			color->SetColor({ 0.7f, 0.8f, 0.2f, 1.0f });
 		}
 		else if (autoMove->GetPressCount() > 0.09f)
 		{
-			fire->col = { 1.0f, 0.2f, 0.2f, 1.0f };
+			color->SetColor({ 1.0f, 0.2f, 0.2f, 1.0f });
 		}
 		else
 		{
-			fire->col = { 0.4f, 0.4f, 0.8f, 1.0f };
+			color->SetColor({ 0.4f, 0.4f, 0.8f, 1.0f });
 		}
 	}
 

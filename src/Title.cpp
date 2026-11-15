@@ -46,6 +46,10 @@
 #include "UIAnimationComponent.h"
 #include "TimeSystem.h"
 #include "NetWorkManager.h"
+#include <ParticleVelocityModule.h>
+#include <ParticleGravityModule.h>
+#include <ParticleSizeModule.h>
+#include <ParticleColorModule.h>
 
 
 //*****************************************************************************
@@ -176,42 +180,82 @@ HRESULT CTitle::Init(void)
 	}
 
 
+	//=============================================================================
 	// 3D雪パーティクルオブジェクトの生成
+	//=============================================================================
+
 	auto snow = CreateObject();
 
 	snow->SetTag("SnowParticle3D");
 
-	auto snowTransform = snow->AddComponent<CTransformComponent>();
+	auto transform = snow->AddComponent<CTransformComponent>();
 
-	snowTransform->Position = { 0.0f, 300.0f, 0.0f };
+	transform->Position = { 0.0f, 300.0f, 0.0f };
 
-	auto snow3D = snow->AddComponent<CParticleEmitterComponent>();
+	auto emitter = snow->AddComponent<CParticleEmitterComponent>();
 
-	snow3D->SetLayer(RenderLayer::Particle3D);
+	emitter->SetLayer(RenderLayer::Particle3D);
 
-	// 放出空間の設定
-	snow3D->Space = ParticleSpace::Space3D;
+	//=====================================
+	// 基本設定
+	//=====================================
 
-	// エミッターのセッターにテクスチャを設定
-	snow3D->SetTexture("data/TEXTURE/effect000.jpg");
+	// 3D空間
+	emitter->Space = ParticleSpace::Space3D;
 
-	// シェーダーの設定
-	snow3D->SetShader("data/Shader/Instancing/ParticleInstancing.fx");
+	// テクスチャ
+	emitter->SetTexture("data/TEXTURE/effect000.jpg");
 
-	snow3D->col = { 1.0f, 1.0f, 1.0f, 1.0f };
-	snow3D->BoxSize = { 600.0f, 100.0f, 600.0f };
-	snow3D->EmitMode = ParticleEmitMode::Loop;
+	// シェーダー
+	emitter->SetShader("data/Shader/Instancing/ParticleInstancing.fx");
 
-	// パーティクルの種類の設定
-	snow3D->Type = ParticleType::Snow;
+	// 発生設定
+	emitter->EmitMode = ParticleEmitMode::Loop;
+	emitter->SpawnShape = ParticleSpawnShape::Box;
+	emitter->EmitRate = 1;
+	emitter->SetPlay(true);
 
-	snow3D->SpawnShape = ParticleSpawnShape::Box;
-	snow3D->Radius = 5.0f;
-	snow3D->EmitRate = 1;
-	snow3D->LifeTimeMin = 100;
-	snow3D->LifeTimeMax = 300;
-	snow3D->SizeMin = 5;
-	snow3D->SizeMax = 10;
+	// 発生範囲
+	emitter->BoxSize = { 600.0f, 100.0f, 600.0f };
+
+	// 寿命
+	emitter->LifeTimeMin = 100;
+	emitter->LifeTimeMax = 300;
+
+	// サイズ
+	emitter->SizeMin = 5;
+	emitter->SizeMax = 10;
+
+	// 色
+	emitter->col = { 1, 1, 1, 1 };
+
+	//=====================================
+	// モジュール設定
+	//=====================================
+
+	// 初速度
+	auto velocity = emitter->AddModule<CParticleVelocityModule>();
+
+	velocity->VelocityMin = { -0.2f, -1.0f, -0.2f };
+	velocity->VelocityMax = { 0.2f, -0.3f,  0.2f };
+
+	// 重力・移動
+	auto gravity = emitter->AddModule<CParticleGravityModule>();
+
+	gravity->Gravity = { 0.0f, -0.01f, 0.0f };
+
+	// サイズ変化
+	auto size = emitter->AddModule<CParticleSizeModule>();
+
+	size->StartSize = 5.0f;
+	size->EndSize = 10.0f;
+
+	// 色・透明度変化
+	auto color = emitter->AddModule<CParticleColorModule>();
+
+	color->StartColor = { 1, 1, 1, 1 };
+	color->EndColor = { 1, 1, 1, 0 };
+
 
 	// 一回サーバーから切断する
 	CManager::Instance()->GetNetworkManager()->Disconnect();

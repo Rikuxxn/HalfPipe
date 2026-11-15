@@ -7,13 +7,11 @@
 #include "ParticleEmitterComponent.h"
 #include "GameObject.h"
 #include "TransformComponent.h"
-#include "ParticleRenderer2D.h"
 #include "Manager.h"
 #include "TextureManager.h"
 #include "TextureResource.h"
 #include "Random.h"
 #include "MathConstants.h"
-//#include "ParticleSystem.h"
 #include "ShaderResource.h"
 #include "ShaderManager.h"
 #include "ParticleRenderer2D.h"
@@ -34,10 +32,7 @@ CParticleEmitterComponent::CParticleEmitterComponent() :
 //=============================================================================
 CParticleEmitterComponent::~CParticleEmitterComponent()
 {
-    //if (m_pParticleSystem)
-    //{
-    //    m_pParticleSystem->RemoveEmitter(this);
-    //}
+
 }
 
 //=============================================================================
@@ -45,13 +40,6 @@ CParticleEmitterComponent::~CParticleEmitterComponent()
 //=============================================================================
 HRESULT CParticleEmitterComponent::Init(void)
 {
-    //m_pParticleSystem = CManager::Instance()->GetParticleSystem();
-
-    //if (m_pParticleSystem)
-    //{
-    //    m_pParticleSystem->AddEmitter(this);
-    //}
-
     m_Particles.resize(MAX_PARTICLES);
 
     for (auto& p : m_Particles)
@@ -67,12 +55,6 @@ HRESULT CParticleEmitterComponent::Init(void)
 //=============================================================================
 void CParticleEmitterComponent::Update(void)
 {
-    //// 停止の場合はスキップ
-    //if (!m_IsPlay)
-    //{
-    //    return;
-    //}
-
     //---------------------------------
     // 発生
     //---------------------------------
@@ -166,73 +148,18 @@ void CParticleEmitterComponent::Emit(int count)
         p.Position = transform->Position + SpawnPosition();
 
         //---------------------------------
-        // 初速度
-        //---------------------------------
-
-        switch (Type)
-        {
-        case ParticleType::Fire:
-        {
-            p.Velocity =
-            {
-                CRandom::RandF(-0.3f, 0.3f),
-                CRandom::RandF(1.0f, 3.0f),
-                CRandom::RandF(-0.3f, 0.3f)
-            };
-        }
-        break;
-
-        case ParticleType::Snow:
-        {
-            p.Velocity =
-            {
-                CRandom::RandF(-0.2f, 0.2f),
-                CRandom::RandF(-1.0f, -0.3f),
-                CRandom::RandF(-0.2f, 0.2f)
-            };
-        }
-        break;
-
-        default:
-        {
-            float speed = CRandom::RandF(SpeedMin, SpeedMax);
-
-            if (Space == ParticleSpace::Space2D)
-            {
-                float angle = CRandom::RandF(0.0f, D3DX_PI * MathConst::F_DOUBLE);
-
-                p.Velocity = { cosf(angle) * speed, sinf(angle) * speed, 0.0f };
-            }
-            else
-            {
-                float theta = CRandom::RandF(0.0f, D3DX_PI * MathConst::F_DOUBLE);
-                float phi = CRandom::RandF(0.0f, D3DX_PI);
-
-                p.Velocity =
-                {
-                    sinf(phi) *
-                    cosf(theta) *
-                    speed,
-
-                    cosf(phi) *
-                    speed,
-
-                    sinf(phi) *
-                    sinf(theta) *
-                    speed,
-                };
-            }
-        }
-        break;
-        }
-
-        //---------------------------------
         // その他
         //---------------------------------
 
         p.Size = CRandom::RandF(SizeMin, SizeMax);
         p.LifeTime = CRandom::RandF(LifeTimeMin, LifeTimeMax);
         p.Color = col;
+
+        // モジュール初期化
+        for (auto& module : m_Modules)
+        {
+            module->OnSpawn(p);
+        }
     }
 }
 
@@ -262,181 +189,12 @@ void CParticleEmitterComponent::UpdateParticles(void)
             continue;
         }
 
-        //---------------------------------
-        // タイプ別更新
-        //---------------------------------
-
-        switch (Type)
+        // 各モジュールで更新
+        for (auto& module : m_Modules)
         {
-        case ParticleType::Fire:
-            UpdateFire(p);
-            break;
-
-        case ParticleType::Smoke:
-            UpdateSmoke(p);
-            break;
-
-        case ParticleType::Spark:
-            UpdateSpark(p);
-            break;
-
-        case ParticleType::Snow:
-            UpdateSnow(p);
-            break;
-
-        default:
-            UpdateDefault(p);
-            break;
+            module->Update(p);
         }
     }
-}
-
-//=============================================================================
-// デフォルト更新
-//=============================================================================
-void CParticleEmitterComponent::UpdateDefault(PARTICLE& p)
-{
-    p.Position += p.Velocity;
-
-    float t = (float)p.Age / p.LifeTime;
-
-    p.Color.a = 1.0f - t;
-}
-
-//=============================================================================
-// 炎パーティクル
-//=============================================================================
-void CParticleEmitterComponent::UpdateFire(PARTICLE& p)
-{
-    //---------------------------------
-     // 移動
-     //---------------------------------
-
-    p.Position += p.Velocity;
-
-    //---------------------------------
-    // 揺らぎ
-    //---------------------------------
-
-    p.Velocity.x += CRandom::RandF(-0.02f, 0.02f);
-
-    p.Velocity.z += CRandom::RandF(-0.02f, 0.02f);
-
-    //---------------------------------
-    // 徐々に減速
-    //---------------------------------
-
-    p.Velocity *= 0.98f;
-
-    //---------------------------------
-    // サイズ縮小
-    //---------------------------------
-
-    p.Size *= 0.96f;
-
-    //---------------------------------
-    // 色変化
-    //---------------------------------
-
-    float t = (float)p.Age / p.LifeTime;
-
-    p.Color.r = 1.0f;
-    p.Color.g = 1.0f - t;
-    p.Color.b = 0.1f;
-    p.Color.a = 1.0f - t;
-}
-
-//=============================================================================
-// 煙パーティクル
-//=============================================================================
-void CParticleEmitterComponent::UpdateSmoke(PARTICLE& p)
-{
-    p.Position += p.Velocity;
-
-    //---------------------------------
-    // ゆっくり上昇
-    //---------------------------------
-
-    p.Velocity.y += 0.003f;
-
-    //---------------------------------
-    // 空気抵抗
-    //---------------------------------
-
-    p.Velocity *= 0.98f;
-
-    //---------------------------------
-    // 広がる
-    //---------------------------------
-
-    p.Size *= 1.01f;
-
-    //---------------------------------
-    // フェード
-    //---------------------------------
-
-    float t = (float)p.Age / p.LifeTime;
-
-    p.Color.a = 0.5f * (1.0f - t);
-}
-
-//=============================================================================
-// スパークエフェクト
-//=============================================================================
-void CParticleEmitterComponent::UpdateSpark(PARTICLE& p)
-{
-    p.Position += p.Velocity;
-
-    //---------------------------------
-    // 重力
-    //---------------------------------
-
-    p.Velocity.y -= 0.05f;
-
-    //---------------------------------
-    // フェード
-    //---------------------------------
-
-    float t = (float)p.Age / p.LifeTime;
-
-    p.Color.a = 1.0f - t;
-}
-
-//=============================================================================
-// 雪エフェクト
-//=============================================================================
-void CParticleEmitterComponent::UpdateSnow(PARTICLE& p)
-{
-    //---------------------------------
-    // 移動
-    //---------------------------------
-
-    p.Position += p.Velocity;
-
-    //---------------------------------
-    // ふわふわ横揺れ
-    //---------------------------------
-
-    p.Velocity.x += CRandom::RandF(-0.01f, 0.01f);
-
-    p.Velocity.z += CRandom::RandF(-0.01f, 0.01f);
-
-    //---------------------------------
-    // 落下速度制限
-    //---------------------------------
-
-    if (p.Velocity.y < -1.5f)
-    {
-        p.Velocity.y = -1.5f;
-    }
-
-    //---------------------------------
-    // フェード
-    //---------------------------------
-
-    float t = (float)p.Age / p.LifeTime;
-
-    p.Color.a = 1.0f - t;
 }
 
 //=============================================================================

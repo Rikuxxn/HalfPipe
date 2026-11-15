@@ -11,6 +11,7 @@
 // インクルードファイル
 //*****************************************************************************
 #include "RenderComponent.h"
+#include "ParticleModule.h"
 
 
 // 前方宣言
@@ -43,30 +44,6 @@ enum class ParticleSpace
     Space3D,
 };
 
-// パーティクルの種類
-enum class ParticleType
-{
-    Default,
-
-    Fire,
-    Smoke,
-    Spark,
-    Snow,
-};
-
-// パーティクル1つの構造体
-struct PARTICLE
-{
-    D3DXVECTOR3 Position;
-    D3DXVECTOR3 Velocity;
-    D3DXCOLOR   Color;
-    float       Size = 32.0f;
-    float       Rotation = 0.0f;
-    float       LifeTime = 60.0f;
-    float       Age = 0.0f;
-    bool        Active = false;
-};
-
 //*****************************************************************************
 // パーティクルエミッターコンポーネントクラス
 //*****************************************************************************
@@ -79,6 +56,33 @@ public:
     // パーティクル最大数
     static constexpr int MAX_PARTICLES = 10000;
 
+    // モジュール追加テンプレート関数
+    template<class T>
+    T* AddModule(void)
+    {
+        auto module = std::make_unique<T>();
+
+        T* ptr = module.get();
+
+        m_Modules.push_back(std::move(module));
+
+        return ptr;
+    }
+
+    // モジュール取得テンプレート関数
+    template<class T>
+    T* GetModule(void)
+    {
+        for (auto& module : m_Modules)
+        {
+            if (auto ptr = dynamic_cast<T*>(module.get()))
+            {
+                return ptr;
+            }
+        }
+
+        return nullptr;
+    }
 
     HRESULT Init(void) override;
     void Update(void) override;
@@ -103,11 +107,6 @@ public:
 private:
 
     void UpdateParticles(void);
-    void UpdateDefault(PARTICLE& p);
-    void UpdateFire(PARTICLE& p);
-    void UpdateSmoke(PARTICLE& p);
-    void UpdateSpark(PARTICLE& p);
-    void UpdateSnow(PARTICLE& p);
 
     void Emit(int count);
 
@@ -123,7 +122,6 @@ public:
     ParticleEmitMode EmitMode = ParticleEmitMode::Loop;
     ParticleSpawnShape SpawnShape = ParticleSpawnShape::Point;
     ParticleSpace Space = ParticleSpace::Space2D;
-    ParticleType Type = ParticleType::Default;
 
     float EmitRate = 5.0f;
 
@@ -149,7 +147,6 @@ public:
 private:
 
     float m_EmitTimer = 0;
-
     int m_NextParticle = 0;
 
     CParticleSystem* m_pParticleSystem = nullptr;
@@ -163,6 +160,9 @@ private:
 
     // パーティクルを再生するかどうか
     bool m_IsPlay;
+
+    // モジュール一覧
+    std::vector<std::unique_ptr<IParticleModule>> m_Modules;
 };
 
 #endif

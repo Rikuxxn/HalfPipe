@@ -253,6 +253,9 @@
     <Filter Include="ソース ファイル\UI">
       <UniqueIdentifier>{b26cd569-bf7b-4e8b-b0d6-ce487dac2e5b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\Particle\Module">
+      <UniqueIdentifier>{d513b3d4-50a8-48b5-8fc8-678571ecae76}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\CollisionSystem.h">
@@ -650,6 +653,21 @@
     </ClInclude>
     <ClInclude Include="include\CountRenderComponent.h">
       <Filter>ヘッダー ファイル\Component\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ParticleGravityModule.h">
+      <Filter>ヘッダー ファイル\Particle\Module</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ParticleModule.h">
+      <Filter>ヘッダー ファイル\Particle\Module</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ParticleSizeModule.h">
+      <Filter>ヘッダー ファイル\Particle\Module</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ParticleColorModule.h">
+      <Filter>ヘッダー ファイル\Particle\Module</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ParticleVelocityModule.h">
+      <Filter>ヘッダー ファイル\Particle\Module</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -232,11 +232,16 @@
     <ClInclude Include="include\NetWorkManager.h" />
     <ClInclude Include="include\NetWorkProtocol.h" />
     <ClInclude Include="include\Parameter.h" />
+    <ClInclude Include="include\ParticleColorModule.h" />
     <ClInclude Include="include\ParticleEmitterComponent.h" />
+    <ClInclude Include="include\ParticleGravityModule.h" />
+    <ClInclude Include="include\ParticleModule.h" />
     <ClInclude Include="include\ParticleRenderer.h" />
     <ClInclude Include="include\ParticleRenderer2D.h" />
     <ClInclude Include="include\ParticleRenderer3D.h" />
+    <ClInclude Include="include\ParticleSizeModule.h" />
     <ClInclude Include="include\ParticleSystem.h" />
+    <ClInclude Include="include\ParticleVelocityModule.h" />
     <ClInclude Include="include\PauseItemComponent.h" />
     <ClInclude Include="include\PauseManager.h" />
     <ClInclude Include="include\pch.h" />
