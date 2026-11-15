@@ -59,7 +59,7 @@
     "type": 8,
     "category": "Model",
     "name": "PointCircle",
-    "contact_type": "Rigid",
+    "contact_type": "Ghost",
     "filepath": "data/MODELS/PointCircle.x"
   },
   {

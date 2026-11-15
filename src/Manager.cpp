@@ -453,6 +453,7 @@ void CManager::Draw(void)
 			if (selected)
 			{
 				auto rigid = selected->GetComponent<CRigidBodyComponent>();
+				auto ghost = selected->GetComponent<CGhostObjectComponent>();
 
 				if (rigid)
 				{
@@ -464,6 +465,22 @@ void CManager::Draw(void)
 							body->getWorldTransform(),
 							body->getCollisionShape(),
 							btVector3(0.0f, 1.0f, 0.3f));
+					}
+				}
+
+				if (ghost)
+				{
+					btGhostObject* ghostObject = ghost->GetGhost();
+
+					if (ghostObject)
+					{
+						m_pDynamicsWorld->debugDrawObject(
+							ghostObject->getWorldTransform(),
+							ghostObject->getCollisionShape(),
+							btVector3(
+								1.0f,
+								0.5f,
+								0.0f));
 					}
 				}
 			}

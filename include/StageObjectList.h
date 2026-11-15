@@ -323,9 +323,14 @@ public:
         return StageObjectType::PointCircle;
     }
 
-    ColliderShape GetColliderShape(void) const override
+    //ColliderShape GetColliderShape(void) const override
+    //{
+    //    return ColliderShape::Cylinder;
+    //}
+
+    GhostShape GetGhostShape(void) const override
     {
-        return ColliderShape::Cylinder;
+        return GhostShape::Cylinder;
     }
 
     void OnTriggerEnter(CGameObject* other)override;
