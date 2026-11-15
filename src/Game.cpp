@@ -185,7 +185,7 @@ HRESULT CGame::Init(void)
 
 #ifdef _DEBUG
 	// カメラの初期位置を設定しておく
-	pCamera->SetCamMode(CCamera::MODE_THIRD_PERSON);
+	pCamera->SetCamMode(CCamera::MODE_EDIT);
 #else
 	// カメラの初期位置を設定しておく
 	pCamera->SetCamMode(CCamera::MODE_THIRD_PERSON);
