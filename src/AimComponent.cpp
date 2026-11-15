@@ -75,6 +75,14 @@ void CAimComponent::Update(void)
         SetTarget(nearest);
     }
 
+    if (m_pTarget)
+    {
+        // ターゲットの最新情報を取得
+        m_TargetCenter = m_pTarget->GetAimCenter();
+        m_TargetRotation = m_pTarget->GetAimRotation();
+        m_AimRadius = m_pTarget->GetAimRadius();
+    }
+
     UpdateAimMarker();
     UpdatePredictionLine();
 }
@@ -179,18 +187,18 @@ void CAimComponent::MoveAim(const D3DXVECTOR3& moveDirection, float deltaTime)
         return;
     }
 
-    // Basket の回転行列
-    D3DXMATRIX rotationMatrix;
+    //// Basket の回転行列
+    //D3DXMATRIX rotationMatrix;
 
-    D3DXMatrixRotationQuaternion(&rotationMatrix,&m_TargetRotation);
+    //D3DXMatrixRotationQuaternion(&rotationMatrix,&m_TargetRotation);
 
-    // ローカル座標での移動方向をワールド座標へ変換
-    D3DXVECTOR3 worldMoveDirection;
+    //// ローカル座標での移動方向をワールド座標へ変換
+    //D3DXVECTOR3 worldMoveDirection;
 
-    D3DXVec3TransformNormal(&worldMoveDirection, &moveDirection, &rotationMatrix);
+    //D3DXVec3TransformNormal(&worldMoveDirection, &moveDirection, &rotationMatrix);
 
     // 移動
-    m_AimPosition += worldMoveDirection * m_AimSpeed * deltaTime;
+    m_AimPosition += moveDirection/*worldMoveDirection*/ * m_AimSpeed * deltaTime;
 
     // 移動可能範囲を制限
     ClampAimPosition();

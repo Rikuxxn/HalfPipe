@@ -31,7 +31,7 @@
     "type": 4,
     "category": "Model",
     "name": "Basket",
-    "contact_type": "Ghost",
+    "contact_type": "Rigid",
     "filepath": "data/MODELS/basket.x"
   },
   {

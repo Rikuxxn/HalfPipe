@@ -387,11 +387,11 @@ void CBasketBlock::Update(void)
 	// 溜めるかごの更新
 	UpdateCollectBox();
 
-	//// 得点サークルをかごに追従させる
-	//UpdatePointCircles();
+	// 得点サークルをかごに追従させる
+	UpdatePointCircles();
 
-	//// テクスチャ用板ポリをかごに追従させる
-	//UpdateTexPoly();
+	// テクスチャ用板ポリをかごに追従させる
+	UpdateTexPoly();
 }
 
 //=============================================================================
