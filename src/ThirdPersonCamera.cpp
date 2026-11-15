@@ -75,6 +75,7 @@ void CThirdPersonCamera::Update(CameraTransform& transform)
 	{
 		// プレイヤーのトランスフォームを取得
 		auto playerTransform = pPlayer->GetComponent<CTransformComponent>();
+		
 		// プレイヤーの自動移動を取得
 		auto playerAutoMove = pPlayer->GetComponent<CAutoMoveComponent>();
 
@@ -82,73 +83,7 @@ void CThirdPersonCamera::Update(CameraTransform& transform)
 		D3DXVECTOR3 playerPos = playerTransform->Position;
 		D3DXVECTOR3 playerRot = playerTransform->Rotation;
 
-		//// マウスの状態を取得
-		//DIMOUSESTATE mouseState;
-
-		//// マウスカーソルを非表示にする
-		//pInputMouse->SetCursorVisibility(false);
-
-		//// ゲームパッド右スティックカメラ操作
-		//if (pStick != nullptr)
-		//{
-		//	// 右スティックの値を取得
-		//	float stickX = pStick->Gamepad.sThumbRX;
-		//	float stickY = pStick->Gamepad.sThumbRY;
-
-		//	// デッドゾーン処理
-		//	const float DEADZONE = 10922.0f;
-		//	if (fabsf(stickX) < DEADZONE)
-		//	{
-		//		stickX = 0.0f;
-		//	}
-		//	if (fabsf(stickY) < DEADZONE)
-		//	{
-		//		stickY = 0.0f;
-		//	}
-
-		//	// 正規化
-		//	stickX /= 32768.0f;
-		//	stickY /= 32768.0f;
-
-		//	// カメラ回転の更新
-		//	CameraWithGamepad(transform, stickX, stickY);
-		//}
-		//if (pInputMouse->GetMouseState(&mouseState))
-		//{
-		//	// 前フレームのカーソル位置を記録する静的変数
-		//	static POINT prevCursorPos = { SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 };
-
-		//	// 現在のマウスの位置の取得
-		//	POINT cursorPos;
-		//	GetCursorPos(&cursorPos);
-
-		//	// マウス感度
-		//	const float mouseSensitivity = 0.003f;
-
-		//	float deltaX = (float)(cursorPos.x - prevCursorPos.x) * mouseSensitivity;
-		//	float deltaY = (float)(cursorPos.y - prevCursorPos.y) * mouseSensitivity;
-
-		//	prevCursorPos = { SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 };
-		//	SetCursorPos(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
-
-		//	transform.rotation.y += deltaX;
-		//	transform.rotation.x += deltaY;
-
-		//	// 上下回転制限
-		//	if (transform.rotation.x < -1.3f)
-		//	{
-		//		transform.rotation.x = -1.3f;
-		//	}
-		//	if (transform.rotation.x > 1.3f)
-		//	{
-		//		transform.rotation.x = 1.3f;
-		//	}
-		//}
 		D3DXVECTOR3 dir = playerAutoMove->GetMoveDirection();
-		// カメラ位置計算
-		//transform.posV.x = playerPos.x + m_fDistance * -dir.x;
-		//transform.posV.y = playerPos.y + m_fDistance + 80.0f* -dir.y;
-		//transform.posV.z = playerPos.z + m_fDistance * -dir.z;
 
 		float fCurrentTime = playerAutoMove->GetSplineDelta();
 		static float nTimeCount = 0.0f;
@@ -157,9 +92,6 @@ void CThirdPersonCamera::Update(CameraTransform& transform)
 
 		float dirX = playerPos.x - transform.posV.x;
 		float dirZ = playerPos.z - transform.posV.z;
-		float rotY = atan2f(dirX,dirZ);
-
-		transform.rotation.y = rotY > -0.065f ? -D3DX_PI * 0.5f : D3DX_PI * 0.5f;
 
 		if (!playerAutoMove->IsJump())
 		{
@@ -172,21 +104,20 @@ void CThirdPersonCamera::Update(CameraTransform& transform)
 			transform.posV.x += (dirX) * 0.05f;
 			transform.posV.y += ((playerPos.y + 60.0f) - transform.posV.y) * 0.05f;
 			transform.posV.z += (dirZ) * 0.05f;
+			
 			// 注視点
 			transform.posR = playerPos;
 			transform.posR.y += 60.0f;
-
-
 		}
 		else if (nTimeCount >1.5f)
 		{
 			transform.posV.x += (dirX) * 0.05f;
 			transform.posV.y += ((playerPos.y + 60.0f) - transform.posV.y) * 0.05f;
 			transform.posV.z += (dirZ) * 0.05f;
+			
 			// 注視点
 			transform.posR = playerPos;
 			transform.posR.y += 60.0f;
-
 		}
 		else
 		{
@@ -197,17 +128,39 @@ void CThirdPersonCamera::Update(CameraTransform& transform)
 			transform.posV.x += (dirX) * 0.001f;
 			transform.posV.y += ((playerPos.y + 100.0f) - transform.posV.y) * 0.1f;
 			transform.posV.z += (dirZ) * 0.001f;
+			
 			// 注視点
-
 			transform.posR = targetCenter;
 			transform.posR.y += 20.0f;
 		}
 
-
+		// 向きの更新
+		UpdateCameraRotation(transform);
 
 		// カメラの位置補正処理
 		//AdjustCameraPosition(transform, playerPos);
 	}
+}
+
+//=============================================================================
+// 向き更新
+//=============================================================================
+void CThirdPersonCamera::UpdateCameraRotation(CameraTransform& transform)
+{
+	D3DXVECTOR3 direction = transform.posR - transform.posV;
+
+	// 水平方向の向きを計算
+	direction.y = 0.0f;
+
+	if (D3DXVec3LengthSq(&direction) < 0.0001f)
+	{
+		return;
+	}
+
+	// 正規化
+	D3DXVec3Normalize(&direction, &direction);
+
+	transform.rotation.y = atan2f(-direction.x, -direction.z);
 }
 
 //=============================================================================

@@ -26,6 +26,9 @@ public:
 
 private:
 
+    // Œü‚«XV
+    void UpdateCameraRotation(CameraTransform& transform);
+
     void CameraWithGamepad(CameraTransform& transform, float stickX, float stickY);
 
     // ƒJƒƒ‰‚Ì•ÇŠÑ’Ê–h~
