@@ -287,7 +287,7 @@ CBasketBlock::CBasketBlock() :
 	m_CenterPosition	(INIT_VEC3),	// バスケットの中心位置
 	m_CenterRotation	(INIT_VEC3),	// 回転
 	m_AimRadius			(400.0f),		// エイム可能な半径
-	m_HeightOffset		(5.0f)			// 得点サークルの高さの間隔
+	m_HeightOffset		(0.5f)			// 得点サークルの高さの間隔
 {
 
 }
@@ -334,25 +334,41 @@ HRESULT CBasketBlock::Init(void)
 	// 得点サークルの高さを設定
 	const D3DXVECTOR3 offsets[] =
 	{
-		D3DXVECTOR3(0.0f, m_HeightOffset, 0.0f),	// 50点
+		D3DXVECTOR3(4.0f, m_HeightOffset, 2.0f),	// 50点
 		D3DXVECTOR3(0.0f, 0.0f, 0.0f),				// 30点 
 		D3DXVECTOR3(0.0f, -m_HeightOffset, 0.0f)	// 10点
 	};
 
-	// 50点：中心
-	CreatePointCircle(m_CenterPosition + offsets[0], 1.8f, 50);
+	// 50点
+	D3DXVECTOR3 pos50 = MatrixUtil::LocalToWorld(
+		localCenter + offsets[0],
+		transform->Position,
+		transform->Rotation,
+		transform->Scale
+	);
 
-	// 30点：中間
-	CreatePointCircle(m_CenterPosition + offsets[1], 5.6f, 30);
+	// 30点
+	D3DXVECTOR3 pos30 = MatrixUtil::LocalToWorld(
+		localCenter + offsets[1],
+		transform->Position,
+		transform->Rotation,
+		transform->Scale
+	);
+
+	// 50点：中心
+	CreatePointCircle(pos50, 1.8f, 50);
+
+	//// 30点：中間
+	//CreatePointCircle(m_CenterPosition + offsets[1], 5.6f, 30);
 
 	// 10点：外側
 	CreatePointCircle(m_CenterPosition + offsets[2], 9.0f, 10);
 
 	// テクスチャ用板ポリの生成
-	CreateTexPoly(m_CenterPosition + offsets[0], 1.3f, "data/TEXTURE/Target_50.png", DX::RED);
+	CreateTexPoly(pos50, 1.3f, "data/TEXTURE/Target_50.png", DX::RED);
 
-	// テクスチャ用板ポリの生成
-	CreateTexPoly(m_CenterPosition + offsets[1], 4.2f, "data/TEXTURE/Target_30.png", DX::GREEN);
+	//// テクスチャ用板ポリの生成
+	//CreateTexPoly(m_CenterPosition + offsets[1], 4.2f, "data/TEXTURE/Target_30.png", DX::GREEN);
 
 	// テクスチャ用板ポリの生成
 	CreateTexPoly(m_CenterPosition + offsets[2], 7.4f, "data/TEXTURE/Target_10.png", DX::WHITE);
@@ -387,11 +403,11 @@ void CBasketBlock::Update(void)
 	// 溜めるかごの更新
 	UpdateCollectBox();
 
-	// 得点サークルをかごに追従させる
-	UpdatePointCircles();
+	//// 得点サークルをかごに追従させる
+	//UpdatePointCircles();
 
-	// テクスチャ用板ポリをかごに追従させる
-	UpdateTexPoly();
+	//// テクスチャ用板ポリをかごに追従させる
+	//UpdateTexPoly();
 }
 
 //=============================================================================
