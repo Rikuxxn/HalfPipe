@@ -67,4 +67,5 @@ void CStageFactory::InitFactory(void)
     m_Factory[CStageObject::StageObjectType::CollectBox]    = [](CScene* scene) { return scene->CreateObject<CCollectBoxBlock>(); };
     m_Factory[CStageObject::StageObjectType::Lodge]         = [](CScene* scene) { return scene->CreateObject<CLodgeBlock>(); };
     m_Factory[CStageObject::StageObjectType::Trees]         = [](CScene* scene) { return scene->CreateObject<CTreesBlock>(); };
+    m_Factory[CStageObject::StageObjectType::Slope]         = [](CScene* scene) { return scene->CreateObject<CSlopeBlock>(); };
 }

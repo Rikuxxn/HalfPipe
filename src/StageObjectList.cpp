@@ -1848,3 +1848,25 @@ void CTreesBlock::Update(void)
 	// ステージオブジェクトの更新
 	CStageObject::Update();
 }
+
+CSlopeBlock::CSlopeBlock()
+{
+
+}
+
+CSlopeBlock::~CSlopeBlock()
+{
+
+}
+
+HRESULT CSlopeBlock::Init(void)
+{
+
+	return S_OK;
+}
+
+void CSlopeBlock::Update(void)
+{
+	// ステージオブジェクトの更新
+	CStageObject::Update();
+}

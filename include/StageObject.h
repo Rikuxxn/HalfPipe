@@ -50,6 +50,7 @@ public:
         CollectBox, // 玉を溜める用のかご
         Lodge,      // ロッジ
         Trees,      // 木々
+        Slope,      // 斜面
 
         Max
     };

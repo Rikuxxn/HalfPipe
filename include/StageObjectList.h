@@ -646,4 +646,29 @@ public:
 private:
 };
 
+//*****************************************************************************
+// 斜面ブロッククラス
+//*****************************************************************************
+class CSlopeBlock : public CStageObject
+{
+public:
+    CSlopeBlock();
+    ~CSlopeBlock();
+
+    HRESULT Init(void) override;
+    void Update(void) override;
+
+    StageObjectType GetType(void) const override
+    {
+        return StageObjectType::Slope;
+    }
+
+    ColliderShape GetColliderShape(void) const override
+    {
+        return ColliderShape::Box;
+    }
+
+private:
+};
+
 #endif
