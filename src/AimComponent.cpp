@@ -187,18 +187,31 @@ void CAimComponent::MoveAim(const D3DXVECTOR3& moveDirection, float deltaTime)
         return;
     }
 
-    //// Basket の回転行列
-    //D3DXMATRIX rotationMatrix;
+     // かごの回転行列
+    D3DXMATRIX basketRotation;
+    D3DXMatrixRotationQuaternion(&basketRotation, &m_TargetRotation);
 
-    //D3DXMatrixRotationQuaternion(&rotationMatrix,&m_TargetRotation);
+    // かごのローカルY軸をワールド方向に変換
+    D3DXVECTOR3 basketNormal(0.0f, 1.0f, 0.0f);
+    D3DXVec3TransformNormal(&basketNormal, &basketNormal, &basketRotation);
 
-    //// ローカル座標での移動方向をワールド座標へ変換
-    //D3DXVECTOR3 worldMoveDirection;
+    // 正規化
+    D3DXVec3Normalize(&basketNormal, &basketNormal);
 
-    //D3DXVec3TransformNormal(&worldMoveDirection, &moveDirection, &rotationMatrix);
+    // カメラ基準の移動方向をかごの平面に投影
+    D3DXVECTOR3 projectedDirection = moveDirection - basketNormal * D3DXVec3Dot(&moveDirection, &basketNormal);
+
+    // 長さがほぼ0なら移動しない
+    if (D3DXVec3LengthSq(&projectedDirection) < 0.0001f)
+    {
+        return;
+    }
+
+    // 正規化
+    D3DXVec3Normalize(&projectedDirection, &projectedDirection);
 
     // 移動
-    m_AimPosition += moveDirection/*worldMoveDirection*/ * m_AimSpeed * deltaTime;
+    m_AimPosition += projectedDirection * m_AimSpeed * deltaTime;
 
     // 移動可能範囲を制限
     ClampAimPosition();
