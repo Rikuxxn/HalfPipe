@@ -111,9 +111,9 @@ void CThirdPersonCamera::Update(CameraTransform& transform)
 		}
 		else if (nTimeCount >1.5f)
 		{
-			transform.posV.x += (dirX) * 0.05f;
-			transform.posV.y += ((playerPos.y + 60.0f) - transform.posV.y) * 0.05f;
-			transform.posV.z += (dirZ) * 0.05f;
+			transform.posV.x += (dirX) * 0.04f;
+			transform.posV.y += ((playerPos.y + 20.0f) - transform.posV.y) * 0.04f;
+			transform.posV.z += (dirZ) * 0.04f;
 			
 			// íçéãì_
 			transform.posR = playerPos;
@@ -125,9 +125,9 @@ void CThirdPersonCamera::Update(CameraTransform& transform)
 			auto Aim = pPlayer->GetComponent<CAimComponent>();
 			D3DXVECTOR3 targetCenter = Aim->GetTargetCenter();
 
-			transform.posV.x += (dirX) * 0.001f;
-			transform.posV.y += ((playerPos.y + 100.0f) - transform.posV.y) * 0.1f;
-			transform.posV.z += (dirZ) * 0.001f;
+			transform.posV.x = playerPos.x + (playerPos.x - targetCenter.x) * 0.1f;
+			transform.posV.y = playerPos.y + (playerPos.y - targetCenter.y) * 0.08f;
+			transform.posV.z += (dirZ) * 0.1f;
 			
 			// íçéãì_
 			transform.posR = targetCenter;
