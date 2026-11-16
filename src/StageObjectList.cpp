@@ -1826,3 +1826,25 @@ void CLodgeBlock::Update(void)
 	// ステージオブジェクトの更新
 	CStageObject::Update();
 }
+
+CTreesBlock::CTreesBlock()
+{
+
+}
+
+CTreesBlock::~CTreesBlock()
+{
+
+}
+
+HRESULT CTreesBlock::Init(void)
+{
+
+	return S_OK;
+}
+
+void CTreesBlock::Update(void)
+{
+	// ステージオブジェクトの更新
+	CStageObject::Update();
+}

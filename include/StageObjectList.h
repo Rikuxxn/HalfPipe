@@ -621,4 +621,29 @@ public:
 private:
 };
 
+//*****************************************************************************
+// 木々ブロッククラス
+//*****************************************************************************
+class CTreesBlock : public CStageObject
+{
+public:
+    CTreesBlock();
+    ~CTreesBlock();
+
+    HRESULT Init(void) override;
+    void Update(void) override;
+
+    StageObjectType GetType(void) const override
+    {
+        return StageObjectType::Trees;
+    }
+
+    ColliderShape GetColliderShape(void) const override
+    {
+        return ColliderShape::Box;
+    }
+
+private:
+};
+
 #endif
