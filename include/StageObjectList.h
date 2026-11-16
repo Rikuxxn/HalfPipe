@@ -171,11 +171,6 @@ public:
         return StageObjectType::Basket;
     }
 
-    //GhostShape GetGhostShape(void) const override
-    //{
-    //    return GhostShape::Box;
-    //}
-
     ColliderShape GetColliderShape(void) const override
     {
         return ColliderShape::Box;
@@ -183,14 +178,30 @@ public:
 
 private:
 
+    // 得点サークル情報
+    struct PointCircleData
+    {
+        CPointCircleBlock* Object = nullptr;
+        D3DXVECTOR3 LocalOffset = INIT_VEC3;
+        float Scale = 1.0f;
+        int Point = 0;
+    };
+
+    // テクスチャ板ポリ情報
+    struct TexPolyData
+    {
+        CGameObject* Object = nullptr;
+        D3DXVECTOR3 LocalOffset = INIT_VEC3;
+        float Scale = 1.0f;
+        std::string TexturePath;
+        D3DXCOLOR Color = { 1.0f, 1.0f, 1.0f, 1.0f };
+    };
+
     // 溜めるかご位置・回転を更新
     void UpdateCollectBox(void);
 
     // 得点サークルの位置・回転を更新
     void UpdatePointCircles(void);
-
-    // テクスチャ用板ポリの位置・回転を更新
-    void UpdateTexPoly(void);
 
 private:
     static constexpr float CIRCLE_OFFSET_Y = 60.0f;
@@ -202,11 +213,11 @@ private:
     // 見えない溜める用かご
     std::vector<CCollectBoxBlock*> m_CollectBox;
 
-    // 得点サークル
-    std::vector<CPointCircleBlock*> m_PointCircles;
+    // 得点サークル情報
+    std::vector<PointCircleData> m_PointCircles;
 
-    // テクスチャ用板ポリ
-    std::vector<CGameObject*> m_TexPoly;
+    // 板ポリテクスチャ情報
+    std::vector<TexPolyData> m_TexPolys;
 
     // エイム可能な半径
     float m_AimRadius;

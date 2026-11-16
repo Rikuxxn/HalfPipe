@@ -299,7 +299,7 @@ CBasketBlock::~CBasketBlock()
 {
 	m_CollectBox.clear();
 	m_PointCircles.clear();
-	m_TexPoly.clear();
+	m_TexPolys.clear();
 }
 
 //=============================================================================
@@ -331,47 +331,67 @@ HRESULT CBasketBlock::Init(void)
 	// 溜めるかごの生成
 	CreateCollectBox(m_CenterPosition, 22.0f);
 
-	// 得点サークルの高さを設定
-	const D3DXVECTOR3 offsets[] =
+	// 得点サークルの配置情報
+	m_PointCircles =
 	{
-		D3DXVECTOR3(4.0f, m_HeightOffset, 2.0f),	// 50点
-		D3DXVECTOR3(0.0f, 0.0f, 0.0f),				// 30点 
-		D3DXVECTOR3(0.0f, -m_HeightOffset, 0.0f)	// 10点
+		{ nullptr, D3DXVECTOR3(4.0f,  m_HeightOffset,	10.0f), 1.8f, 50 },
+		{ nullptr, D3DXVECTOR3(0.0f,  0.0f,				0.0f), 5.6f, 30 },
+		{ nullptr, D3DXVECTOR3(0.0f, -m_HeightOffset,	1.0f), 9.0f, 10 }
 	};
 
-	// 50点
-	D3DXVECTOR3 pos50 = MatrixUtil::LocalToWorld(
-		localCenter + offsets[0],
-		transform->Position,
-		transform->Rotation,
-		transform->Scale
-	);
+	// 得点サークル生成
+	for (auto& data : m_PointCircles) 
+	{
+		D3DXVECTOR3 worldPosition = MatrixUtil::LocalToWorld(
+			localCenter + data.LocalOffset,
+			transform->Position,
+			transform->Rotation,
+			transform->Scale
+		);
 
-	// 30点
-	D3DXVECTOR3 pos30 = MatrixUtil::LocalToWorld(
-		localCenter + offsets[1],
-		transform->Position,
-		transform->Rotation,
-		transform->Scale
-	);
+		data.Object = CreatePointCircle(worldPosition, data.Scale, data.Point);
 
-	// 50点：中心
-	CreatePointCircle(pos50, 1.8f, 50);
+		if (!data.Object)
+		{
+			return E_FAIL;
+		}
+	}
 
-	//// 30点：中間
-	//CreatePointCircle(m_CenterPosition + offsets[1], 5.6f, 30);
+	// 板ポリテクスチャ配置情報
+	m_TexPolys =
+	{
+		{ nullptr, D3DXVECTOR3(4.0f,  m_HeightOffset, 10.0f), 1.3f,
+		  "data/TEXTURE/Target_50.png", DX::RED },
 
-	// 10点：外側
-	CreatePointCircle(m_CenterPosition + offsets[2], 9.0f, 10);
+		{ nullptr, D3DXVECTOR3(0.0f,  0.0f,           0.0f), 4.2f,
+		  "data/TEXTURE/Target_30.png", DX::GREEN },
+
+		{ nullptr, D3DXVECTOR3(0.0f, -m_HeightOffset, 1.0f), 7.4f,
+		  "data/TEXTURE/Target_10.png", DX::WHITE }
+	};
 
 	// テクスチャ用板ポリの生成
-	CreateTexPoly(pos50, 1.3f, "data/TEXTURE/Target_50.png", DX::RED);
+	for (auto& data : m_TexPolys)
+	{
+		D3DXVECTOR3 worldPosition = MatrixUtil::LocalToWorld(
+			localCenter + data.LocalOffset,
+			transform->Position,
+			transform->Rotation,
+			transform->Scale
+		);
 
-	//// テクスチャ用板ポリの生成
-	//CreateTexPoly(m_CenterPosition + offsets[1], 4.2f, "data/TEXTURE/Target_30.png", DX::GREEN);
+		data.Object = CreateTexPoly(
+			worldPosition,
+			data.Scale,
+			data.TexturePath,
+			data.Color
+		);
 
-	// テクスチャ用板ポリの生成
-	CreateTexPoly(m_CenterPosition + offsets[2], 7.4f, "data/TEXTURE/Target_10.png", DX::WHITE);
+		if (!data.Object)
+		{
+			return E_FAIL;
+		}
+	}
 
 	//=============================================================================
 	// エイム対象の設定
@@ -403,11 +423,8 @@ void CBasketBlock::Update(void)
 	// 溜めるかごの更新
 	UpdateCollectBox();
 
-	//// 得点サークルをかごに追従させる
-	//UpdatePointCircles();
-
-	//// テクスチャ用板ポリをかごに追従させる
-	//UpdateTexPoly();
+	// 得点サークルをかごに追従させる
+	UpdatePointCircles();
 }
 
 //=============================================================================
@@ -490,90 +507,55 @@ void CBasketBlock::UpdatePointCircles(void)
 	);
 
 	m_CenterRotation = transform->Rotation;
-
-	// 得点サークルの高さを設定
-	const D3DXVECTOR3 offsets[] = 
-	{ 
-		D3DXVECTOR3(0.0f, m_HeightOffset, 0.0f),	// 50点
-		D3DXVECTOR3(0.0f, 0.0f, 0.0f),				// 30点 
-		D3DXVECTOR3(0.0f, -m_HeightOffset, 0.0f)	// 10点
-	};
 	
 	// 得点サークルを更新
-	for (size_t i = 0; i < m_PointCircles.size(); ++i) 
+	for (auto& data : m_PointCircles)
 	{
-		auto* circle = m_PointCircles[i]; 
-
-		if (!circle)
+		if (!data.Object)
 		{
 			continue;
 		}
 
-		auto circleTransform = circle->GetComponent<CTransformComponent>();
+		auto circleTransform = data.Object->GetComponent<CTransformComponent>();
 
 		if (!circleTransform)
 		{
 			continue;
 		}
 
-		// 中心位置に高さのオフセットを加える 
-		circleTransform->Position = m_CenterPosition + offsets[i];
+		// ローカル座標からワールド座標へ変換
+		circleTransform->Position = MatrixUtil::LocalToWorld(
+			localCenter + data.LocalOffset,
+			transform->Position,
+			transform->Rotation,
+			transform->Scale
+		);
+
 		circleTransform->SetRotation(m_CenterRotation);
 	}
-}
 
-//=============================================================================
-// テクスチャ用板ポリの更新処理
-//=============================================================================
-void CBasketBlock::UpdateTexPoly(void)
-{
-	auto transform = GetComponent<CTransformComponent>();
-
-	if (!transform)
+	// テクスチャ板ポリ更新
+	for (auto& data : m_TexPolys)
 	{
-		return;
-	}
-
-	// かごの中心となるローカル座標
-	D3DXVECTOR3 localCenter(0.0f, CIRCLE_OFFSET_Y, 0.0f);
-
-	// 現在の位置・回転・拡縮からワールド座標を計算
-	m_CenterPosition = MatrixUtil::LocalToWorld(
-		localCenter,
-		transform->Position,
-		transform->Rotation,
-		transform->Scale
-	);
-
-	m_CenterRotation = transform->Rotation;
-
-	// 得点サークルの高さを設定
-	const D3DXVECTOR3 offsets[] =
-	{
-		D3DXVECTOR3(0.0f, m_HeightOffset, 0.0f),	// 50点
-		D3DXVECTOR3(0.0f, 0.0f, 0.0f),				// 30点 
-		D3DXVECTOR3(0.0f, -m_HeightOffset, 0.0f)	// 10点
-	};
-
-	// テクスチャ用板ポリを更新
-	for (size_t i = 0; i < m_TexPoly.size(); ++i)
-	{
-		auto* texPoly = m_TexPoly[i];
-		
-		if (!texPoly)
+		if (!data.Object)
 		{
 			continue;
 		}
 
-		auto polyTransform = texPoly->GetComponent<CTransformComponent>();
+		auto polyTransform = data.Object->GetComponent<CTransformComponent>();
 
 		if (!polyTransform)
 		{
 			continue;
 		}
 
-		// 中心位置に高さのオフセットを加える 
-		polyTransform->Position = m_CenterPosition + offsets[i];
+		polyTransform->Position = MatrixUtil::LocalToWorld(
+			localCenter + data.LocalOffset,
+			transform->Position,
+			transform->Rotation,
+			transform->Scale
+		);
+
 		polyTransform->SetRotation(m_CenterRotation);
 	}
 }
@@ -749,9 +731,6 @@ CPointCircleBlock* CBasketBlock::CreatePointCircle(
 	// 当たり判定更新
 	ghost->UpdateFromScale(transform->Scale);
 
-	// 得点サークルを保存
-	m_PointCircles.push_back(obj);
-
 	return obj;
 }
 
@@ -805,9 +784,6 @@ CGameObject* CBasketBlock::CreateTexPoly(const D3DXVECTOR3 pos, float scale, con
 		transform->Scale = D3DXVECTOR3(scale, scale, scale);
 		transform->SetRotation(m_CenterRotation);
 	}
-
-	// テクスチャ用板ポリを保存
-	m_TexPoly.push_back(obj);
 
 	return obj;
 }
