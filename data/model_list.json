@@ -124,5 +124,19 @@
     "name": "Lodge",
     "contact_type": "Rigid",
     "filepath": "data/MODELS/lodge.x"
+  },
+  {
+    "type": 18,
+    "category": "Model",
+    "name": "Trees",
+    "contact_type": "Rigid",
+    "filepath": "data/MODELS/trees.x"
+  },
+  {
+    "type": 19,
+    "category": "Model",
+    "name": "Slope",
+    "contact_type": "Rigid",
+    "filepath": "data/MODELS/slope.x"
   }
 ]
