@@ -22,7 +22,7 @@
 // コンストラクタ
 //=============================================================================
 CBall::CBall() : 
-    m_LifeTime      (3.0f),     // ボールの寿命（秒）
+    m_LifeTime      (6.0f),     // ボールの寿命（秒）
     m_ElapsedTime   (0.0f),     // 経過時間
 	m_IsThrown      (false),    // ボールを投げたか
     m_HasScored     (false),
@@ -157,6 +157,15 @@ void CBall::Update(void)
 
         // スプラインだったかを記録
         m_isPrevSprain = isSprain;
+    }
+
+    float dt = CManager::Instance()->GetTimeSystem()->GetDeltaTime();
+
+    m_LifeTime -= dt;
+
+    if (m_LifeTime <= 0.0f)
+    {
+        this->Destroy();
     }
 }
 

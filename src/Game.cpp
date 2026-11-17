@@ -149,7 +149,7 @@ HRESULT CGame::Init(void)
 		score->SetLayer(RenderLayer::UI);
 		score->SetTexture("data/TEXTURE/Num_01.png");
 		score->SetDigitSize(0.02f, 0.04f);
-		score->SetCountSpeed(100.0f);
+		score->SetCountSpeed(150.0f);
 		score->SetScore(0);
 	}
 
