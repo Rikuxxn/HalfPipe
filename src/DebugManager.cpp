@@ -17,6 +17,7 @@
 #include "Raycast.h"
 #include "Renderer.h"
 #include "Camera.h"
+#include "ShadowMap.h"
 
 
 namespace GuiParam
@@ -105,6 +106,14 @@ void CDebugManager::Draw(void)
     {
         jumpTiming->DrawDebugGUI();
     }
+
+    // シャドウマップの取得
+    auto shadow = CManager::Instance()->GetRenderer()->GetShadowMap();
+
+    ImGui::Image(
+        (ImTextureID)shadow->GetShadowTexture(),
+        ImVec2(256, 256)
+    );
 
     ImGui::End();
 
