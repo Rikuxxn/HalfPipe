@@ -39,6 +39,11 @@
 #include "NetWorkManager.h"
 #include "TimeSystem.h"
 #include <UIComponent.h>
+#include <ParticleEmitterComponent.h>
+#include <ParticleVelocityModule.h>
+#include <ParticleGravityModule.h>
+#include <ParticleSizeModule.h>
+#include <ParticleColorModule.h>
 
 
 
@@ -132,6 +137,82 @@ HRESULT CConnect::Init(void)
 			uiID->SetUVFrame(0, 3);
 		}
 	}
+
+	//=============================================================================
+	// 3D雪パーティクルオブジェクトの生成
+	//=============================================================================
+
+	auto snow = CreateObject();
+
+	snow->SetTag("SnowParticle3D");
+
+	auto transform = snow->AddComponent<CTransformComponent>();
+
+	transform->Position = { 0.0f, 1000.0f, -2200.0f };
+
+	auto emitter = snow->AddComponent<CParticleEmitterComponent>();
+
+	emitter->SetLayer(RenderLayer::Particle3D);
+
+	//=====================================
+	// 基本設定
+	//=====================================
+
+	// 3D空間
+	emitter->Space = ParticleSpace::Space3D;
+
+	// テクスチャ
+	emitter->SetTexture("data/TEXTURE/effect000.jpg");
+
+	// シェーダー
+	emitter->SetShader("data/Shader/Instancing/ParticleInstancing.fx");
+
+	// 発生設定
+	emitter->EmitMode = ParticleEmitMode::Loop;
+	emitter->SpawnShape = ParticleSpawnShape::Box;
+	emitter->EmitRate = 1;
+	emitter->SetPlay(true);
+
+	// 発生範囲
+	emitter->BoxSize = { 800.0f, 100.0f, 600.0f };
+
+	// 寿命
+	emitter->LifeTimeMin = 100;
+	emitter->LifeTimeMax = 300;
+
+	// サイズ
+	emitter->SizeMin = 5;
+	emitter->SizeMax = 10;
+
+	// 色
+	emitter->col = { 1, 1, 1, 1 };
+
+	//=====================================
+	// モジュール設定
+	//=====================================
+
+	// 初速度
+	auto velocity = emitter->AddModule<CParticleVelocityModule>();
+
+	velocity->VelocityMin = { -0.2f, -1.0f, -0.2f };
+	velocity->VelocityMax = { 0.2f, -0.3f,  0.2f };
+
+	// 重力・移動
+	auto gravity = emitter->AddModule<CParticleGravityModule>();
+
+	gravity->Gravity = { 0.0f, -0.008f, 0.0f };
+
+	// サイズ変化
+	auto size = emitter->AddModule<CParticleSizeModule>();
+
+	size->StartSize = 5.0f;
+	size->EndSize = 10.0f;
+
+	// 色・透明度変化
+	auto color = emitter->AddModule<CParticleColorModule>();
+
+	color->StartColor = { 1, 1, 1, 1 };
+	color->EndColor = { 1, 1, 1, 0 };
 
 	CNetworkManager* network = CManager::Instance()->GetNetworkManager();
 
