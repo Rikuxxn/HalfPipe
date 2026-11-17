@@ -276,14 +276,14 @@ void CConnect::Update(void)
 	//	pFade->StartFadeOut(Mode::Game);
 	//}
 
-//#ifdef _DEBUG
+#ifdef _DEBUG
 	if (pFade->GetFade() == CFade::FADE_NONE &&
 		pKeyboard->GetTrigger(DIK_T))
 	{
 		// ゲーム画面に移行
 		pFade->StartFadeOut(Mode::Game);
 	}
-//#endif
+#endif
 
 	// シーンの更新処理
 	CScene::Update();
