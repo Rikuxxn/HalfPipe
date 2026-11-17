@@ -53,7 +53,7 @@ public:
     // ‰e‚ð•`‰æ‚·‚é‚©
     bool IsShadowCaster(void) override
     {
-        return true;
+        return false;
     }
 
 private:
