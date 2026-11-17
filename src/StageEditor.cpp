@@ -96,6 +96,9 @@ HRESULT CStageEditor::Init(void)
 
     // サムネイルの生成
     GenerateThumbnails();
+#else
+    // モデルリストの読み込み
+    LoadModelList("data/model_list.json");
 #endif
     return S_OK;
 }
