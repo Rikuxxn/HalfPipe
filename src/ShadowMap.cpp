@@ -128,17 +128,18 @@ void CShadowMap::Begin(void)
 
     D3DXVECTOR3 center(0, 0, 0);
 
-    if (player)
-    {
-        auto transform = player->GetComponent<CTransformComponent>();
+    //if (player)
+    //{
+    //    auto transform = player->GetComponent<CTransformComponent>();
 
-        if (transform)
-        {
-            center = transform->Position;
-        }
-    }
+    //    if (transform)
+    //    {
+    //        center.x = transform->Position.x;
+    //        center.z = transform->Position.z;
+    //    }
+    //}
 
-    D3DXVECTOR3 lightPos = center - m_LightDir * distance;
+    D3DXVECTOR3 lightPos = D3DXVECTOR3(0.0f,1000.0f,0.0f);
 
     //---------------------------------
     // íçéãì_
@@ -165,10 +166,10 @@ void CShadowMap::Begin(void)
 
     D3DXMatrixOrthoLH(
         &m_Projection,
-        1200.0f,
-        1200.0f,
-        100.0f,
-        3000.0f);
+        1000.0f,
+        1000.0f,
+        10.0f,
+        2000.0f);
 }
 
 //=============================================================================

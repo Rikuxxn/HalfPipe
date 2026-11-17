@@ -69,7 +69,7 @@ struct VS_OUTPUT
     float3 Normal   : NORMAL0;
     float2 Tex      : TEXCOORD0;
     
-    float4 ShadowPos : TEXCOORD1;
+    float4 posInLVP : TEXCOORD1;
 };
 
 //=============================================================================
@@ -104,7 +104,7 @@ VS_OUTPUT VS_Main(VS_INPUT In)
 
     shadowPos = mul(shadowPos, LightProjection);
 
-    Out.ShadowPos = shadowPos;
+    Out.posInLVP = shadowPos;
     
     //----------------------------------
     // View
@@ -152,38 +152,39 @@ float4 PS_Main(VS_OUTPUT Out) : COLOR0
     //---------------------------------
     
     // “§Ž‹œŽZ
-    float3 shadowCoord =
-    Out.ShadowPos.xyz /
-    Out.ShadowPos.w;
+    float2 shadowMapUV =
+    Out.posInLVP.xy /
+    Out.posInLVP.w;
 
-    // -1`1 ¨ 0`1
-    shadowCoord.xy = shadowCoord.xy * 0.5f + 0.5f;
+    //// -1`1 ¨ 0`1
+    //shadowMapUV.xy = shadowMapUV.xy * 0.5f + 0.5f;
 
-    // Y”½“]
-    shadowCoord.y = 1.0f - shadowCoord.y;
+    //// Y”½“]
+    //shadowMapUV.y = 1.0f - shadowMapUV.y;
+    
+    shadowMapUV *= float2(0.5f, -0.5f);
+    shadowMapUV += 0.5f;
     
     //---------------------------------
     // Œ»Ý[“x
     //---------------------------------
 
-    float currentDepth = shadowCoord.z * 0.5f + 0.5f;
+    float zInLVP = Out.posInLVP.z / Out.posInLVP.w;
     
     //---------------------------------
     // ”ÍˆÍŠOƒ`ƒFƒbƒN
     //---------------------------------
 
-    if (shadowCoord.x >= 0.0f &&
-        shadowCoord.x <= 1.0f &&
-        shadowCoord.y >= 0.0f &&
-        shadowCoord.y <= 1.0f &&
-        currentDepth >= 0.0f &&
-        currentDepth <= 1.0f)
+    if (shadowMapUV.x > 0.0f &&
+        shadowMapUV.x < 1.0f &&
+        shadowMapUV.y > 0.0f &&
+        shadowMapUV.y < 1.0f)
     {
         //---------------------------------
         // ShadowMap[“x
         //---------------------------------
 
-        float shadowDepth = tex2D(ShadowSampler, shadowCoord.xy).r;
+        float shadowMap = tex2D(ShadowSampler, shadowMapUV).r;
 
         //---------------------------------
         // ƒoƒCƒAƒX
@@ -199,7 +200,7 @@ float4 PS_Main(VS_OUTPUT Out) : COLOR0
         // ‰e”»’è
         //---------------------------------
 
-        if (currentDepth > shadowDepth + bias)
+        if (zInLVP > shadowMap)
         {
             shadow = 0.5f;
         }

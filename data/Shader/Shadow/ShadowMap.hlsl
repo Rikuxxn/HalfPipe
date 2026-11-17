@@ -24,7 +24,7 @@ struct VS_INPUT
 struct VS_OUTPUT
 {
     float4 Position : POSITION0;
-    float Depth : TEXCOORD0;
+    float4 Tex : TEXCOORD0;
 };
 
 //*********************************************************************
@@ -52,7 +52,7 @@ VS_OUTPUT VSMain(VS_INPUT input)
 
     output.Position = pos;
 
-    output.Depth = pos.z / pos.w;
+    output.Tex = output.Position;
 
     return output;
 }
@@ -83,7 +83,8 @@ float4 EncodeDepth(float depth)
 //*********************************************************************
 float4 PSMain(VS_OUTPUT input) : COLOR0
 {
-    float depth = input.Depth * 0.5f + 0.5f;
+    float depth = input.Tex.z / input.Tex.w;
+    
 
     return float4(
         depth,
