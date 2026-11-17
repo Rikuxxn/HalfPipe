@@ -335,7 +335,10 @@ HRESULT CBasketBlock::Init(void)
 	m_PointCircles =
 	{
 		{ nullptr, D3DXVECTOR3(4.0f,  m_HeightOffset,	10.0f), 1.8f, 50 },
-		{ nullptr, D3DXVECTOR3(0.0f,  0.0f,				0.0f), 5.6f, 30 },
+		{ nullptr, D3DXVECTOR3(-10.0f,  m_HeightOffset,	-10.0f), 1.8f, 50 },
+		{ nullptr, D3DXVECTOR3(12.0f,  m_HeightOffset,	0.0f), 1.8f, 50 },
+		{ nullptr, D3DXVECTOR3(-12.0f,  0.0f,			12.0f), 1.8f, 30 },
+		{ nullptr, D3DXVECTOR3(0.0f,  0.0f,				0.0f), 1.8f, 30 },
 		{ nullptr, D3DXVECTOR3(0.0f, -m_HeightOffset,	1.0f), 9.0f, 10 }
 	};
 
@@ -363,8 +366,17 @@ HRESULT CBasketBlock::Init(void)
 		{ nullptr, D3DXVECTOR3(4.0f,  m_HeightOffset, 10.0f), 1.3f,
 		  "data/TEXTURE/Target_50.png", DX::RED },
 
-		{ nullptr, D3DXVECTOR3(0.0f,  0.0f,           0.0f), 4.2f,
-		  "data/TEXTURE/Target_30.png", DX::GREEN },
+		{ nullptr, D3DXVECTOR3(-10.0f,  m_HeightOffset, -10.0f), 1.3f,
+		  "data/TEXTURE/Target_50.png", DX::RED },
+
+		{ nullptr, D3DXVECTOR3(12.0f,  m_HeightOffset, 0.0f), 1.3f,
+		  "data/TEXTURE/Target_50.png", DX::RED },
+
+		{ nullptr, D3DXVECTOR3(-12.0f,  0.0f,           12.0f), 1.3f,
+		  "data/TEXTURE/Target_30_1.png", DX::GREEN },
+
+		{ nullptr, D3DXVECTOR3(0.0f,  0.0f,           0.0f), 1.3f,
+		  "data/TEXTURE/Target_30_1.png", DX::GREEN },
 
 		{ nullptr, D3DXVECTOR3(0.0f, -m_HeightOffset, 1.0f), 7.4f,
 		  "data/TEXTURE/Target_10.png", DX::WHITE }
