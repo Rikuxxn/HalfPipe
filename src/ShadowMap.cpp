@@ -136,10 +136,11 @@ void CShadowMap::Begin(void)
     //    {
     //        center.x = transform->Position.x;
     //        center.z = transform->Position.z;
+    //        center.z = transform->Position.z;
     //    }
     //}
 
-    D3DXVECTOR3 lightPos = D3DXVECTOR3(0.0f,1000.0f,0.0f);
+    D3DXVECTOR3 lightPos = D3DXVECTOR3(0.0f, 1000.0f, 0.0f)/*center + m_LightDir * distance*/;
 
     //---------------------------------
     // íçéãì_
