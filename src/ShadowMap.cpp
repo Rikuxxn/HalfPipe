@@ -124,13 +124,39 @@ void CShadowMap::Begin(void)
     float distance = 800.0f;
 
     // プレイヤーの取得
-    auto player = CManager::Instance()->GetSceneManager()->GetScene()->FindGameObject("Player");
+    CPlayer* pPlayer = nullptr;
+
+    // シーンの取得
+    auto scene = CManager::Instance()->GetSceneManager()->GetScene();
+
+    if (!scene)
+    {
+        return;
+    }
+
+    // ローカルプレイヤーを検索
+    for (auto& object : scene->GetObjects())
+    {
+        auto player = dynamic_cast<CPlayer*>(object.get());
+
+        if (player && player->IsLocalPlayer())
+        {
+            pPlayer = player;
+            break;
+        }
+    }
+
+    if (!pPlayer)
+    {
+        return;
+    }
 
     D3DXVECTOR3 center(0, 0, 0);
 
-    if (player)
+    //  ローカルプレイヤーだったら
+    if (pPlayer != nullptr && pPlayer->IsLocalPlayer())
     {
-        auto transform = player->GetComponent<CTransformComponent>();
+        auto transform = pPlayer->GetComponent<CTransformComponent>();
 
         if (transform)
         {
