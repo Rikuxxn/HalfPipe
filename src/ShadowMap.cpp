@@ -128,19 +128,19 @@ void CShadowMap::Begin(void)
 
     D3DXVECTOR3 center(0, 0, 0);
 
-    //if (player)
-    //{
-    //    auto transform = player->GetComponent<CTransformComponent>();
+    if (player)
+    {
+        auto transform = player->GetComponent<CTransformComponent>();
 
-    //    if (transform)
-    //    {
-    //        center.x = transform->Position.x;
-    //        center.z = transform->Position.z;
-    //        center.z = transform->Position.z;
-    //    }
-    //}
+        if (transform)
+        {
+            center.x = transform->Position.x;
+            center.z = transform->Position.z;
+            center.z = transform->Position.z;
+        }
+    }
 
-    D3DXVECTOR3 lightPos = D3DXVECTOR3(0.0f, 1000.0f, 0.0f)/*center + m_LightDir * distance*/;
+    D3DXVECTOR3 lightPos = center - m_LightDir * distance;
 
     //---------------------------------
     // íçéãì_
