@@ -96,24 +96,24 @@ void CDebugManager::Draw(void)
 		pCamera->DrawDebugGUI();
 	}
 
-    //-------------------------------------------
-    // ジャンプタイミング
-    //-------------------------------------------
+    ////-------------------------------------------
+    //// ジャンプタイミング
+    ////-------------------------------------------
 
-    auto jumpTiming = scene->FindGameObject("jumpTiming");
+    //auto jumpTiming = scene->FindGameObject("jumpTiming");
 
-    if (jumpTiming)
-    {
-        jumpTiming->DrawDebugGUI();
-    }
+    //if (jumpTiming)
+    //{
+    //    jumpTiming->DrawDebugGUI();
+    //}
 
-    // シャドウマップの取得
-    auto shadow = CManager::Instance()->GetRenderer()->GetShadowMap();
+    //// シャドウマップの取得
+    //auto shadow = CManager::Instance()->GetRenderer()->GetShadowMap();
 
-    ImGui::Image(
-        (ImTextureID)shadow->GetShadowTexture(),
-        ImVec2(256, 256)
-    );
+    //ImGui::Image(
+    //    (ImTextureID)shadow->GetShadowTexture(),
+    //    ImVec2(256, 256)
+    //);
 
     ImGui::End();
 
