@@ -435,9 +435,9 @@ bool CInputJoypad::GetAnyTrigger(void)
 	return false;
 }
 //=============================================================================
-// スティック処理
+// 左スティック取得処理
 //=============================================================================
-bool CInputJoypad::GetStick(void)
+bool CInputJoypad::GetStickL(void)
 {
 	bool joykey = false;
 	//真ん中じゃなかったら
@@ -445,6 +445,22 @@ bool CInputJoypad::GetStick(void)
 		m_joyKeyState.Gamepad.sThumbLX <= -100 ||
 		m_joyKeyState.Gamepad.sThumbLY >= 100 ||
 		m_joyKeyState.Gamepad.sThumbLY <= -100)
+	{
+		joykey = true;
+	}
+	return joykey;
+}
+//=============================================================================
+// 右スティック取得処理
+//=============================================================================
+bool CInputJoypad::GetStickR(void)
+{
+	bool joykey = false;
+	//真ん中じゃなかったら
+	if (m_joyKeyState.Gamepad.sThumbRX >= 100 ||
+		m_joyKeyState.Gamepad.sThumbRX <= -100 ||
+		m_joyKeyState.Gamepad.sThumbRY >= 100 ||
+		m_joyKeyState.Gamepad.sThumbRY <= -100)
 	{
 		joykey = true;
 	}

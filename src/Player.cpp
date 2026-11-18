@@ -1065,13 +1065,13 @@ CPlayer::InputData CPlayer::GatherInput(void)
 	}
 
 	//---------------------------
-	// ゲームパッド入力(左スティック)
+	// ゲームパッド入力(右スティック)
 	//---------------------------
-	if (pJoypad->GetStick() && pStick)
+	if (pJoypad->GetStickR() && pStick)
 	{
 		// 左スティックの取得
-		float stickX = pStick->Gamepad.sThumbLX;
-		float stickY = pStick->Gamepad.sThumbLY;
+		float stickX = pStick->Gamepad.sThumbRX;
+		float stickY = pStick->Gamepad.sThumbRY;
 		float magnitude = sqrtf(stickX * stickX + stickY * stickY);
 
 		if (magnitude >= CInputJoypad::DEADZONE)

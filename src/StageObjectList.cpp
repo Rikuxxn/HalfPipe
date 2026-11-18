@@ -492,7 +492,7 @@ void CBasketBlock::UpdateCollectBox(void)
 		{
 			continue;
 		}
-
+		
 		// 中心位置に高さのオフセットを加える 
 		circleTransform->Position = m_CenterPosition + offsets[i];
 		circleTransform->SetRotation(m_CenterRotation);

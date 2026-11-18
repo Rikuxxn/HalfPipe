@@ -117,7 +117,8 @@ public:
 	bool GetPressR2(void);
 	bool GetAnyPress(void);
 	bool GetAnyTrigger(void);
-	bool GetStick(void);
+	bool GetStickL(void);
+	bool GetStickR(void);
 	bool CheckCommand(const std::vector<StickDir>& command, int maxFrame = DEFAULT_FRAME);
 	StickDir GetDirection(float x, float y);
 	XINPUT_STATE* GetStickAngle(void);
