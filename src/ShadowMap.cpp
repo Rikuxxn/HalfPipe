@@ -161,7 +161,7 @@ void CShadowMap::Begin(void)
         if (transform)
         {
             center.x = transform->Position.x;
-            center.z = transform->Position.z;
+            center.y = transform->Position.y;
             center.z = transform->Position.z;
         }
     }
@@ -193,10 +193,10 @@ void CShadowMap::Begin(void)
 
     D3DXMatrixOrthoLH(
         &m_Projection,
-        1000.0f,
-        1000.0f,
+        5000.0f,
+        5000.0f,
         10.0f,
-        2000.0f);
+        3000.0f);
 }
 
 //=============================================================================
