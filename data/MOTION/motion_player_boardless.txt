@@ -9,7 +9,7 @@ SCRIPT			# この行は絶対消さないこと！
 #------------------------------------------------------------------------------
 # モデル数
 #------------------------------------------------------------------------------
-NUM_MODEL = 13
+NUM_MODEL = 15
 
 #------------------------------------------------------------------------------
 # モデルファイル名
@@ -25,14 +25,16 @@ MODEL_FILENAME = data/MODELS/PLAYER_PARTS/07_underarm_left.x	# [7]左腕
 MODEL_FILENAME = data/MODELS/PLAYER_PARTS/08_hand_left.x		# [8]左手
 MODEL_FILENAME = data/MODELS/PLAYER_PARTS/09_topleg_right.x		# [9]右太腿
 MODEL_FILENAME = data/MODELS/PLAYER_PARTS/10_underleg_right.x	# [10]右腿
-MODEL_FILENAME = data/MODELS/PLAYER_PARTS/11_topleg_left.x		# [11]左太腿
-MODEL_FILENAME = data/MODELS/PLAYER_PARTS/12_underleg_left.x	# [12]左腿
+MODEL_FILENAME = data/MODELS/PLAYER_PARTS/44_foot_right.x		# [11]右足
+MODEL_FILENAME = data/MODELS/PLAYER_PARTS/11_topleg_left.x		# [12]左太腿
+MODEL_FILENAME = data/MODELS/PLAYER_PARTS/12_underleg_left.x	# [13]左腿
+MODEL_FILENAME = data/MODELS/PLAYER_PARTS/44_foot_left.x		# [14]左足
 
 #------------------------------------------------------------------------------
 # キャラクター情報
 #------------------------------------------------------------------------------
 CHARACTERSET
-	NUM_PARTS = 13					# パーツ数
+	NUM_PARTS = 15					# パーツ数
 	MOVE = 3.0						# 移動量
 	JUMP = 11.75					# ジャンプ量
 	RADIUS = 20.0					# 半径
@@ -116,19 +118,33 @@ CHARACTERSET
 	END_PARTSSET
 		
 	PARTSSET
-		INDEX = 11					# 左太腿
+		INDEX = 11					# 右足
+		PARENT = 10					# (親)右脚
+		POS = 0.0 -18.0 0.0
+		ROT = 0.0 0.0 0.0
+	END_PARTSSET
+
+	PARTSSET
+		INDEX = 12					# 左太腿
 		PARENT = 0					# (親)腰
 		POS = 3.3 -4.8 0.0
 		ROT = 0.0 0.0 0.0
 	END_PARTSSET
 	
 	PARTSSET
-		INDEX = 12					# 左腿
-		PARENT = 11					# (親)左太腿
+		INDEX = 13					# 左腿
+		PARENT = 12					# (親)左太腿
 		POS = 0.5 -8.6 -0.3
 		ROT = 0.0 0.0 0.0
 	END_PARTSSET
 		
+	PARTSSET
+		INDEX = 14					# 左足
+		PARENT = 13					# (親)左腿
+		POS = 0.0 -18.0 0.0
+		ROT = 0.0 0.0 0.0
+	END_PARTSSET
+
 END_CHARACTERSET
 
 #------------------------------------------------------------------------------
