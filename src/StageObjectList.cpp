@@ -692,6 +692,9 @@ CPointCircleBlock* CBasketBlock::CreatePointCircle(
 		return nullptr;
 	}
 
+	// ポインタの設定
+	obj->SetBasket(this);
+
 	// トランスフォームコンポーネントの取得
 	auto transform = obj->AddComponent<CTransformComponent>();
 
@@ -802,6 +805,38 @@ CGameObject* CBasketBlock::CreateTexPoly(const D3DXVECTOR3 pos, float scale, con
 	}
 
 	return obj;
+}
+
+//=============================================================================
+// 得点サークルと対応するテクスチャを削除
+//=============================================================================
+void CBasketBlock::RemovePointCircle(CPointCircleBlock* pointCircle)
+{
+	if (!pointCircle)
+	{
+		return;
+	}
+
+	for (size_t i = 0; i < m_PointCircles.size(); ++i)
+	{
+		if (m_PointCircles[i].Object != pointCircle)
+		{
+			continue;
+		}
+
+		// 対応するテクスチャ板ポリを取得
+		CGameObject* texPoly = m_TexPolys[i].Object;
+
+		// それぞれのオブジェクトを削除
+		pointCircle->Destroy();
+		texPoly->Destroy();
+
+		// ポインタを無効化
+		m_PointCircles[i].Object = nullptr;
+		m_TexPolys[i].Object = nullptr;
+
+		break;
+	}
 }
 
 CRightBlock::CRightBlock()
@@ -1045,7 +1080,9 @@ void CRiftPoleBlock::Update(void)
 // 得点サークルのコンストラクタ
 //=============================================================================
 CPointCircleBlock::CPointCircleBlock() :
-	m_Point (0) // 得点
+	m_Basket (nullptr),
+	m_Point (0), // 得点
+	m_IsScored (false)// 得点済みフラグ
 {
 
 }
@@ -1118,6 +1155,15 @@ void CPointCircleBlock::OnTriggerEnter(CGameObject* other)
 		return;
 	}
 
+	// すでに得点済みなら処理しない
+	if (m_IsScored)
+	{
+		return;
+	}
+
+	// 得点済みにする
+	m_IsScored = true;
+
 	// シーンの取得
 	auto scene = CManager::Instance()->GetSceneManager()->GetScene();
 
@@ -1126,28 +1172,17 @@ void CPointCircleBlock::OnTriggerEnter(CGameObject* other)
 		return;
 	}
 
-	// ボールの得点済み状態を取得
-	auto ball = scene->FindGameObject<CBall>("Ball");
-
-	if (!ball)
-	{
-		return;
-	}
-
-	//// すでに得点していたら無視
-	//if (ball->HasScored())
-	//{
-	//	return;
-	//}
-
-	//// 得点済みにする
-	//ball->SetScored(true);
-
-	// このサークルの得点を取得
-	int point = GetPoint();
-
 	// 得点加算
-	AddScore(GetPoint());
+	AddScore(m_Point);
+
+	// 50点・30点なら削除
+	if (m_Point == 50 || m_Point == 30)
+	{
+		if (m_Basket)
+		{
+			m_Basket->RemovePointCircle(this);
+		}
+	}
 }
 
 //=============================================================================

@@ -157,6 +157,9 @@ public:
         const std::string texPath,
         const D3DXCOLOR col);
 
+    // 得点サークルと対応するテクスチャを削除
+    void RemovePointCircle(CPointCircleBlock* pointCircle);
+
     // 中心位置取得
     const D3DXVECTOR3& GetCenterPosition(void) const { return m_CenterPosition; }
 
@@ -344,11 +347,19 @@ public:
     // 得点設定
     void SetPoint(int point) { m_Point = point; }
 
-    // 得点取得
-    int GetPoint(void) const { return m_Point; }
+    void SetBasket(CBasketBlock* basket)
+    {
+        m_Basket = basket;
+    }
+
+    // 得点済みか取得
+    bool HasScored(void) const { return m_IsScored; }
 
 private:
+
+    CBasketBlock* m_Basket;
     int m_Point;    // 得点
+    bool m_IsScored;    // 得点済みフラグ
 };
 
 //*****************************************************************************
