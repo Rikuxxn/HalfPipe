@@ -145,7 +145,7 @@ void CRenderTarget::Begin(void)
         0,
         nullptr,
         D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER,
-        0x00000000,
+        D3DCOLOR_RGBA(255, 255, 255, 255),
         1.0f,
         0);
 }
