@@ -963,9 +963,9 @@ void CStageEditor::PickObject(void)
     {
         m_SelectedObject = stage;
 
-        OutputDebugStringA(
-            (stage->GetTag() + "\n").c_str()
-        );
+        //OutputDebugStringA(
+        //    (stage->GetTag() + "\n").c_str()
+        //);
     }
     else
     {

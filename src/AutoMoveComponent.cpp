@@ -103,10 +103,10 @@ void CAutoMoveComponent::AddMovePoint(const D3DXVECTOR3& position, MovePointType
 
 	m_MovePoints.push_back(point);
 
-#ifdef _DEBUG
-	// デバッグ用自動移動ポイントモデルの生成
-	CreateMovePointObject(position, type);
-#endif
+//#ifdef _DEBUG
+//	// デバッグ用自動移動ポイントモデルの生成
+//	CreateMovePointObject(position, type);
+//#endif
 }
 
 //=============================================================================
@@ -923,10 +923,10 @@ void CAutoMoveComponent::LoadMovePoint(const char* filename)
 
 			m_MovePoints.push_back(point);
 
-#ifdef _DEBUG
-			// ポイントデバッグ表示用モデルの生成
-			CreateMovePointObject(position, type);
-#endif
+//#ifdef _DEBUG
+//			// ポイントデバッグ表示用モデルの生成
+//			CreateMovePointObject(position, type);
+//#endif
 		}
 	}
 }
