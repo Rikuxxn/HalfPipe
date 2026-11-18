@@ -402,90 +402,90 @@ void CManager::Draw(void)
 	// グリッドの描画
 	m_pDebugRenderer->Draw();
 
-	//---------------------------------
-	// プレイヤーのコライダー描画
-	//---------------------------------
-	if (m_pSceneManager)
-	{
-		// シーン内のプレイヤーを取得する
-		auto players = m_pSceneManager->GetScene()->FindGameObjects<CPlayer>();
+	////---------------------------------
+	//// プレイヤーのコライダー描画
+	////---------------------------------
+	//if (m_pSceneManager)
+	//{
+	//	// シーン内のプレイヤーを取得する
+	//	auto players = m_pSceneManager->GetScene()->FindGameObjects<CPlayer>();
 
-		for (auto* player : players)
-		{
-			if (!player)
-			{
-				continue;
-			}
+	//	for (auto* player : players)
+	//	{
+	//		if (!player)
+	//		{
+	//			continue;
+	//		}
 
-			// 剛体コンポーネントを取得
-			auto rigid = player->GetComponent<CRigidBodyComponent>();
+	//		// 剛体コンポーネントを取得
+	//		auto rigid = player->GetComponent<CRigidBodyComponent>();
 
-			if (!rigid)
-			{
-				continue;
-			}
+	//		if (!rigid)
+	//		{
+	//			continue;
+	//		}
 
-			// 剛体を取得
-			btRigidBody* body = rigid->GetBody();
+	//		// 剛体を取得
+	//		btRigidBody* body = rigid->GetBody();
 
-			if (!body)
-			{
-				continue;
-			}
+	//		if (!body)
+	//		{
+	//			continue;
+	//		}
 
-			// コライダーを描画
-			m_pDynamicsWorld->debugDrawObject(
-				body->getWorldTransform(),
-				body->getCollisionShape(),
-				btVector3(0.0f, 1.0f, 0.3f));
-		}
-	}
+	//		// コライダーを描画
+	//		m_pDynamicsWorld->debugDrawObject(
+	//			body->getWorldTransform(),
+	//			body->getCollisionShape(),
+	//			btVector3(0.0f, 1.0f, 0.3f));
+	//	}
+	//}
 
-	// Bullet Physicsコライダーデバッグ描画(選択中のオブジェクトのみ)
-	if (m_pStageManager)
-	{
-		auto editor = m_pStageManager->GetStageEditor();
+	//// Bullet Physicsコライダーデバッグ描画(選択中のオブジェクトのみ)
+	//if (m_pStageManager)
+	//{
+	//	auto editor = m_pStageManager->GetStageEditor();
 
-		if (editor)
-		{
-			auto selected = editor->GetSelectedObject();
+	//	if (editor)
+	//	{
+	//		auto selected = editor->GetSelectedObject();
 
-			if (selected)
-			{
-				auto rigid = selected->GetComponent<CRigidBodyComponent>();
-				auto ghost = selected->GetComponent<CGhostObjectComponent>();
+	//		if (selected)
+	//		{
+	//			auto rigid = selected->GetComponent<CRigidBodyComponent>();
+	//			auto ghost = selected->GetComponent<CGhostObjectComponent>();
 
-				if (rigid)
-				{
-					btRigidBody* body = rigid->GetBody();
+	//			if (rigid)
+	//			{
+	//				btRigidBody* body = rigid->GetBody();
 
-					if (body)
-					{
-						m_pDynamicsWorld->debugDrawObject(
-							body->getWorldTransform(),
-							body->getCollisionShape(),
-							btVector3(0.0f, 1.0f, 0.3f));
-					}
-				}
+	//				if (body)
+	//				{
+	//					m_pDynamicsWorld->debugDrawObject(
+	//						body->getWorldTransform(),
+	//						body->getCollisionShape(),
+	//						btVector3(0.0f, 1.0f, 0.3f));
+	//				}
+	//			}
 
-				if (ghost)
-				{
-					btGhostObject* ghostObject = ghost->GetGhost();
+	//			if (ghost)
+	//			{
+	//				btGhostObject* ghostObject = ghost->GetGhost();
 
-					if (ghostObject)
-					{
-						m_pDynamicsWorld->debugDrawObject(
-							ghostObject->getWorldTransform(),
-							ghostObject->getCollisionShape(),
-							btVector3(
-								1.0f,
-								0.5f,
-								0.0f));
-					}
-				}
-			}
-		}
-	}
+	//				if (ghostObject)
+	//				{
+	//					m_pDynamicsWorld->debugDrawObject(
+	//						ghostObject->getWorldTransform(),
+	//						ghostObject->getCollisionShape(),
+	//						btVector3(
+	//							1.0f,
+	//							0.5f,
+	//							0.0f));
+	//				}
+	//			}
+	//		}
+	//	}
+	//}
 
 	if (m_pTriggerObjectManager)
 	{
