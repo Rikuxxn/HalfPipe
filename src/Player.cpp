@@ -214,7 +214,7 @@ HRESULT CPlayer::Init(void)
 		// ”­¶Ý’è
 		emitter->EmitMode = ParticleEmitMode::Loop;
 		emitter->SpawnShape = ParticleSpawnShape::Point;
-		emitter->EmitRate = 1;
+		emitter->EmitRate = 2;
 
 		// Žõ–½
 		emitter->LifeTimeMin = 20;
@@ -255,7 +255,7 @@ HRESULT CPlayer::Init(void)
 		// F•Ï‰»
 		auto color = emitter->AddModule<CParticleColorModule>();
 
-		color->StartColor = { 0.2f, 0.2f, 0.7f, 0.7f };
+		color->StartColor = { 0.2f, 0.2f, 0.7f, 0.9f };
 		color->EndColor = { 0.2f, 0.2f, 0.7f, 0.0f };
 	}
 
