@@ -22,7 +22,6 @@ public:
 	~CThrowComponent() = default;
 
 	HRESULT Init	(void) override;
-	void	Update	(void) override;
 
 	// “Š±”‚Ìİ’è
 	void SetThrowNum(int num) { m_ThrowCount = num; }

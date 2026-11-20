@@ -442,51 +442,51 @@ void CManager::Draw(void)
 	//	}
 	//}
 
-	//// Bullet Physicsコライダーデバッグ描画(選択中のオブジェクトのみ)
-	//if (m_pStageManager)
-	//{
-	//	auto editor = m_pStageManager->GetStageEditor();
+	// Bullet Physicsコライダーデバッグ描画(選択中のオブジェクトのみ)
+	if (m_pStageManager)
+	{
+		auto editor = m_pStageManager->GetStageEditor();
 
-	//	if (editor)
-	//	{
-	//		auto selected = editor->GetSelectedObject();
+		if (editor)
+		{
+			auto selected = editor->GetSelectedObject();
 
-	//		if (selected)
-	//		{
-	//			auto rigid = selected->GetComponent<CRigidBodyComponent>();
-	//			auto ghost = selected->GetComponent<CGhostObjectComponent>();
+			if (selected)
+			{
+				auto rigid = selected->GetComponent<CRigidBodyComponent>();
+				auto ghost = selected->GetComponent<CGhostObjectComponent>();
 
-	//			if (rigid)
-	//			{
-	//				btRigidBody* body = rigid->GetBody();
+				if (rigid)
+				{
+					btRigidBody* body = rigid->GetBody();
 
-	//				if (body)
-	//				{
-	//					m_pDynamicsWorld->debugDrawObject(
-	//						body->getWorldTransform(),
-	//						body->getCollisionShape(),
-	//						btVector3(0.0f, 1.0f, 0.3f));
-	//				}
-	//			}
+					if (body)
+					{
+						m_pDynamicsWorld->debugDrawObject(
+							body->getWorldTransform(),
+							body->getCollisionShape(),
+							btVector3(0.0f, 1.0f, 0.3f));
+					}
+				}
 
-	//			if (ghost)
-	//			{
-	//				btGhostObject* ghostObject = ghost->GetGhost();
+				if (ghost)
+				{
+					btGhostObject* ghostObject = ghost->GetGhost();
 
-	//				if (ghostObject)
-	//				{
-	//					m_pDynamicsWorld->debugDrawObject(
-	//						ghostObject->getWorldTransform(),
-	//						ghostObject->getCollisionShape(),
-	//						btVector3(
-	//							1.0f,
-	//							0.5f,
-	//							0.0f));
-	//				}
-	//			}
-	//		}
-	//	}
-	//}
+					if (ghostObject)
+					{
+						m_pDynamicsWorld->debugDrawObject(
+							ghostObject->getWorldTransform(),
+							ghostObject->getCollisionShape(),
+							btVector3(
+								1.0f,
+								0.5f,
+								0.0f));
+					}
+				}
+			}
+		}
+	}
 
 	if (m_pTriggerObjectManager)
 	{

@@ -32,6 +32,8 @@ private:
 public:
     CTransformComponent()
     {
+        SetUpdateEnabled(false);
+
         Position    = { 0, 0, 0 };
         Rotation    = { 0, 0, 0 };
         Scale       = { 1, 1, 1 };

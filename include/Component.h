@@ -18,12 +18,14 @@ class CComponent
 protected:
     CGameObject* m_pOwner;
     bool m_bActive;
+    bool m_bUpdateEnabled;
 
 public:
     CComponent()
     {
         m_pOwner = nullptr;
         m_bActive = true;
+        m_bUpdateEnabled = true;
     }
 
     virtual ~CComponent() = default;
@@ -35,12 +37,14 @@ public:
     virtual void    Update (void) {}
     virtual void    Draw   (void) {}
 
-    void SetOwner   (CGameObject* pOwner)   { m_pOwner = pOwner; }
-    void SetActive  (bool active)           { m_bActive = active; }
+    void SetOwner           (CGameObject* pOwner)   { m_pOwner = pOwner; }
+    void SetActive          (bool active)           { m_bActive = active; }
+    void SetUpdateEnabled   (bool enable)           { m_bUpdateEnabled = enable; }
 
     CGameObject* GetOwner(void) const { return m_pOwner; }
 
     bool IsActive(void) const { return m_bActive; }
+    bool IsUpdateEnabled(void) const { return m_bUpdateEnabled; }
 
     //--------------------------------------
     // Imguiのデバッグ描画

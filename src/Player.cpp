@@ -422,9 +422,6 @@ void CPlayer::Update(void)
 	// デルタタイムの取得
 	float dt = CManager::Instance()->GetTimeSystem()->GetDeltaTime();
 
-	// ハーフパイプの面に合わせた姿勢制御
-	UpdateSurfaceAlignment(dt);
-
 	//============================================================
 	// LocalPlayerなら入力をサーバーへ送信
 	//============================================================
@@ -445,6 +442,9 @@ void CPlayer::Update(void)
 	{
 		return;
 	}
+
+	// ハーフパイプの面に合わせた姿勢制御
+	UpdateSurfaceAlignment(dt);
 
 	// カメラの取得
 	CCamera* pCamera = CManager::Instance()->GetCamera();

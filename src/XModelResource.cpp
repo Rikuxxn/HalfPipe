@@ -219,9 +219,7 @@ btTriangleMesh* CXModelResource::CreateBulletTriangleMesh(void) const
     BYTE* vertexData = nullptr;
     void* indexData = nullptr;
 
-    //=========================================================
-    // 頂点バッファをロック
-    //=========================================================
+    // 頂点バッファ
     HRESULT hr = Mesh->LockVertexBuffer(
         D3DLOCK_READONLY,
         reinterpret_cast<void**>(&vertexData)
@@ -233,9 +231,7 @@ btTriangleMesh* CXModelResource::CreateBulletTriangleMesh(void) const
         return nullptr;
     }
 
-    //=========================================================
-    // インデックスバッファをロック
-    //=========================================================
+    // インデックスバッファ
     hr = Mesh->LockIndexBuffer(
         D3DLOCK_READONLY,
         &indexData
@@ -244,20 +240,18 @@ btTriangleMesh* CXModelResource::CreateBulletTriangleMesh(void) const
     if (FAILED(hr))
     {
         Mesh->UnlockVertexBuffer();
-
         delete triangleMesh;
         return nullptr;
     }
 
-    //=========================================================
-    // Index Format
-    //=========================================================
+    // インデックス形式
     ComPtr<IDirect3DIndexBuffer9> indexBuffer;
 
     hr = Mesh->GetIndexBuffer(indexBuffer.GetAddressOf());
 
     if (FAILED(hr))
     {
+        Mesh->UnlockIndexBuffer();
         Mesh->UnlockVertexBuffer();
         delete triangleMesh;
         return nullptr;
@@ -269,6 +263,7 @@ btTriangleMesh* CXModelResource::CreateBulletTriangleMesh(void) const
 
     if (FAILED(hr))
     {
+        Mesh->UnlockIndexBuffer();
         Mesh->UnlockVertexBuffer();
         delete triangleMesh;
         return nullptr;
@@ -277,13 +272,29 @@ btTriangleMesh* CXModelResource::CreateBulletTriangleMesh(void) const
     const bool is32Bit = (indexDesc.Format == D3DFMT_INDEX32);
 
     //=========================================================
-    // 三角形
+    // 頂点を先に取得
     //=========================================================
+
+    std::vector<btVector3> vertices;
+
+    vertices.reserve(NumVertices);
+
+    for (UINT i = 0; i < NumVertices; ++i)
+    {
+        const BYTE* vertex = vertexData + i * VertexStride;
+
+        const D3DXVECTOR3& pos = *reinterpret_cast<const D3DXVECTOR3*>(vertex);
+
+        vertices.emplace_back(pos.x, pos.y, pos.z);
+    }
+
+    //=========================================================
+    // 三角形登録
+    //=========================================================
+
     for (UINT face = 0; face < NumFaces; ++face)
     {
-        UINT i0;
-        UINT i1;
-        UINT i2;
+        UINT i0, i1, i2;
 
         if (is32Bit)
         {
@@ -302,30 +313,21 @@ btTriangleMesh* CXModelResource::CreateBulletTriangleMesh(void) const
             i2 = indices[face * 3 + 2];
         }
 
-        //=====================================================
-        // 頂点取得
-        //=====================================================
-        const BYTE* v0 = vertexData + i0 * VertexStride;
-        const BYTE* v1 = vertexData + i1 * VertexStride;
-        const BYTE* v2 = vertexData + i2 * VertexStride;
+        // インデックス範囲チェック
+        if (i0 >= vertices.size() ||
+            i1 >= vertices.size() ||
+            i2 >= vertices.size())
+        {
+            continue;
+        }
 
-        const D3DXVECTOR3& p0 = *reinterpret_cast<const D3DXVECTOR3*>(v0);
-        const D3DXVECTOR3& p1 = *reinterpret_cast<const D3DXVECTOR3*>(v1);
-        const D3DXVECTOR3& p2 = *reinterpret_cast<const D3DXVECTOR3*>(v2);
-
-        //=====================================================
-        // Bullet TriangleMeshへ追加
-        //=====================================================
         triangleMesh->addTriangle(
-            btVector3(p0.x, p0.y, p0.z),
-            btVector3(p1.x, p1.y, p1.z),
-            btVector3(p2.x, p2.y, p2.z)
+            vertices[i0],
+            vertices[i1],
+            vertices[i2]
         );
     }
 
-    //=========================================================
-    // アンロック
-    //=========================================================
     Mesh->UnlockIndexBuffer();
     Mesh->UnlockVertexBuffer();
 
