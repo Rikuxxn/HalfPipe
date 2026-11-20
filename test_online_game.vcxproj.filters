@@ -256,6 +256,12 @@
     <Filter Include="ヘッダー ファイル\Particle\Module">
       <UniqueIdentifier>{d513b3d4-50a8-48b5-8fc8-678571ecae76}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Shader\DoF">
+      <UniqueIdentifier>{bdc61908-7c5b-4360-a3d5-6e01a514e51d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Shader\DoF">
+      <UniqueIdentifier>{473fde75-53a3-4855-9092-a271e5e0c0c6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\CollisionSystem.h">
@@ -669,6 +675,9 @@
     <ClInclude Include="include\ParticleVelocityModule.h">
       <Filter>ヘッダー ファイル\Particle\Module</Filter>
     </ClInclude>
+    <ClInclude Include="include\DepthOfField.h">
+      <Filter>ヘッダー ファイル\Shader\DoF</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="imgui\imgui.cpp">
@@ -1018,6 +1027,9 @@
     </ClCompile>
     <ClCompile Include="src\CountRenderComponent.cpp">
       <Filter>ソース ファイル\Component\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DepthOfField.cpp">
+      <Filter>ソース ファイル\Shader\DoF</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
