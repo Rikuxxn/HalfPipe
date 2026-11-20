@@ -25,9 +25,10 @@ private:
 
 public:
     CSceneManager();
-    ~CSceneManager() {};
+    ~CSceneManager();
 
     HRESULT Init(CScene::Mode mode);
+    void    Uninit(void);
     void    Update (void);
     void    Draw   (void);
     void    DrawShadow(void);

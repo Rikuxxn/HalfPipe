@@ -84,6 +84,8 @@ public:
 	bool IsPlayerReady(uint8_t playerId) const;
 	void SendPlayerReady(bool isReady);
 	bool PopPlayerReady(PlayerReadyInfo& info);
+	bool PopPointCircleScored(uint32_t& circleId);
+	//void SendPointCircleScored(uint32_t circleId);
 
 private:
 
@@ -109,6 +111,8 @@ private:
 	bool						m_PlayerReady[Network::MAX_PLAYERS] = {};
 
 	std::queue<PlayerReadyInfo> m_PlayerReadyQueue;
+
+	std::queue<uint32_t> m_PointCircleScoredQueue;
 };
 
 #endif

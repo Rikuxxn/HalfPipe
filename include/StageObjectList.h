@@ -147,6 +147,7 @@ public:
         float scale);
 
     CPointCircleBlock* CreatePointCircle(
+        uint32_t id,
         const D3DXVECTOR3& position,
         float scale,
         int point);
@@ -159,6 +160,9 @@ public:
 
     // 得点サークルと対応するテクスチャを削除
     void RemovePointCircle(CPointCircleBlock* pointCircle);
+
+    // IDで得点サークルと対応するテクスチャを削除
+    void RemovePointCircleById(uint32_t circleId);
 
     // 中心位置取得
     const D3DXVECTOR3& GetCenterPosition(void) const { return m_CenterPosition; }
@@ -184,6 +188,7 @@ private:
     // 得点サークル情報
     struct PointCircleData
     {
+        uint32_t Id = 0;
         CPointCircleBlock* Object = nullptr;
         D3DXVECTOR3 LocalOffset = INIT_VEC3;
         float Scale = 1.0f;
@@ -355,11 +360,15 @@ public:
     // 得点済みか取得
     bool HasScored(void) const { return m_IsScored; }
 
+    void SetCircleId(uint32_t id) { m_CircleId = id; }
+    uint32_t GetCircleId(void) const { return m_CircleId; }
+
 private:
 
-    CBasketBlock* m_Basket;
-    int m_Point;    // 得点
-    bool m_IsScored;    // 得点済みフラグ
+    CBasketBlock* m_Basket; // かごのポインタ
+    uint32_t m_CircleId;    // ID
+    int m_Point;            // 得点
+    bool m_IsScored;        // 得点済みフラグ
 };
 
 //*****************************************************************************

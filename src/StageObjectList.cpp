@@ -30,6 +30,7 @@
 #include "3DSpriteRenderComponent.h"
 #include "ColorConstants.h"
 #include <GhostObjectComponent.h>
+#include "NetWorkManager.h"
 
 
 // 名前空間の使用
@@ -334,13 +335,13 @@ HRESULT CBasketBlock::Init(void)
 	// 得点サークルの配置情報
 	m_PointCircles =
 	{
-		{ nullptr, D3DXVECTOR3(4.0f,	m_HeightOffset,		10.0f),		1.8f, 50 },
-		{ nullptr, D3DXVECTOR3(-10.0f,  m_HeightOffset,		-10.0f),	1.8f, 50 },
-		{ nullptr, D3DXVECTOR3(5.0f,	m_HeightOffset,		-12.0f),	1.8f, 50 },
-		{ nullptr, D3DXVECTOR3(12.0f,	m_HeightOffset,		0.0f),		1.8f, 30 },
-		{ nullptr, D3DXVECTOR3(-12.0f,  0.0f,				12.0f),		1.8f, 30 },
-		{ nullptr, D3DXVECTOR3(-3.0f,	0.0f,				0.0f),		1.8f, 30 },
-		{ nullptr, D3DXVECTOR3(0.0f,	-m_HeightOffset,	1.0f),		9.0f, 10 }
+		{ 0, nullptr, D3DXVECTOR3(4.0f,	m_HeightOffset,		10.0f),		1.8f, 50 },
+		{ 1, nullptr, D3DXVECTOR3(-10.0f,  m_HeightOffset,		-10.0f),	1.8f, 50 },
+		{ 2, nullptr, D3DXVECTOR3(5.0f,	m_HeightOffset,		-12.0f),	1.8f, 50 },
+		{ 3, nullptr, D3DXVECTOR3(12.0f,	m_HeightOffset,		0.0f),		1.8f, 30 },
+		{ 4, nullptr, D3DXVECTOR3(-12.0f,  0.0f,				12.0f),		1.8f, 30 },
+		{ 5, nullptr, D3DXVECTOR3(-3.0f,	0.0f,				0.0f),		1.8f, 30 },
+		{ 6, nullptr, D3DXVECTOR3(0.0f,	-m_HeightOffset,	1.0f),		9.0f, 10 }
 	};
 
 	// 得点サークル生成
@@ -353,7 +354,7 @@ HRESULT CBasketBlock::Init(void)
 			transform->Scale
 		);
 
-		data.Object = CreatePointCircle(worldPosition, data.Scale, data.Point);
+		data.Object = CreatePointCircle(data.Id, worldPosition, data.Scale, data.Point);
 
 		if (!data.Object)
 		{
@@ -674,7 +675,7 @@ CCollectBoxBlock* CBasketBlock::CreateCollectBox(
 // 得点サークル生成処理
 //=============================================================================
 CPointCircleBlock* CBasketBlock::CreatePointCircle(
-	const D3DXVECTOR3& position, float scale, int point)
+	uint32_t id, const D3DXVECTOR3& position, float scale, int point)
 {
 	// シーン取得
 	auto scene = CManager::Instance()->GetSceneManager()->GetScene();
@@ -694,6 +695,9 @@ CPointCircleBlock* CBasketBlock::CreatePointCircle(
 
 	// ポインタの設定
 	obj->SetBasket(this);
+
+	// IDの設定
+	obj->SetCircleId(id);
 
 	// トランスフォームコンポーネントの取得
 	auto transform = obj->AddComponent<CTransformComponent>();
@@ -836,6 +840,42 @@ void CBasketBlock::RemovePointCircle(CPointCircleBlock* pointCircle)
 		m_TexPolys[i].Object = nullptr;
 
 		break;
+	}
+}
+
+//=============================================================================
+// IDで得点サークルと対応するテクスチャを削除
+//=============================================================================
+void CBasketBlock::RemovePointCircleById(uint32_t circleId)
+{
+	if (m_PointCircles.size() != m_TexPolys.size())
+	{
+		return;
+	}
+
+	for (size_t i = 0; i < m_PointCircles.size(); ++i)
+	{
+		if (m_PointCircles[i].Id != circleId)
+		{
+			continue;
+		}
+
+		CPointCircleBlock* pointCircle = m_PointCircles[i].Object;
+		CGameObject* texPoly = m_TexPolys[i].Object;
+
+		if (pointCircle)
+		{
+			pointCircle->Destroy();
+			m_PointCircles[i].Object = nullptr;
+		}
+
+		if (texPoly)
+		{
+			texPoly->Destroy();
+			m_TexPolys[i].Object = nullptr;
+		}
+
+		return;
 	}
 }
 
@@ -1080,9 +1120,10 @@ void CRiftPoleBlock::Update(void)
 // 得点サークルのコンストラクタ
 //=============================================================================
 CPointCircleBlock::CPointCircleBlock() :
-	m_Basket (nullptr),
-	m_Point (0), // 得点
-	m_IsScored (false)// 得点済みフラグ
+	m_Basket	(nullptr),	// かごのポインタ
+	m_CircleId	(0),		// ID
+	m_Point		(0),		// 得点
+	m_IsScored	(false)		// 得点済みフラグ
 {
 
 }
@@ -1164,23 +1205,23 @@ void CPointCircleBlock::OnTriggerEnter(CGameObject* other)
 	// 得点済みにする
 	m_IsScored = true;
 
-	// シーンの取得
-	auto scene = CManager::Instance()->GetSceneManager()->GetScene();
-
-	if (!scene)
-	{
-		return;
-	}
-
 	// 得点加算
 	AddScore(m_Point);
+
+	//// ネットワーク通知
+	//auto network = CManager::Instance()->GetNetworkManager();
+
+	//if (network)
+	//{
+	//	network->SendPointCircleScored(m_CircleId);
+	//}
 
 	// 50点・30点なら削除
 	if (m_Point == 50 || m_Point == 30)
 	{
 		if (m_Basket)
 		{
-			m_Basket->RemovePointCircle(this);
+			m_Basket->RemovePointCircleById(m_CircleId);
 		}
 	}
 }

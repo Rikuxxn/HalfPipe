@@ -19,6 +19,8 @@
 class CParticleGravityModule : public IParticleModule
 {
 public:
+    CParticleGravityModule() = default;
+    ~CParticleGravityModule() = default;
 
     D3DXVECTOR3 Gravity = { 0.0f, -0.1f, 0.0f };
 

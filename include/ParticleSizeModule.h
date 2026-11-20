@@ -19,6 +19,8 @@
 class CParticleSizeModule : public IParticleModule
 {
 public:
+    CParticleSizeModule() = default;
+    ~CParticleSizeModule() = default;
 
     float StartSize = 32.0f;
     float EndSize   = 0.0f;

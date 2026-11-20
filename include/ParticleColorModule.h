@@ -19,6 +19,8 @@
 class CParticleColorModule : public IParticleModule
 {
 public:
+    CParticleColorModule() = default;
+    ~CParticleColorModule() = default;
 
     D3DXCOLOR StartColor    = D3DXCOLOR(1, 1, 1, 1);
     D3DXCOLOR EndColor      = D3DXCOLOR(1, 1, 1, 0);

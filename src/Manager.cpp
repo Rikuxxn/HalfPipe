@@ -270,16 +270,17 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd)
 //=============================================================================
 void CManager::Uninit(void)
 {
-	if (m_pNetworkManager)
+	// シーンマネージャーの破棄
+	if (m_pSceneManager)
 	{
-		m_pNetworkManager->Uninit();
+		m_pSceneManager->Uninit();
 	}
-
-	// ネットワークの破棄
-	m_pNetworkManager.reset();
 
 	// シーンマネージャーの破棄
 	m_pSceneManager.reset();
+
+	// ネットワークの破棄
+	m_pNetworkManager.reset();
 
 	// テクスチャマネージャーの破棄
 	m_pTextureManager.reset();
@@ -343,10 +344,10 @@ void CManager::Update(void)
 
 	// トリガーオブジェクトマネージャーの更新処理
 	m_pTriggerObjectManager->Update();
-#endif
 
 	// UIアニメーションエディターの更新処理
 	m_pUIAnimationEditor->Update();
+#endif
 
 	// フェードの更新処理
 	if (m_pFade != nullptr)

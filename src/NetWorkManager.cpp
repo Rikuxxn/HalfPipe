@@ -665,6 +665,20 @@ void CNetworkManager::OnReceive( ENetPeer* peer, ENetPacket* packet)
 		m_LeftPlayerId = playerId;
 		m_HasPlayerLeft = true;
 	}
+	//else if (header.type == Network::PacketType::PointCircleScored)
+	//{
+	//	if (packet->dataLength < sizeof(Network::PointCircleScoredPacket))
+	//	{
+	//		return;
+	//	}
+
+	//	Network::PointCircleScoredPacket input{};
+
+	//	std::memcpy(&input, packet->data, sizeof(input));
+
+	//	// 削除通知をキューに追加
+	//	m_PointCircleScoredQueue.push(input.circleId);
+	//}
 }
 
 //=============================================================================
@@ -970,3 +984,47 @@ bool CNetworkManager::PopPlayerReady(PlayerReadyInfo& info)
 
 	return true;
 }
+
+//=============================================================================
+// 得点状態をキューから取り出す
+//=============================================================================
+bool CNetworkManager::PopPointCircleScored(uint32_t& circleId)
+{
+	if (m_PointCircleScoredQueue.empty())
+	{
+		return false;
+	}
+
+	circleId = m_PointCircleScoredQueue.front();
+	m_PointCircleScoredQueue.pop();
+
+	return true;
+}
+
+////=============================================================================
+//// 得点サークル獲得通知
+////=============================================================================
+//void CNetworkManager::SendPointCircleScored(uint32_t circleId)
+//{
+//	if (!m_IsConnected || !m_IsJoined || !m_ServerPeer)
+//	{
+//		return;
+//	}
+//
+//	Network::PointCircleScoredPacket packet{};
+//
+//	packet.header.type = Network::PacketType::PointCircleScored;
+//	packet.header.size = sizeof(packet);
+//	packet.circleId = circleId;
+//
+//	ENetPacket* sendPacket = enet_packet_create(
+//		&packet,
+//		sizeof(packet),
+//		ENET_PACKET_FLAG_RELIABLE);
+//
+//	if (sendPacket)
+//	{
+//		enet_peer_send(m_ServerPeer, 0, sendPacket);
+//		enet_host_flush(m_Host);
+//	}
+//}

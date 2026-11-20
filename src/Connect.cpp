@@ -239,6 +239,9 @@ HRESULT CConnect::Init(void)
 //=============================================================================
 void CConnect::Uninit(void)
 {
+	// シーンの終了処理
+	CScene::Uninit();
+
 	// サウンドマネージャーの取得
 	auto sound = CManager::Instance()->GetSoundManager();
 
@@ -251,9 +254,6 @@ void CConnect::Uninit(void)
 	// トリガーオブジェクトマネージャの初期化
 	auto trigger = CManager::Instance()->GetTriggerObjectManager();
 	trigger->Reset();
-
-	// シーンの終了処理
-	CScene::Uninit();
 
 	// モデルマネージャーの破棄
 	CModelManager::GetInstance().Release();

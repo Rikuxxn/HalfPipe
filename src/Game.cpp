@@ -198,6 +198,9 @@ HRESULT CGame::Init(void)
 //=============================================================================
 void CGame::Uninit(void)
 {
+	// シーンの終了処理
+	CScene::Uninit();
+
 	// ステージマネージャの初期化
 	auto stage = CManager::Instance()->GetStageManager();
 	stage->Reset();
@@ -205,9 +208,6 @@ void CGame::Uninit(void)
 	// トリガーオブジェクトマネージャの初期化
 	auto trigger = CManager::Instance()->GetTriggerObjectManager();
 	trigger->Reset();
-
-	// シーンの終了処理
-	CScene::Uninit();
 
 	//// ジョイパッドの取得
 	//CInputJoypad* pJoypad = CManager::GetInputJoypad();
