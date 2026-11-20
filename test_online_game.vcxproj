@@ -191,6 +191,7 @@
     <ClInclude Include="include\DebugDrawer.h" />
     <ClInclude Include="include\DebugManager.h" />
     <ClInclude Include="include\DebugRenderer.h" />
+    <ClInclude Include="include\DepthOfField.h" />
     <ClInclude Include="include\DeviceResource.h" />
     <ClInclude Include="include\DeviceResourceManager.h" />
     <ClInclude Include="include\DirectionCamera.h" />
@@ -325,6 +326,7 @@
     <ClCompile Include="src\CountRenderComponent.cpp" />
     <ClCompile Include="src\DebugManager.cpp" />
     <ClCompile Include="src\DebugRenderer.cpp" />
+    <ClCompile Include="src\DepthOfField.cpp" />
     <ClCompile Include="src\DeviceResourceManager.cpp" />
     <ClCompile Include="src\DirectionCamera.cpp" />
     <ClCompile Include="src\EditCamera.cpp" />

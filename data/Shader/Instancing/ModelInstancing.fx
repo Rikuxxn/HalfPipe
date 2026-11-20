@@ -70,7 +70,15 @@ struct VS_OUTPUT
     float2 Tex      : TEXCOORD0;
     
     float4 posInLVP : TEXCOORD1;
+    float depthInView : TEXCOORD2;
 };
+
+struct PS_OUTPUT
+{
+    float4 color : COLOR0;
+    float4 depth : COLOR1;
+};
+
 
 //=============================================================================
 // 頂点メインエントリー
@@ -111,6 +119,8 @@ VS_OUTPUT VS_Main(VS_INPUT In)
     //----------------------------------
 
     float4 viewPos = mul(worldPos, View);
+    
+    Out.depthInView = viewPos.z;
 
     //----------------------------------
     // Projection
@@ -137,8 +147,10 @@ VS_OUTPUT VS_Main(VS_INPUT In)
 //=============================================================================
 // ピクセルメインエントリー
 //=============================================================================
-float4 PS_Main(VS_OUTPUT Out) : COLOR0
+PS_OUTPUT PS_Main(VS_OUTPUT Out) : COLOR0
 {
+    PS_OUTPUT psOut;
+    
     float4 color = HasTexture ? tex2D(TextureSampler, Out.Tex) : MatColor;
 
     float3 N = normalize(Out.Normal);
@@ -220,7 +232,10 @@ float4 PS_Main(VS_OUTPUT Out) : COLOR0
     // アルファ維持
     result.a = color.a;
 
-    return result;
+    psOut.color = result;
+    psOut.depth = Out.depthInView;
+    
+    return psOut;
 }
 
 //=============================================================================
@@ -230,8 +245,6 @@ technique ModelInstancing
 {
     pass P0
     {
-        CullMode = CCW;
-
         VertexShader = compile vs_3_0 VS_Main();
         PixelShader = compile ps_3_0 PS_Main();
     }
