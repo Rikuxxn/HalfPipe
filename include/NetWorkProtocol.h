@@ -37,7 +37,7 @@ namespace Network
 		GameStart,
 		PlayerGoal,
 		GameFinish,
-		//PointCircleScored,
+		PointCircleScored,
 		PlayerLeft
 	}; 
 	
@@ -153,16 +153,16 @@ namespace Network
 		uint8_t playerId;
 	};
 
-	////============================================================
-	//// 得点サークル
-	//// 
-	////============================================================
-	//struct PointCircleScoredPacket
-	//{
-	//	PacketHeader header{};
-	//	uint8_t playerId = 255;
-	//	uint32_t circleId = 0;
-	//};
+	//============================================================
+	// 得点サークル
+	// 
+	//============================================================
+	struct PointCircleScoredPacket
+	{
+		PacketHeader header{};
+		uint8_t playerId = 255;
+		uint32_t circleId = 0;
+	};
 
 	//============================================================
 	// プレイヤー入力

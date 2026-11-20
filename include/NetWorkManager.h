@@ -85,7 +85,7 @@ public:
 	void SendPlayerReady(bool isReady);
 	bool PopPlayerReady(PlayerReadyInfo& info);
 	bool PopPointCircleScored(uint32_t& circleId);
-	//void SendPointCircleScored(uint32_t circleId);
+	void SendPointCircleScored(uint32_t circleId);
 
 private:
 
