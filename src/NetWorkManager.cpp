@@ -673,11 +673,14 @@ void CNetworkManager::OnReceive( ENetPeer* peer, ENetPacket* packet)
 		}
 
 		Network::PointCircleScoredPacket input{};
-
 		std::memcpy(&input, packet->data, sizeof(input));
 
+		PointCircleScoredInfo info{};
+		info.BasketId = input.basketId;
+		info.CircleId = input.circleId;
+
 		// 削除通知をキューに追加
-		m_PointCircleScoredQueue.push(input.circleId);
+		m_PointCircleScoredQueue.push(info);
 	}
 }
 
@@ -988,14 +991,14 @@ bool CNetworkManager::PopPlayerReady(PlayerReadyInfo& info)
 //=============================================================================
 // 得点状態をキューから取り出す
 //=============================================================================
-bool CNetworkManager::PopPointCircleScored(uint32_t& circleId)
+bool CNetworkManager::PopPointCircleScored(PointCircleScoredInfo& info)
 {
 	if (m_PointCircleScoredQueue.empty())
 	{
 		return false;
 	}
 
-	circleId = m_PointCircleScoredQueue.front();
+	info = m_PointCircleScoredQueue.front();
 	m_PointCircleScoredQueue.pop();
 
 	return true;
@@ -1004,7 +1007,7 @@ bool CNetworkManager::PopPointCircleScored(uint32_t& circleId)
 //=============================================================================
 // 得点サークル獲得通知
 //=============================================================================
-void CNetworkManager::SendPointCircleScored(uint32_t circleId)
+void CNetworkManager::SendPointCircleScored(uint32_t basketId, uint32_t circleId)
 {
 	if (!m_IsConnected || !m_IsJoined || !m_ServerPeer)
 	{
@@ -1015,6 +1018,7 @@ void CNetworkManager::SendPointCircleScored(uint32_t circleId)
 
 	packet.header.type = Network::PacketType::PointCircleScored;
 	packet.header.size = sizeof(packet);
+	packet.basketId = basketId;
 	packet.circleId = circleId;
 
 	ENetPacket* sendPacket = enet_packet_create(

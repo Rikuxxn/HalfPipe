@@ -161,6 +161,7 @@ namespace Network
 	{
 		PacketHeader header{};
 		uint8_t playerId = 255;
+		uint32_t basketId = 0;
 		uint32_t circleId = 0;
 	};
 

@@ -311,9 +311,9 @@ void CGame::Update(void)
 
 	if (network)
 	{
-		uint32_t circleId = 0;
+		CNetworkManager::PointCircleScoredInfo info{};
 
-		while (network->PopPointCircleScored(circleId))
+		while (network->PopPointCircleScored(info))
 		{
 			// バスケットを取得
 			auto scene = CManager::Instance()->GetSceneManager()->GetScene();
@@ -323,18 +323,17 @@ void CGame::Update(void)
 				continue;
 			}
 
-			auto basketObject = scene->FindGameObject("Basket");
+			// シーン内のすべてのBasketを取得
+			auto baskets = scene->FindGameObjects<CBasketBlock>();
 
-			if (!basketObject)
+			// 投げ込んだかごからサークルを削除
+			for (auto basket : baskets)
 			{
-				continue;
-			}
-
-			auto basket = basketObject->GetComponent<CBasketBlock>();
-
-			if (basket)
-			{
-				basket->RemovePointCircleById(circleId);
+				if (basket && basket->GetBasketId() == info.BasketId)
+				{
+					basket->RemovePointCircleById(info.CircleId);
+					break;
+				}
 			}
 		}
 	}

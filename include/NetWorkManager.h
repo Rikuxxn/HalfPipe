@@ -32,6 +32,12 @@ public:
 		bool isReady = false;
 	};
 
+	struct PointCircleScoredInfo
+	{
+		uint32_t BasketId;
+		uint32_t CircleId;
+	};
+
 	//============================================================ 
 	// クライアントからサーバーに接続
 	//============================================================ 
@@ -84,8 +90,8 @@ public:
 	bool IsPlayerReady(uint8_t playerId) const;
 	void SendPlayerReady(bool isReady);
 	bool PopPlayerReady(PlayerReadyInfo& info);
-	bool PopPointCircleScored(uint32_t& circleId);
-	void SendPointCircleScored(uint32_t circleId);
+	bool PopPointCircleScored(PointCircleScoredInfo& info);
+	void SendPointCircleScored(uint32_t basketId, uint32_t circleId);
 
 private:
 
@@ -112,7 +118,7 @@ private:
 
 	std::queue<PlayerReadyInfo> m_PlayerReadyQueue;
 
-	std::queue<uint32_t> m_PointCircleScoredQueue;
+	std::queue<PointCircleScoredInfo> m_PointCircleScoredQueue;
 };
 
 #endif
