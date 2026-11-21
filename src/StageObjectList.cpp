@@ -891,9 +891,14 @@ void CBasketBlock::DrawCustomUI(void)
 	// IDÇÃê›íË
 	//=========================================================
 
-	if (ImGui::InputInt("ID", &m_BasketId))
+	int id = static_cast<int>(m_BasketId);
+
+	if (ImGui::InputInt("ID", &id))
 	{
-		SetBasketId(m_BasketId);
+		if (id >= 0)
+		{
+			m_BasketId = static_cast<uint32_t>(id);
+		}
 	}
 
 	ImGui::Dummy(ImVec2(0.0f, 5.0f));
