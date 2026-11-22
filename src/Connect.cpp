@@ -418,8 +418,8 @@ void CConnect::Update(void)
 	}
 
 	if (!network->IsGameReady() && pFade->GetFade() == CFade::FADE_NONE &&
-		(pKeyboard->GetTrigger(DIK_BACKSPACE) ||
-			pJoypad->GetTrigger(CInputJoypad::JOYKEY_B)))
+		(pKeyboard->GetTrigger(DIK_R) ||
+			pJoypad->GetTrigger(CInputJoypad::JOYKEY_BACK)))
 	{
 		// ƒ^ƒCƒgƒ‹‚É–ß‚é
 		pFade->StartFadeOut(Mode::Title);
