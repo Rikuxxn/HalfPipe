@@ -417,6 +417,14 @@ void CConnect::Update(void)
 		}
 	}
 
+	if (!network->IsGameReady() && pFade->GetFade() == CFade::FADE_NONE &&
+		(pKeyboard->GetTrigger(DIK_BACKSPACE) ||
+			pJoypad->GetTrigger(CInputJoypad::JOYKEY_B)))
+	{
+		// タイトルに戻る
+		pFade->StartFadeOut(Mode::Title);
+	}
+
 	// 参加確定後はゲームシーンへの遷移を待つ
 	if (network->IsJoined())
 	{
@@ -459,14 +467,6 @@ void CConnect::Update(void)
 		}
 
 		return;
-	}
-
-	if (pFade->GetFade() == CFade::FADE_NONE && 
-		(pKeyboard->GetTrigger(DIK_BACKSPACE) ||
-		pJoypad->GetTrigger(CInputJoypad::JOYKEY_B)))
-	{
-		// タイトルに戻る
-		pFade->StartFadeOut(Mode::Title);
 	}
 
 	// 参加要求は1回だけ送信
