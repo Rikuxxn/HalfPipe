@@ -461,6 +461,14 @@ void CConnect::Update(void)
 		return;
 	}
 
+	if (pFade->GetFade() == CFade::FADE_NONE && 
+		(pKeyboard->GetTrigger(DIK_BACK) ||
+		pJoypad->GetTrigger(CInputJoypad::JOYKEY_B)))
+	{
+		// タイトルに戻る
+		pFade->StartFadeOut(Mode::Title);
+	}
+
 	// 参加要求は1回だけ送信
 	if (!m_JoinRequestSent)
 	{
