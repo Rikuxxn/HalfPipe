@@ -462,7 +462,7 @@ void CConnect::Update(void)
 	}
 
 	if (pFade->GetFade() == CFade::FADE_NONE && 
-		(pKeyboard->GetTrigger(DIK_BACK) ||
+		(pKeyboard->GetTrigger(DIK_BACKSPACE) ||
 		pJoypad->GetTrigger(CInputJoypad::JOYKEY_B)))
 	{
 		// ƒ^ƒCƒgƒ‹‚É–ß‚é
