@@ -92,6 +92,19 @@ public:
 	bool PopPlayerReady(PlayerReadyInfo& info);
 	bool PopPointCircleScored(PointCircleScoredInfo& info);
 	void SendPointCircleScored(uint32_t basketId, uint32_t circleId);
+	void SendAddScore(int point);
+
+	// スコア情報を取得
+	const std::vector<Network::PlayerScoreInfo>& GetPlayerScores(void) const
+	{
+		return m_PlayerScores;
+	}
+
+	// スコア受信済みか
+	bool IsPlayerScoresReceived(void) const
+	{
+		return m_IsPlayerScoresReceived;
+	}
 
 private:
 
@@ -119,6 +132,10 @@ private:
 	std::queue<PlayerReadyInfo> m_PlayerReadyQueue;
 
 	std::queue<PointCircleScoredInfo> m_PointCircleScoredQueue;
+
+	// スコア保存用
+	std::vector<Network::PlayerScoreInfo> m_PlayerScores;
+	bool m_IsPlayerScoresReceived = false;
 };
 
 #endif

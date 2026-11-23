@@ -98,23 +98,24 @@ HRESULT CResult::Init(void)
 	m_pSky->Init();
 
 
-	////============================================================
-	//// Player生成(クライアント)
-	////============================================================
-	//{
-	//	auto network = CManager::Instance()->GetNetworkManager();
+	//============================================================
+	// Player生成(クライアント)
+	//============================================================
+	{
+		auto network = CManager::Instance()->GetNetworkManager();
 
-	//	if (network)
-	//	{
-	//		// サーバーから受け取った参加プレイヤー一覧を取得
-	//		const auto& playerIds = network->GetActivePlayerIds();
+		if (network && network->IsPlayerScoresReceived())
+		{
+			// 順位計算
+			CalculateRanking();
 
-	//		for (uint8_t id : playerIds)
-	//		{
-	//			SpawnPlayer(id);
-	//		}
-	//	}
-	//}
+			// 順位順にプレイヤー生成
+			for (const auto& ranking : m_Rankings)
+			{
+				SpawnPlayer(ranking.playerId, ranking.rank);
+			}
+		}
+	}
 
 	// カメラの取得
 	CCamera* pCamera = CManager::Instance()->GetCamera();
@@ -197,7 +198,7 @@ void CResult::Draw(void)
 //=============================================================================
 // プレイヤー生成
 //=============================================================================
-void CResult::SpawnPlayer(uint8_t playerId)
+void CResult::SpawnPlayer(uint8_t playerId, uint8_t rank)
 {
 	auto network = CManager::Instance()->GetNetworkManager();
 
@@ -240,13 +241,7 @@ void CResult::SpawnPlayer(uint8_t playerId)
 	// トランスフォームコンポーネントの追加
 	auto transform = player->AddComponent<CTransformComponent>();
 
-	transform->Position =
-	{
-		-133.0f,
-		598.0f,
-		-1998.0f
-	};
-
+	transform->Position = m_RankPositions[rank - 1];
 	transform->Rotation = { 0.0f, D3DXToRadian(180.0f), 0.0f };
 
 	// キャラクター
@@ -269,7 +264,7 @@ void CResult::SpawnPlayer(uint8_t playerId)
 		break;
 	}
 
-	player->Init();
+	player->ConnectInit();
 
 	auto rigid = player->AddComponent<CRigidBodyComponent>();
 
@@ -320,6 +315,52 @@ CPlayer* CResult::FindPlayerById(uint8_t playerId)
 	}
 
 	return nullptr;
+}
+
+//=============================================================================
+// 順位計算
+//=============================================================================
+void CResult::CalculateRanking(void)
+{
+	auto network = CManager::Instance()->GetNetworkManager();
+
+	if (!network || !network->IsPlayerScoresReceived())
+	{
+		return;
+	}
+
+	auto scores = network->GetPlayerScores();
+
+	m_Rankings.clear();
+
+	for (const auto& score : scores)
+	{
+		PlayerRanking ranking{};
+
+		ranking.playerId = score.playerId;
+		ranking.score = score.score;
+
+		m_Rankings.push_back(ranking);
+	}
+
+	// スコアの高い順
+	std::sort(
+		m_Rankings.begin(),
+		m_Rankings.end(),
+		[](const PlayerRanking& a, const PlayerRanking& b)
+		{
+			if (a.score != b.score)
+				return a.score > b.score;
+
+			return a.playerId < b.playerId;
+		}
+	);
+
+	// 順位設定
+	for (size_t i = 0; i < m_Rankings.size(); ++i)
+	{
+		m_Rankings[i].rank = static_cast<uint8_t>(i + 1);
+	}
 }
 
 //=============================================================================

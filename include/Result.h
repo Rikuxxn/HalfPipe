@@ -17,6 +17,7 @@
 //*****************************************************************************
 class CBlockManager;
 class CSky;
+class CPlayer;
 
 
 //*****************************************************************************
@@ -29,7 +30,7 @@ public:
 	~CResult();
 
 	// プレイヤー生成
-	void SpawnPlayer(uint8_t playerId);
+	void SpawnPlayer(uint8_t playerId, uint8_t rank);
 
 	// 指定IDのプレイヤーを検索
 	CPlayer* FindPlayerById(uint8_t playerId);
@@ -38,16 +39,35 @@ public:
 	void Uninit(void) override;
 	void Update(void) override;
 	void Draw(void) override;
-	static void SetClearRank(int idx) { m_clearRankIndex = idx; }
 
-	static int GetClearRank(void) { return m_clearRankIndex; }
+	void CalculateRanking(void);
 
 	void OnDeviceReset(void) override;
+
+private:
+
+	struct PlayerRanking
+	{
+		uint8_t playerId;
+		int score;
+		uint8_t rank;
+	};
 
 private:
 	static int			m_clearRankIndex;	// クリア時のランクインデックス
 
 	std::unique_ptr<CSky>	m_pSky;
+
+	std::vector<PlayerRanking> m_Rankings;
+
+	// 順位ごとの配置位置
+	D3DXVECTOR3 m_RankPositions[4] =
+	{
+		{ -300.0f, 598.0f, -1998.0f }, // 1位
+		{ -100.0f, 598.0f, -1998.0f }, // 2位
+		{  100.0f, 598.0f, -1998.0f }, // 3位
+		{  300.0f, 598.0f, -1998.0f }  // 4位
+	};
 };
 
 #endif

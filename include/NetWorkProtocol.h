@@ -35,6 +35,8 @@ namespace Network
 		JoinRejected,
 		PlayerReady,
 		GameStart,
+		AddScore,
+		PlayerScore,
 		PlayerGoal,
 		GameFinish,
 		PointCircleScored,
@@ -163,6 +165,32 @@ namespace Network
 		uint8_t playerId = 255;
 		uint32_t basketId = 0;
 		uint32_t circleId = 0;
+	};
+
+	//============================================================
+	// ìæì_í ím
+	//============================================================
+	struct AddScorePacket
+	{
+		PacketHeader header{};
+		int point = 0;
+	};
+
+	//============================================================
+	// ìæì_èÓïÒ
+	//============================================================
+	struct PlayerScoreInfo
+	{
+		uint8_t playerId = 255;
+		int score = 0;
+	};
+
+	struct PlayerScorePacket
+	{
+		PacketHeader header{};
+
+		uint8_t playerCount = 0;
+		PlayerScoreInfo players[Network::MAX_PLAYERS]{};
 	};
 
 	//============================================================

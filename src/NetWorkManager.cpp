@@ -682,6 +682,30 @@ void CNetworkManager::OnReceive( ENetPeer* peer, ENetPacket* packet)
 		// 削除通知をキューに追加
 		m_PointCircleScoredQueue.push(info);
 	}
+	else if (header.type == Network::PacketType::PlayerScore)
+	{
+		if (packet->dataLength < sizeof(Network::PlayerScorePacket))
+		{
+			return;
+		}
+
+		Network::PlayerScorePacket scorePacket{};
+
+		std::memcpy(
+			&scorePacket,
+			packet->data,
+			sizeof(scorePacket)
+		);
+
+		m_PlayerScores.clear();
+
+		for (uint8_t i = 0; i < scorePacket.playerCount; ++i)
+		{
+			m_PlayerScores.push_back(scorePacket.players[i]);
+		}
+
+		m_IsPlayerScoresReceived = true;
+	}
 }
 
 //=============================================================================
@@ -1020,6 +1044,29 @@ void CNetworkManager::SendPointCircleScored(uint32_t basketId, uint32_t circleId
 	packet.header.size = sizeof(packet);
 	packet.basketId = basketId;
 	packet.circleId = circleId;
+
+	ENetPacket* sendPacket = enet_packet_create(
+		&packet,
+		sizeof(packet),
+		ENET_PACKET_FLAG_RELIABLE);
+
+	if (sendPacket)
+	{
+		enet_peer_send(m_ServerPeer, 0, sendPacket);
+		enet_host_flush(m_Host);
+	}
+}
+
+//=============================================================================
+// 得点通知
+//=============================================================================
+void CNetworkManager::SendAddScore(int point)
+{
+	Network::AddScorePacket packet{};
+
+	packet.header.type = Network::PacketType::AddScore;
+	packet.header.size = sizeof(packet);
+	packet.point = point;
 
 	ENetPacket* sendPacket = enet_packet_create(
 		&packet,
