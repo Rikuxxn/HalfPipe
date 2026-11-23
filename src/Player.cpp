@@ -314,7 +314,7 @@ HRESULT CPlayer::ConnectInit(void)
 		return E_FAIL;
 	}
 
-	// タイトルロゴオブジェクトの生成
+	// IDロゴオブジェクトの生成
 	m_pIDIconUI = scene->CreateObject();
 
 	m_pIDIconUI->SetTag("IDIcon");
@@ -440,7 +440,7 @@ HRESULT CPlayer::ResultInit(void)
 		return E_FAIL;
 	}
 
-	// タイトルロゴオブジェクトの生成
+	// IDロゴオブジェクトの生成
 	m_pIDIconUI = scene->CreateObject();
 
 	m_pIDIconUI->SetTag("IDIcon");
