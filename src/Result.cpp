@@ -28,6 +28,11 @@
 #include "Sky.h"
 #include "SoundManager.h"
 #include "GameTime.h"
+#include <Player.h>
+#include <NetWorkManager.h>
+#include <CharacterComponent.h>
+#include <RigidBodyComponent.h>
+#include <CollisionGroup.h>
 
 
 //*****************************************************************************
@@ -92,6 +97,25 @@ HRESULT CResult::Init(void)
 	m_pSky = std::make_unique<CSky>();
 	m_pSky->Init();
 
+
+	////============================================================
+	//// Player生成(クライアント)
+	////============================================================
+	//{
+	//	auto network = CManager::Instance()->GetNetworkManager();
+
+	//	if (network)
+	//	{
+	//		// サーバーから受け取った参加プレイヤー一覧を取得
+	//		const auto& playerIds = network->GetActivePlayerIds();
+
+	//		for (uint8_t id : playerIds)
+	//		{
+	//			SpawnPlayer(id);
+	//		}
+	//	}
+	//}
+
 	// カメラの取得
 	CCamera* pCamera = CManager::Instance()->GetCamera();
 
@@ -138,14 +162,6 @@ void CResult::Update(void)
 	CInputJoypad* pJoypad = CManager::Instance()->GetInput()->GetJoypad();		// ゲームパッドの入力取得
 	CFade* pFade = CManager::Instance()->GetFade();
 
-	//if (pFade->GetFade() == CFade::FADE_NONE && 
-	//	(pKeyboard->GetAnyKeyTrigger() || pJoypad->GetTrigger(CInputJoypad::JOYKEY_A) ||
-	//		pKeyboard->GetTrigger(DIK_RETURN)))
-	//{
-	//	// タイトル画面に移行
-	//	CManager::Instance()->GetSceneManager()->SetMode(Mode::Title);
-	//}
-
 	if (pFade->GetFade() == CFade::FADE_NONE && 
 		(pKeyboard->GetTrigger(DIK_RETURN) || pJoypad->GetTrigger(CInputJoypad::JOYKEY_A)))
 	{
@@ -177,6 +193,135 @@ void CResult::Draw(void)
 	pCamera->SetPosR({ 0.0f, -1175.0f, 4100.0f });
 	pCamera->SetRot({ 0.0f, 0.0f, 0.0f });
 }
+
+//=============================================================================
+// プレイヤー生成
+//=============================================================================
+void CResult::SpawnPlayer(uint8_t playerId)
+{
+	auto network = CManager::Instance()->GetNetworkManager();
+
+	if (!network)
+	{
+		return;
+	}
+
+	if (playerId >= Network::MAX_PLAYERS)
+	{
+		return;
+	}
+
+	// 同じIDのプレイヤーが存在するなら生成しない
+	if (FindPlayerById(playerId))
+	{
+		return;
+	}
+
+	// プレイヤー生成
+	auto player = CreateObject<CPlayer>();
+
+	if (!player)
+	{
+		return;
+	}
+
+	player->SetTag("Player");
+
+	player->SetPlayerId(playerId);
+
+	const bool isLocal = (playerId == network->GetLocalPlayerId());
+
+	player->SetLocalPlayer(isLocal);
+
+	// 自分のプレイヤーはローカル入力で操作する
+	// 相手のプレイヤーはネットワークの状態で動かす
+	player->SetNetworkControlled(!isLocal);
+
+	// トランスフォームコンポーネントの追加
+	auto transform = player->AddComponent<CTransformComponent>();
+
+	transform->Position =
+	{
+		-133.0f,
+		598.0f,
+		-1998.0f
+	};
+
+	transform->Rotation = { 0.0f, D3DXToRadian(180.0f), 0.0f };
+
+	// キャラクター
+	auto character = player->AddComponent<CCharacterComponent>();
+
+	// IDによって、色を変える
+	switch (playerId)
+	{
+	case 0:
+		character->Load("data/MOTION/motion_player.txt");
+		break;
+	case 1:
+		character->Load("data/MOTION/motion_player_blue.txt");
+		break;
+	case 2:
+		character->Load("data/MOTION/motion_player_green.txt");
+		break;
+	case 3:
+		character->Load("data/MOTION/motion_player_yellow.txt");
+		break;
+	}
+
+	player->Init();
+
+	auto rigid = player->AddComponent<CRigidBodyComponent>();
+
+	if (rigid)
+	{
+		rigid->SetCollisionFilter(
+			COLLISION_GROUP_PLAYER,
+			COLLISION_GROUP_STAGE |
+			COLLISION_GROUP_GHOST |
+			COLLISION_GROUP_ENEMY |
+			COLLISION_GROUP_CAMERA
+		);
+
+		rigid->SetColliderOffset({ 0.0f, 50.0f, 0.0f });
+
+		rigid->CreateCapsule(15.5f, 45.5f, 0.8f);
+
+		rigid->SetDynamic(false);
+
+		// 回転同期しない
+		rigid->SetSyncRotation(false);
+
+		// 回転因子の設定
+		rigid->SetAngularFactor(btVector3(0.0f, 0.0f, 0.0f));
+
+		rigid->Transform();
+	}
+}
+
+//=============================================================================
+// PlayerIDからプレイヤーを検索
+//=============================================================================
+CPlayer* CResult::FindPlayerById(uint8_t playerId)
+{
+	auto players = FindGameObjects<CPlayer>();
+
+	for (auto player : players)
+	{
+		if (!player)
+		{
+			continue;
+		}
+
+		if (player->GetPlayerId() == playerId)
+		{
+			return player;
+		}
+	}
+
+	return nullptr;
+}
+
 //=============================================================================
 // デバイスリセット通知
 //=============================================================================

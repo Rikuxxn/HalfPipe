@@ -282,9 +282,6 @@ HRESULT CPlayer::ConnectInit(void)
 	// 投擲コンポーネントの追加
 	auto throwCmp = AddComponent<CThrowComponent>();
 
-	//// 自動移動ポイントの読み込み
-	//autoMove->LoadMovePoint("data/MovePointInfo01.json");
-
 	// エイムコンポーネントの追加
 	auto aim = AddComponent<CAimComponent>();
 
@@ -395,6 +392,105 @@ HRESULT CPlayer::ConnectInit(void)
 	if (uiReady)
 	{
 		uiReady->SetUVFrame(1, 3);
+	}
+
+	return S_OK;
+}
+
+//=============================================================================
+// リザルトでのの初期化処理
+//=============================================================================
+HRESULT CPlayer::ResultInit(void)
+{
+	// 自動移動コンポーネントの追加
+	auto autoMove = AddComponent<CAutoMoveComponent>();
+
+	// 投擲コンポーネントの追加
+	auto throwCmp = AddComponent<CThrowComponent>();
+
+	// エイムコンポーネントの追加
+	auto aim = AddComponent<CAimComponent>();
+
+	if (!aim)
+	{
+		return E_FAIL;
+	}
+
+	// エイムは最初は非表示
+	aim->InvisibleAim();
+
+	// レイキャストコンポーネントの追加
+	AddComponent<CRaycastComponent>();
+
+	// インスタンスのポインタを渡す
+	m_stateMachine.Start(this);
+
+	// 初期状態のステートをセット
+	m_stateMachine.ChangeState<CPlayerStandState>();
+
+	//=============================================
+	// プレイヤーIDアイコンUI
+	//=============================================
+
+	// シーンの取得
+	auto scene = CManager::Instance()->GetSceneManager()->GetScene();
+
+	if (!scene)
+	{
+		return E_FAIL;
+	}
+
+	// タイトルロゴオブジェクトの生成
+	m_pIDIconUI = scene->CreateObject();
+
+	m_pIDIconUI->SetTag("IDIcon");
+
+	// ビルボードレンダーコンポーネント
+	auto uiID = m_pIDIconUI->AddComponent<CBillboardRenderComponent>();
+	auto uiIDTransform = m_pIDIconUI->AddComponent<CTransformComponent>();
+
+	auto playerTransform = GetComponent<CTransformComponent>();
+
+	// 生成位置(オフセット)
+	uiIDTransform->Position = playerTransform->Position + D3DXVECTOR3(0.0f, 70.0f, 0.0f);
+
+	// デバイスの取得
+	auto device = CManager::Instance()->GetRenderer()->GetDevice();
+
+	// 色の設定
+	uiID->SetColor(ColorConst::DX::WHITE);
+
+	// サイズの設定
+	uiID->SetSize(20.0f, 13.0f);
+
+	//-------------------------------------------------------------------------
+	// ビルボード行列
+	//-------------------------------------------------------------------------
+	uiID->SetBillboardTransform(device, uiIDTransform->Position);
+
+	// 描画順の設定
+	uiID->SetLayer(RenderLayer::UI);
+
+	// テクスチャの設定
+	uiID->SetTexture("data/TEXTURE/Players.png");
+
+	if (uiID)
+	{
+		switch (m_PlayerId)
+		{
+		case 0:
+			uiID->SetUVFrame(0, 4);
+			break;
+		case 1:
+			uiID->SetUVFrame(1, 4);
+			break;
+		case 2:
+			uiID->SetUVFrame(2, 4);
+			break;
+		case 3:
+			uiID->SetUVFrame(3, 4);
+			break;
+		}
 	}
 
 	return S_OK;
