@@ -214,11 +214,16 @@ HRESULT CConnect::Init(void)
 	color->StartColor = { 1, 1, 1, 1 };
 	color->EndColor = { 1, 1, 1, 0 };
 
-	CNetworkManager* network = CManager::Instance()->GetNetworkManager();
-
-	if (network)
+	//=====================================
+	// サーバーへ接続
+	//=====================================
 	{
-		network->FindLANServer(22334);
+		CNetworkManager* network = CManager::Instance()->GetNetworkManager();
+
+		if (network)
+		{
+			network->FindLANServer(22334);
+		}
 	}
 
 	// カメラの取得
