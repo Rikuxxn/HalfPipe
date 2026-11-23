@@ -264,7 +264,7 @@ void CResult::SpawnPlayer(uint8_t playerId, uint8_t rank)
 		break;
 	}
 
-	player->ConnectInit();
+	player->ResultInit();
 
 	auto rigid = player->AddComponent<CRigidBodyComponent>();
 
