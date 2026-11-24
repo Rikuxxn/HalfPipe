@@ -216,6 +216,15 @@ void CTutorial::Update(void)
 	CInputKeyboard* pKeyboard = CManager::Instance()->GetInput()->GetKeyboard();
 	CInputJoypad* pJoypad = CManager::Instance()->GetInput()->GetJoypad();
 
+#ifdef _DEBUG
+	if (pFade->GetFade() == CFade::FADE_NONE &&
+		pKeyboard->GetTrigger(DIK_T))
+	{
+		// ゲーム画面に移行
+		pFade->StartFadeOut(Mode::Game);
+	}
+#endif
+
 	// ネットワークの取得
 	auto network = CManager::Instance()->GetNetworkManager();
 
