@@ -25,7 +25,7 @@
 #include "DirectionCamera.h"
 #include "MovieCamera.h"
 #include "FixedCamera.h"
-#include "MathConstants.h"
+#include "RenderTargetMulti.h"
 
 
 // –¼‘O‹óŠÔ‚ÌŽg—p
@@ -422,7 +422,8 @@ void CCamera::DrawDebugGUI(void)
 		ImGui::Text("Z:"); ImGui::SameLine();
 		ImGui::SetNextItemWidth(80);
 		bool changedZ = ImGui::DragFloat("##camera_rot_z", &m_BaseTransform.rotation.z, 0.1f, -D3DX_PI, D3DX_PI, "%.2f");
-
+		IDirect3DTexture9* pTexture = CManager::Instance()->GetRenderer()->CRenderer::GetZScene().GetTexture();
+		ImGui::Image((ImTextureID)pTexture, ImVec2(256, 256));
 		ImGui::TreePop(); // •Â‚¶‚é
 	}
 }
