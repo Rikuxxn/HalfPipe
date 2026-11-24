@@ -130,7 +130,7 @@ HRESULT CConnect::Init(void)
 		spriteID->SetLayer(RenderLayer::UI);
 
 		// テクスチャの設定
-		spriteID->SetTexture("data/TEXTURE/Connect.png");
+		spriteID->SetTexture("data/TEXTURE/Connect_2.png");
 
 		if (uiID)
 		{

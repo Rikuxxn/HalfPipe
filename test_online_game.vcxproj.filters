@@ -678,9 +678,6 @@
     <ClInclude Include="include\DepthOfField.h">
       <Filter>ヘッダー ファイル\Shader\DoF</Filter>
     </ClInclude>
-    <ClInclude Include="include\RenderTargetMulti.h">
-      <Filter>ヘッダー ファイル\System\RenderTarget</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="imgui\imgui.cpp">
@@ -1033,9 +1030,6 @@
     </ClCompile>
     <ClCompile Include="src\DepthOfField.cpp">
       <Filter>ソース ファイル\Shader\DoF</Filter>
-    </ClCompile>
-    <ClCompile Include="src\RenderTargetMulti.cpp">
-      <Filter>ソース ファイル\System\RenderTarget</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
