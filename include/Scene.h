@@ -30,6 +30,7 @@ public:
     {
         Title,
         Connect,
+        Tutorial,
         Game,
         Result,
         Max

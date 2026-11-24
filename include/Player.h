@@ -26,6 +26,7 @@ public:
 
     HRESULT Init            (void) override;
     HRESULT ConnectInit     (void);
+    HRESULT TutorialInit    (void);
     HRESULT ResultInit      (void);
     void    Update          (void) override;
     void    SetIsAutoMove   (bool flag);
