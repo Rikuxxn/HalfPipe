@@ -97,14 +97,6 @@ HRESULT CTutorial::Init(void)
 	m_pSky = std::make_unique<CSky>();
 	m_pSky->Init();
 
-	// ジャンプタイミングUIの生成
-	auto jump = CreateObject<CJumpTiming>();
-	jump->Init();
-
-	// ジャンプタイミングの評価UIの生成
-	auto jumpTimingUI = CreateObject<CJumpTimingRating>();
-	jumpTimingUI->Init();
-
 	//============================================================
 	// Player生成(クライアント)
 	//============================================================
