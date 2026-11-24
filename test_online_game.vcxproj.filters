@@ -262,6 +262,12 @@
     <Filter Include="ヘッダー ファイル\Shader\DoF">
       <UniqueIdentifier>{473fde75-53a3-4855-9092-a271e5e0c0c6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\DepthOfField">
+      <UniqueIdentifier>{1ce20272-c58b-4add-9c42-a3500286b519}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\DepthOfField">
+      <UniqueIdentifier>{c065424b-09a4-463f-b042-25c84f973a12}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\CollisionSystem.h">
@@ -675,8 +681,20 @@
     <ClInclude Include="include\ParticleVelocityModule.h">
       <Filter>ヘッダー ファイル\Particle\Module</Filter>
     </ClInclude>
-    <ClInclude Include="include\DepthOfField.h">
+    <ClInclude Include="include\DepthOfFieldShader.h">
       <Filter>ヘッダー ファイル\Shader\DoF</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Tutorial.h">
+      <Filter>ヘッダー ファイル\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TutorialState.h">
+      <Filter>ヘッダー ファイル\State</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RenderTargetMulti.h">
+      <Filter>ヘッダー ファイル\System\RenderTarget</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DepthOfField.h">
+      <Filter>ヘッダー ファイル\DepthOfField</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1028,8 +1046,20 @@
     <ClCompile Include="src\CountRenderComponent.cpp">
       <Filter>ソース ファイル\Component\Render</Filter>
     </ClCompile>
-    <ClCompile Include="src\DepthOfField.cpp">
+    <ClCompile Include="src\DepthOfFieldShader.cpp">
       <Filter>ソース ファイル\Shader\DoF</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tutorial.cpp">
+      <Filter>ソース ファイル\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TutorialState.cpp">
+      <Filter>ソース ファイル\State</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RenderTargetMulti.cpp">
+      <Filter>ソース ファイル\System\RenderTarget</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DepthOfField.cpp">
+      <Filter>ソース ファイル\DepthOfField</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
