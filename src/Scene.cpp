@@ -12,6 +12,7 @@
 #include "GameObject.h"
 #include "Title.h"
 #include "Connect.h"
+#include "Tutorial.h"
 #include "Game.h"
 #include "Result.h"
 #include "RenderComponent.h"
@@ -49,6 +50,10 @@ std::unique_ptr<CScene>CScene::Create(Mode mode)
 
     case Mode::Connect:
         scene = new CConnect();
+        break;
+
+    case Mode::Tutorial:
+        scene = new CTutorial();
         break;
 
     case Mode::Game:

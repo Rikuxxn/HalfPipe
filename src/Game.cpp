@@ -10,7 +10,6 @@
 //*****************************************************************************
 #include "Game.h"
 #include "Manager.h"
-#include "Result.h"
 #include "Input.h"
 #include "InputManager.h"
 #include "Fade.h"
