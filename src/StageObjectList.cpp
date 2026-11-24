@@ -285,6 +285,7 @@ void CHalfPipeBlock::Update(void)
 // コンストラクタ
 //=============================================================================
 CBasketBlock::CBasketBlock() :
+	m_BasketId			(0),			// かごのID
 	m_CenterPosition	(INIT_VEC3),	// バスケットの中心位置
 	m_CenterRotation	(INIT_VEC3),	// 回転
 	m_AimRadius			(400.0f),		// エイム可能な半径
@@ -879,6 +880,53 @@ void CBasketBlock::RemovePointCircleById(uint32_t circleId)
 	}
 }
 
+//=============================================================================
+// ID設定の描画
+//=============================================================================
+void CBasketBlock::DrawCustomUI(void)
+{
+	ImGui::Dummy(ImVec2(0.0f, 5.0f));
+
+	//=========================================================
+	// IDの設定
+	//=========================================================
+
+	int id = static_cast<int>(m_BasketId);
+
+	if (ImGui::InputInt("ID", &id))
+	{
+		if (id >= 0)
+		{
+			m_BasketId = static_cast<uint32_t>(id);
+		}
+	}
+
+	ImGui::Dummy(ImVec2(0.0f, 5.0f));
+}
+
+//=============================================================================
+// JSONでの保存
+//=============================================================================
+void CBasketBlock::SaveToJson(json& b)
+{
+	CStageObject::SaveToJson(b);
+
+	b["id"] = m_BasketId;
+}
+
+//=============================================================================
+// JSONでの読み込み
+//=============================================================================
+void CBasketBlock::LoadFromJson(const json& b)
+{
+	CStageObject::LoadFromJson(b);
+
+	if (b.contains("id"))
+	{
+		m_BasketId = b.value("id", 0);
+	}
+}
+
 CRightBlock::CRightBlock()
 {
 
@@ -1208,17 +1256,22 @@ void CPointCircleBlock::OnTriggerEnter(CGameObject* other)
 	// 得点加算
 	AddScore(m_Point);
 
-	// ネットワーク通知
+	// サーバーに得点を通知
 	auto network = CManager::Instance()->GetNetworkManager();
 
-	if (network)
+	if (network && network->IsConnected())
 	{
-		network->SendPointCircleScored(m_CircleId);
+		network->SendAddScore(m_Point);
 	}
 
 	// 50点・30点なら削除
 	if (m_Point == 50 || m_Point == 30)
 	{
+		if (network && m_Basket)
+		{
+			network->SendPointCircleScored(m_Basket->GetBasketId(), m_CircleId);
+		}
+
 		if (m_Basket)
 		{
 			m_Basket->RemovePointCircleById(m_CircleId);

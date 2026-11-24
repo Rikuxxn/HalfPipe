@@ -48,10 +48,17 @@ void CGameObject::Update(void)
 
     for (auto& comp : m_Components)
     {
-        if (comp->IsActive())
+        if (!comp->IsActive())
         {
-            comp->Update();
+            continue;
         }
+
+        if (!comp->IsUpdateEnabled())
+        {
+            continue;
+        }
+
+        comp->Update();
     }
 }
 

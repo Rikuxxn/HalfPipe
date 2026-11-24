@@ -173,6 +173,10 @@ public:
     // エイム範囲取得
     float GetAimRadius(void) const { return m_AimRadius; }
 
+    // かごのID
+    void SetBasketId(uint32_t id) { m_BasketId = id; }
+    uint32_t GetBasketId(void) const { return m_BasketId; }
+
     StageObjectType GetType(void) const override
     {
         return StageObjectType::Basket;
@@ -211,6 +215,11 @@ private:
     // 得点サークルの位置・回転を更新
     void UpdatePointCircles(void);
 
+    void SaveToJson(json& j) override;
+    void LoadFromJson(const json& j) override;
+
+    void DrawCustomUI(void) override;
+
 private:
     static constexpr float CIRCLE_OFFSET_Y = 60.0f;
 
@@ -232,6 +241,8 @@ private:
 
     // 得点サークルの高さの間隔
     float m_HeightOffset;
+
+    uint32_t m_BasketId;
 };
 
 //*****************************************************************************

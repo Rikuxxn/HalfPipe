@@ -43,6 +43,7 @@
 #include "UIFactory.h"
 #include "UIAnimationComponent.h"
 #include "TimeSystem.h"
+#include <StageObjectList.h>
 
 
 //=============================================================================
@@ -307,6 +308,35 @@ void CGame::Update(void)
 
 	// シーンの更新処理
 	CScene::Update();
+
+	if (network)
+	{
+		CNetworkManager::PointCircleScoredInfo info{};
+
+		while (network->PopPointCircleScored(info))
+		{
+			// バスケットを取得
+			auto scene = CManager::Instance()->GetSceneManager()->GetScene();
+
+			if (!scene)
+			{
+				continue;
+			}
+
+			// シーン内のすべてのBasketを取得
+			auto baskets = scene->FindGameObjects<CBasketBlock>();
+
+			// 投げ込んだかごからサークルを削除
+			for (auto basket : baskets)
+			{
+				if (basket && basket->GetBasketId() == info.BasketId)
+				{
+					basket->RemovePointCircleById(info.CircleId);
+					break;
+				}
+			}
+		}
+	}
 
 	// デルタタイムの取得
 	float dt = CManager::Instance()->GetTimeSystem()->GetDeltaTime();

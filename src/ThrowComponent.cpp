@@ -31,7 +31,7 @@ CThrowComponent::CThrowComponent() :
 	m_ThrowCount		(MAX_DEF_THROW_NUM),	// 投擲数
 	m_BallThrowSpeed	(3500.0f)				// ボールの投擲スピード
 {
-
+	SetUpdateEnabled(false);
 }
 
 //=============================================================================
@@ -40,14 +40,6 @@ CThrowComponent::CThrowComponent() :
 HRESULT CThrowComponent::Init(void)
 {
 	return S_OK;
-}
-
-//=============================================================================
-// 更新処理
-//=============================================================================
-void CThrowComponent::Update(void)
-{
-
 }
 
 //=============================================================================

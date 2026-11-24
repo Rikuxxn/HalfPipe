@@ -114,7 +114,7 @@ private:
 
 public:
 
-    CUIComponent() = default;
+    CUIComponent();
     ~CUIComponent() override = default;
 
     // UIî•ñ‚Ìæ“¾

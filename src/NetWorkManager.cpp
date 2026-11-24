@@ -673,11 +673,38 @@ void CNetworkManager::OnReceive( ENetPeer* peer, ENetPacket* packet)
 		}
 
 		Network::PointCircleScoredPacket input{};
-
 		std::memcpy(&input, packet->data, sizeof(input));
 
+		PointCircleScoredInfo info{};
+		info.BasketId = input.basketId;
+		info.CircleId = input.circleId;
+
 		// 削除通知をキューに追加
-		m_PointCircleScoredQueue.push(input.circleId);
+		m_PointCircleScoredQueue.push(info);
+	}
+	else if (header.type == Network::PacketType::PlayerScore)
+	{
+		if (packet->dataLength < sizeof(Network::PlayerScorePacket))
+		{
+			return;
+		}
+
+		Network::PlayerScorePacket scorePacket{};
+
+		std::memcpy(
+			&scorePacket,
+			packet->data,
+			sizeof(scorePacket)
+		);
+
+		m_PlayerScores.clear();
+
+		for (uint8_t i = 0; i < scorePacket.playerCount; ++i)
+		{
+			m_PlayerScores.push_back(scorePacket.players[i]);
+		}
+
+		m_IsPlayerScoresReceived = true;
 	}
 }
 
@@ -988,14 +1015,14 @@ bool CNetworkManager::PopPlayerReady(PlayerReadyInfo& info)
 //=============================================================================
 // 得点状態をキューから取り出す
 //=============================================================================
-bool CNetworkManager::PopPointCircleScored(uint32_t& circleId)
+bool CNetworkManager::PopPointCircleScored(PointCircleScoredInfo& info)
 {
 	if (m_PointCircleScoredQueue.empty())
 	{
 		return false;
 	}
 
-	circleId = m_PointCircleScoredQueue.front();
+	info = m_PointCircleScoredQueue.front();
 	m_PointCircleScoredQueue.pop();
 
 	return true;
@@ -1004,7 +1031,7 @@ bool CNetworkManager::PopPointCircleScored(uint32_t& circleId)
 //=============================================================================
 // 得点サークル獲得通知
 //=============================================================================
-void CNetworkManager::SendPointCircleScored(uint32_t circleId)
+void CNetworkManager::SendPointCircleScored(uint32_t basketId, uint32_t circleId)
 {
 	if (!m_IsConnected || !m_IsJoined || !m_ServerPeer)
 	{
@@ -1015,7 +1042,31 @@ void CNetworkManager::SendPointCircleScored(uint32_t circleId)
 
 	packet.header.type = Network::PacketType::PointCircleScored;
 	packet.header.size = sizeof(packet);
+	packet.basketId = basketId;
 	packet.circleId = circleId;
+
+	ENetPacket* sendPacket = enet_packet_create(
+		&packet,
+		sizeof(packet),
+		ENET_PACKET_FLAG_RELIABLE);
+
+	if (sendPacket)
+	{
+		enet_peer_send(m_ServerPeer, 0, sendPacket);
+		enet_host_flush(m_Host);
+	}
+}
+
+//=============================================================================
+// 得点通知
+//=============================================================================
+void CNetworkManager::SendAddScore(int point)
+{
+	Network::AddScorePacket packet{};
+
+	packet.header.type = Network::PacketType::AddScore;
+	packet.header.size = sizeof(packet);
+	packet.point = point;
 
 	ENetPacket* sendPacket = enet_packet_create(
 		&packet,

@@ -214,11 +214,16 @@ HRESULT CConnect::Init(void)
 	color->StartColor = { 1, 1, 1, 1 };
 	color->EndColor = { 1, 1, 1, 0 };
 
-	CNetworkManager* network = CManager::Instance()->GetNetworkManager();
-
-	if (network)
+	//=====================================
+	// サーバーへ接続
+	//=====================================
 	{
-		network->FindLANServer(22334);
+		CNetworkManager* network = CManager::Instance()->GetNetworkManager();
+
+		if (network)
+		{
+			network->FindLANServer(22334);
+		}
 	}
 
 	// カメラの取得
@@ -415,6 +420,14 @@ void CConnect::Update(void)
 				player->Destroy();
 			}
 		}
+	}
+
+	if (!network->IsGameReady() && pFade->GetFade() == CFade::FADE_NONE &&
+		(pKeyboard->GetTrigger(DIK_R) ||
+			pJoypad->GetTrigger(CInputJoypad::JOYKEY_BACK)))
+	{
+		// タイトルに戻る
+		pFade->StartFadeOut(Mode::Title);
 	}
 
 	// 参加確定後はゲームシーンへの遷移を待つ
