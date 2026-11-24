@@ -398,6 +398,220 @@ HRESULT CPlayer::ConnectInit(void)
 }
 
 //=============================================================================
+// チュートリアルでの初期化処理
+//=============================================================================
+HRESULT CPlayer::TutorialInit(void)
+{
+	if (m_IsLocalPlayer)
+	{
+		// 自動移動コンポーネントの追加
+		auto autoMove = AddComponent<CAutoMoveComponent>();
+
+		// 投擲コンポーネントの追加
+		auto throwCmp = AddComponent<CThrowComponent>();
+
+		// 自動移動ポイントの読み込み
+		autoMove->LoadMovePoint("data/MovePointInfo01.json");
+
+		// 最初は自動移動停止
+		autoMove->StopAutoMove();
+
+		// エイムコンポーネントの追加
+		auto aim = AddComponent<CAimComponent>();
+
+		if (!aim)
+		{
+			return E_FAIL;
+		}
+
+		// エイムは最初は非表示
+		aim->InvisibleAim();
+
+		// シーンの取得
+		auto scene = CManager::Instance()->GetSceneManager()->GetScene();
+
+		// UIアニメーションデータの読み込み
+		auto uiManager = CManager::Instance()->GetUIAnimationManager();
+
+		if (uiManager)
+		{
+			uiManager->Load("data/UIAnimation/SnowBall_Icon.json");
+		}
+
+		// 登録済みのUIデータを取得
+		UIAnimationData* data = uiManager->GetData("SnowBallIcon");
+
+		if (!scene)
+		{
+			return E_FAIL;
+		}
+
+		// UI生成
+		m_pSnowBallIconUI = CUIFactory::Create(scene, *data);
+
+		// 最初は表示
+		auto sprite = m_pSnowBallIconUI->GetComponent<CSpriteRenderComponent>();
+
+		if (sprite)
+		{
+			sprite->SetIsVisible(true);
+		}
+
+		// 雪玉カウントの生成
+		auto countObject = scene->CreateObject<CGameObject>();
+
+		countObject->SetTag("SnowBallCount");
+
+		// UIコンポーネント
+		auto ui = countObject->AddComponent<CUIComponent>();
+
+		// カウント描画コンポーネント
+		auto count = countObject->AddComponent<CCountRenderComponent>();
+
+		ui->SetPosition({ 0.97f, 0.9f });
+		ui->SetScale({ 2.0f, 2.0f });
+
+		count->SetLayer(RenderLayer::UI);
+		count->SetTexture("data/TEXTURE/Num_01.png");
+		count->SetDigitSize(0.03f, 0.05f);
+		count->SetCount(throwCmp->GetCurrentThrowCount());
+		count->SetCountType(CountType::Dec);
+
+
+		// 3D炎パーティクルオブジェクトの生成
+		m_ParticleObject = scene->CreateObject();
+
+		m_ParticleObject->SetTag("Particle3D_Player");
+
+		// 松明の位置
+		auto transform = GetComponent<CTransformComponent>();
+
+		// パーティクルの位置
+		auto particle3DTransform = m_ParticleObject->AddComponent<CTransformComponent>();
+
+		// 松明の先端位置
+		D3DXVECTOR3 localTipPosition(0.0f, 10.0f, 0.0f);
+
+		// ローカルからワールドへ
+		particle3DTransform->Position = LocalToWorld(
+			localTipPosition,
+			transform->Position,
+			transform->Rotation,
+			transform->Scale
+		);
+
+		//=====================================
+		// パーティクル設定
+		//=====================================
+
+		auto emitter = m_ParticleObject->AddComponent<CParticleEmitterComponent>();
+
+		emitter->SetLayer(RenderLayer::Particle3D);
+
+		emitter->Space = ParticleSpace::Space3D;
+
+		emitter->SetTexture("data/TEXTURE/smoke.jpg");
+
+		emitter->SetShader("data/Shader/Instancing/ParticleInstancing.fx");
+
+		emitter->SetPlay(false);
+
+		// 発生設定
+		emitter->EmitMode = ParticleEmitMode::Loop;
+		emitter->SpawnShape = ParticleSpawnShape::Point;
+		emitter->EmitRate = 2;
+
+		// 寿命
+		emitter->LifeTimeMin = 20;
+		emitter->LifeTimeMax = 40;
+
+		// サイズ
+		emitter->SizeMin = 20;
+		emitter->SizeMax = 40;
+
+		// 色
+		emitter->col = { 0.2f, 0.2f, 0.7f, 1.0f };
+
+
+		//=====================================
+		// モジュール設定
+		//=====================================
+
+		// 初速度
+		auto velocity = emitter->AddModule<CParticleVelocityModule>();
+
+		velocity->VelocityMin = { -0.3f, 0.5f, -0.3f };
+		velocity->VelocityMax = { 0.3f, 2.0f,  0.3f };
+
+
+		// 重力・移動
+		auto gravity = emitter->AddModule<CParticleGravityModule>();
+
+		gravity->Gravity = { 0.0f, 0.01f, 0.0f };
+
+
+		// サイズ変化
+		auto size = emitter->AddModule<CParticleSizeModule>();
+
+		size->StartSize = 20.0f;
+		size->EndSize = 40.0f;
+
+
+		// 色変化
+		auto color = emitter->AddModule<CParticleColorModule>();
+
+		color->StartColor = { 0.2f, 0.2f, 0.7f, 0.9f };
+		color->EndColor = { 0.2f, 0.2f, 0.7f, 0.0f };
+	}
+
+	// レイキャストコンポーネントの追加
+	AddComponent<CRaycastComponent>();
+
+	// インスタンスのポインタを渡す
+	m_stateMachine.Start(this);
+
+	// 初期状態のステートをセット
+	m_stateMachine.ChangeState<CPlayerStandState>();
+
+	// シーンの取得
+	auto scene = CManager::Instance()->GetSceneManager()->GetScene();
+
+	if (!scene)
+	{
+		return E_FAIL;
+	}
+
+	// 準備UIオブジェクトの生成
+	m_pReadyUI = scene->CreateObject();
+
+	m_pReadyUI->SetTag("ReadyUI");
+
+	// UIコンポーネント
+	auto uiReady = m_pReadyUI->AddComponent<CUIComponent>();
+
+	auto& readyTransform = uiReady->GetTransform();
+	readyTransform.Position = { m_PlayerId * 0.25f + 0.14f, 0.73f };
+	readyTransform.Alpha = 1.0f;
+	readyTransform.Scale = { 0.0016f, 0.0008f };
+
+	// スプライトコンポーネントに追加
+	auto spriteReady = m_pReadyUI->AddComponent<CSpriteRenderComponent>();
+
+	// 描画順の設定
+	spriteReady->SetLayer(RenderLayer::UI);
+
+	// テクスチャの設定
+	spriteReady->SetTexture("data/TEXTURE/Connect_2.png");
+
+	if (uiReady)
+	{
+		uiReady->SetUVFrame(1, 3);
+	}
+
+	return S_OK;
+}
+
+//=============================================================================
 // リザルトでのの初期化処理
 //=============================================================================
 HRESULT CPlayer::ResultInit(void)

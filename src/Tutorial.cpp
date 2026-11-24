@@ -465,7 +465,7 @@ void CTutorial::SpawnPlayer(uint8_t playerId)
 		break;
 	}
 
-	player->Init();
+	player->TutorialInit();
 
 	auto rigid = player->AddComponent<CRigidBodyComponent>();
 
