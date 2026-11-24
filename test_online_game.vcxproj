@@ -288,6 +288,8 @@
     <ClInclude Include="include\TriggerObjectEditor.h" />
     <ClInclude Include="include\TriggerObjectList.h" />
     <ClInclude Include="include\TriggerObjectManager.h" />
+    <ClInclude Include="include\Tutorial.h" />
+    <ClInclude Include="include\TutorialState.h" />
     <ClInclude Include="include\UIAnimationComponent.h" />
     <ClInclude Include="include\UIAnimationData.h" />
     <ClInclude Include="include\UIAnimationEditor.h" />
@@ -412,6 +414,8 @@
     <ClCompile Include="src\TriggerObjectEditor.cpp" />
     <ClCompile Include="src\TriggerObjectList.cpp" />
     <ClCompile Include="src\TriggerObjectManager.cpp" />
+    <ClCompile Include="src\Tutorial.cpp" />
+    <ClCompile Include="src\TutorialState.cpp" />
     <ClCompile Include="src\UIAnimationComponent.cpp" />
     <ClCompile Include="src\UIAnimationEditor.cpp" />
     <ClCompile Include="src\UIAnimationManager.cpp" />

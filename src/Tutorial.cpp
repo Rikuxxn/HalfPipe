@@ -42,6 +42,7 @@
 #include "UIAnimationComponent.h"
 #include "TimeSystem.h"
 #include <StageObjectList.h>
+#include "TutorialState.h"
 
 
 //=============================================================================
@@ -172,6 +173,12 @@ HRESULT CTutorial::Init(void)
 			sprite->SetIsVisible(true);
 		}
 	}
+
+	// インスタンスのポインタを渡す
+	m_stateMachine.Start(this);
+
+	// 初期状態のステートをセット
+	m_stateMachine.ChangeState<CTutorialWaitState>();
 
 	// カメラの取得
 	CCamera* pCamera = CManager::Instance()->GetCamera();
