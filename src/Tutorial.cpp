@@ -299,9 +299,6 @@ void CTutorial::Update(void)
 		// 全員が準備完了になったら
 		if (network->IsGameReady())
 		{
-			// デルタタイムの取得
-			float dt = CManager::Instance()->GetTimeSystem()->GetDeltaTime();
-
 			m_fCount -= dt;
 
 			if (pFade->GetFade() == CFade::FADE_NONE && m_fCount <= 0.0f)
