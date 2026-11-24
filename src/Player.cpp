@@ -605,7 +605,7 @@ HRESULT CPlayer::TutorialInit(void)
 
 	if (uiReady)
 	{
-		uiReady->SetUVFrame(1, 3);
+		uiReady->SetUVFrame(0, 2);
 	}
 
 	return S_OK;
