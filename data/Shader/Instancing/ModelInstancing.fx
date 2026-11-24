@@ -233,7 +233,7 @@ PS_OUTPUT PS_Main(VS_OUTPUT Out) : COLOR0
     result.a = color.a;
 
     psOut.color = result;
-    psOut.depth = float4(Out.depthInView,0.0f,0.0f,1.0f);
+    psOut.depth = Out.depthInView;
     
     return psOut;
 }

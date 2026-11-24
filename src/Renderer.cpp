@@ -203,7 +203,6 @@ void CRenderer::Uninit(void)
 	}
 
 	m_SceneRT.Release();
-	m_ZSceneRT.Release();
 	m_BrightRT.Release();
 	m_BlurRT1.Release();
 	m_BlurRT2.Release();
@@ -221,7 +220,6 @@ void CRenderer::Uninit(void)
 void CRenderer::ReleaseRenderTargets(void)
 {
 	m_SceneRT.Release();
-	m_ZSceneRT.Release();
 	m_BrightRT.Release();
 	m_BlurRT1.Release();
 	m_BlurRT2.Release();
@@ -243,7 +241,6 @@ void CRenderer::Begin(void)
 
 	// •`‰ææ‚ðSceneRT‚ÖØ‚è‘Ö‚¦
 	m_SceneRT.Set();
-	m_ZSceneRT.Set();
 
 	// ƒNƒŠƒA
 	m_pD3DDevice->Clear(
@@ -413,12 +410,6 @@ HRESULT CRenderer::CreateRenderTargets(void)
 
 	// Scene
 	if (FAILED(m_SceneRT.Create(w, h, D3DFMT_A8R8G8B8, D3DFMT_D24S8)))
-	{
-		return E_FAIL;
-	}
-
-	// ZScene
-	if (FAILED(m_ZSceneRT.Create(w, h, D3DFMT_A32B32G32R32F, D3DFMT_D24S8)))
 	{
 		return E_FAIL;
 	}
