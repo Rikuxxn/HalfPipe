@@ -601,7 +601,7 @@ HRESULT CPlayer::TutorialInit(void)
 	spriteReady->SetLayer(RenderLayer::UI);
 
 	// テクスチャの設定
-	spriteReady->SetTexture("data/TEXTURE/Skip.png");
+	spriteReady->SetTexture("data/TEXTURE/Connect_2.png");
 
 	if (uiReady)
 	{
