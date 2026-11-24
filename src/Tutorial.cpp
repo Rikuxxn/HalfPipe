@@ -76,7 +76,7 @@ HRESULT CTutorial::Init(void)
 	trigger->Init();
 
 	// ステージオブジェクトの読み込み
-	CManager::Instance()->GetStageManager()->LoadFromJson("data/StageInfo/Game_Stage.json");
+	CManager::Instance()->GetStageManager()->LoadFromJson("data/StageInfo/Tutorial_Stage.json");
 
 	// トリガーオブジェクトの読み込み
 	CManager::Instance()->GetTriggerObjectManager()->LoadFromJson("data/TriggerInfo/Game_Trigger.json");
