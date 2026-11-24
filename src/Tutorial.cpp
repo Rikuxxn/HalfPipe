@@ -301,33 +301,23 @@ void CTutorial::Update(void)
 		}
 	}
 
-	// 人数がそろって、一定時間経過したら
-	if (m_nReadyCount >= Network::MAX_PLAYERS && !m_IsGameStart)
+	// スキップ
+	if (network->IsJoined())
 	{
-		m_fCount -= dt;
-
-		if (m_fCount <= 0.0f)
+		// 全員が準備完了になったら
+		if (network->IsGameReady())
 		{
-			m_fCount = 3.0f;
-			m_IsGameStart = true;
+			// デルタタイムの取得
+			float dt = CManager::Instance()->GetTimeSystem()->GetDeltaTime();
 
-			// プレイヤーの自動移動を開始
-			auto players = FindGameObjects<CPlayer>();
+			m_fCount -= dt;
 
-			for (auto player : players)
+			if (pFade->GetFade() == CFade::FADE_NONE && m_fCount <= 0.0f)
 			{
-				if (!player)
-				{
-					continue;
-				}
+				m_fCount = 0.0f;
 
-				if (!player->IsLocalPlayer())
-				{
-					continue;
-				}
-
-				// 自動移動開始
-				player->SetIsAutoMove(true);
+				// ゲーム画面に移行
+				pFade->StartFadeOut(Mode::Game);
 			}
 		}
 	}
