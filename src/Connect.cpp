@@ -286,7 +286,7 @@ void CConnect::Update(void)
 		pKeyboard->GetTrigger(DIK_T))
 	{
 		// ƒQ[ƒ€‰æ–Ê‚ÉˆÚs
-		pFade->StartFadeOut(Mode::Game);
+		pFade->StartFadeOut(Mode::Tutorial);
 	}
 #endif
 

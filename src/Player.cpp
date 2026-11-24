@@ -601,11 +601,11 @@ HRESULT CPlayer::TutorialInit(void)
 	spriteReady->SetLayer(RenderLayer::UI);
 
 	// テクスチャの設定
-	spriteReady->SetTexture("data/TEXTURE/Connect_2.png");
+	spriteReady->SetTexture("data/TEXTURE/Skip.png");
 
 	if (uiReady)
 	{
-		uiReady->SetUVFrame(0, 2);
+		uiReady->SetUVFrame(1, 3);
 	}
 
 	return S_OK;
