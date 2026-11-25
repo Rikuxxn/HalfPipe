@@ -158,9 +158,6 @@ HRESULT CTextSprite::Init(void)
 
     spriteFont->SetLayer(RenderLayer::UI);
 
-    // テクスチャの設定
-    spriteFont->SetTexture("data/TEXTURE/.png");
-
     spriteFont->SetIsVisible(true);
 
     spriteFont->SetTexture(m_pTexture);
