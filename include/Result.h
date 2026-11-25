@@ -30,18 +30,10 @@ public:
 	CResult();
 	~CResult();
 
-	// プレイヤー生成
-	void SpawnPlayer(uint8_t playerId, uint8_t rank);
-
-	// 指定IDのプレイヤーを検索
-	CPlayer* FindPlayerById(uint8_t playerId);
-
 	HRESULT Init(void) override;
 	void Uninit(void) override;
 	void Update(void) override;
 	void Draw(void) override;
-
-	void CalculateRanking(void);
 
 	void OnDeviceReset(void) override;
 
@@ -53,6 +45,17 @@ private:
 		int score;
 		uint8_t rank;
 	};
+
+	// 指定IDのプレイヤーを検索
+	CPlayer* FindPlayerById(uint8_t playerId);
+
+	// プレイヤー生成
+	void SpawnPlayer(uint8_t playerId, uint8_t rank);
+
+	// スコア生成
+	void SpawnScore(const PlayerRanking& ranking);
+
+	void CalculateRanking(void);
 
 private:
 	static int			m_clearRankIndex;	// クリア時のランクインデックス
@@ -78,9 +81,6 @@ private:
 		{	0.64f,	0.48f }, // 3位
 		{	0.74f,	0.55f }  // 4位
 	};
-
-	// スコア
-	std::vector<CGameObject*> m_pScore;
 };
 
 #endif
