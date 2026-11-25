@@ -22,11 +22,13 @@
 #include "ShaderManager.h"
 #include "ShaderResource.h"
 #include "SpriteRenderComponent.h"
+#include "UIComponent.h"
 
 //=============================================================================
 // コンストラクタ
 //=============================================================================
-CDepthOfField::CDepthOfField()
+CDepthOfField::CDepthOfField():
+    m_GameObject(nullptr)
 {
 
 }
@@ -56,19 +58,17 @@ HRESULT CDepthOfField::Init(void)
 
     m_GameObject->SetTag("DoF");
 
-    auto meshTransform = m_GameObject->AddComponent<CTransformComponent>();
-
-    meshTransform->Position = { 0.0f, 0.0f, 0.0f };
-
     auto SpriteRenderer = m_GameObject->AddComponent<CSpriteRenderComponent>();
+    auto UI = m_GameObject->AddComponent<CUIComponent>();
+
+    auto& uiTransform = UI->GetTransform();
+    uiTransform.Position = { 0.5f,0.5f };
+    uiTransform.Scale    = { 0.01f,0.01f };
 
     // 描画順の設定
-    SpriteRenderer->SetLayer(RenderLayer::Mesh);
-
-    CManager::Instance()->GetShaderManager()->Load<CDoFShader>(
-        "data/Shader/Sky/Sky.hlsl");
-
-
+    SpriteRenderer->SetLayer(RenderLayer::UI);
+    SpriteRenderer->SetShader( CManager::Instance()->GetShaderManager()->Load<CDoFShader>(
+        "data/Shader/DepthOfField.hlsl"));
 
     return S_OK;
 }

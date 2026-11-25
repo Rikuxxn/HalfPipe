@@ -29,8 +29,6 @@ public:
 
 private:
     CGameObject* m_GameObject;
-    std::shared_ptr<CShaderResource> m_pEffect;
-
 };
 
 #endif

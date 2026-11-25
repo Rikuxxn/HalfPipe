@@ -438,6 +438,13 @@
     <FxCompile Include="data\Shader\Bloom\BloomCombine.hlsl" />
     <FxCompile Include="data\Shader\Bloom\BloomHorizontalBlur.hlsl" />
     <FxCompile Include="data\Shader\Bloom\BloomVerticalBlur.hlsl" />
+    <None Include="data\Shader\DepthOfField.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <FileType>Document</FileType>
+    </None>
     <FxCompile Include="data\Shader\Fbx\ShaderFBX.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">3.0</ShaderModel>
