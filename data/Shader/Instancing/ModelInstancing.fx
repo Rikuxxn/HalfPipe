@@ -20,7 +20,7 @@ texture Texture0;   // テクスチャ
 bool HasTexture;    // テクスチャを持っているか
 
 float3 LightDir;
-float4 Ambient = float4(0.25f, 0.25f, 0.25f, 1.0f);
+float4 Ambient = float4(0.5f, 0.5f, 0.5f, 1.0f);
 
 
 sampler ShadowSampler = sampler_state
