@@ -28,6 +28,7 @@ namespace ColorConst
 		constexpr D3DCOLOR YELLOW	= D3DCOLOR_ARGB(255, 255, 255, 0);
 		constexpr D3DCOLOR CYAN		= D3DCOLOR_ARGB(255, 0, 255, 255);
 		constexpr D3DCOLOR MAGENTA	= D3DCOLOR_ARGB(255, 255, 0, 255);
+		constexpr D3DCOLOR ORANGE	= D3DCOLOR_ARGB(255, 165, 0, 0);
 
 		//=====================================================================
 		// ÉOÉåÅ[ 

@@ -678,6 +678,18 @@
     <ClInclude Include="include\DepthOfField.h">
       <Filter>ヘッダー ファイル\Shader\DoF</Filter>
     </ClInclude>
+    <ClInclude Include="include\RenderTargetMulti.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Tutorial.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TutorialState.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TextSprite.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="imgui\imgui.cpp">
@@ -1030,6 +1042,18 @@
     </ClCompile>
     <ClCompile Include="src\DepthOfField.cpp">
       <Filter>ソース ファイル\Shader\DoF</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RenderTargetMulti.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tutorial.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TutorialState.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TextSprite.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
