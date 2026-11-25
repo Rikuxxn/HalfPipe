@@ -33,6 +33,10 @@
 #include <CharacterComponent.h>
 #include <RigidBodyComponent.h>
 #include <CollisionGroup.h>
+#include <UIComponent.h>
+#include <ScoreRenderComponent.h>
+#include "UIAnimationManager.h"
+#include <UIFactory.h>
 
 
 //*****************************************************************************
@@ -291,6 +295,34 @@ void CResult::SpawnPlayer(uint8_t playerId, uint8_t rank)
 		rigid->SetAngularFactor(btVector3(0.0f, 0.0f, 0.0f));
 
 		rigid->Transform();
+	}
+
+	// スコアの生成
+	{
+		auto scoreObject = CreateObject<CGameObject>();
+
+		scoreObject->SetTag("Score");
+
+		// UIコンポーネント
+		auto ui = scoreObject->AddComponent<CUIComponent>();
+
+		// スコア描画コンポーネント
+		auto scoreRender = scoreObject->AddComponent<CScoreRenderComponent>();
+
+		ui->SetPosition(m_ScorePositions[rank -1]);
+		ui->SetScale({ 2.0f, 2.0f });
+
+		scoreRender->SetLayer(RenderLayer::UI);
+		scoreRender->SetTexture("data/TEXTURE/Num_01.png");
+		scoreRender->SetDigitSize(0.02f, 0.04f);
+		scoreRender->SetCountSpeed(150.0f);
+
+		auto scores = network->GetPlayerScores();
+
+		for (const auto& score : scores)
+		{
+			scoreRender->SetScore(score.score);
+		}
 	}
 }
 
