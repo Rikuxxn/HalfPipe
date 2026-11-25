@@ -203,6 +203,7 @@ void CRenderer::Uninit(void)
 	}
 
 	m_SceneRT.Release();
+	m_ZSceneRT.Release();
 	m_BrightRT.Release();
 	m_BlurRT1.Release();
 	m_BlurRT2.Release();
@@ -220,6 +221,7 @@ void CRenderer::Uninit(void)
 void CRenderer::ReleaseRenderTargets(void)
 {
 	m_SceneRT.Release();
+	m_ZSceneRT.Release();
 	m_BrightRT.Release();
 	m_BlurRT1.Release();
 	m_BlurRT2.Release();
@@ -241,6 +243,7 @@ void CRenderer::Begin(void)
 
 	// 描画先をSceneRTへ切り替え
 	m_SceneRT.Set();
+	m_ZSceneRT.Set();
 
 	// クリア
 	m_pD3DDevice->Clear(
@@ -385,6 +388,12 @@ void CRenderer::ResetDevice(void)
 	m_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
 	m_pD3DDevice->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_CURRENT);
 
+	//テクスチャステージステート
+	m_pD3DDevice->SetTextureStageState(1, D3DTSS_COLORARG1, D3DTA_TEXTURE);
+	m_pD3DDevice->SetTextureStageState(1, D3DTSS_COLORARG2, D3DTA_CURRENT);
+	m_pD3DDevice->SetTextureStageState(1, D3DTSS_COLOROP, D3DTOP_MODULATE);
+
+
 	//// デバッグフォントの初期化
 	//m_pDebug->Init();
 
@@ -413,6 +422,13 @@ HRESULT CRenderer::CreateRenderTargets(void)
 	{
 		return E_FAIL;
 	}
+
+	// ZScene
+	if (FAILED(m_ZSceneRT.Create(w, h, D3DFMT_A32B32G32R32F, D3DFMT_D24S8)))
+	{
+		return E_FAIL;
+	}
+
 
 	// Bright
 	if (FAILED(m_BrightRT.Create(w / 2, h / 2, D3DFMT_A8R8G8B8, D3DFMT_UNKNOWN)))
@@ -476,7 +492,6 @@ void CRenderer::DrawFullscreenQuad(ID3DXEffect* effect, float width, float heigh
 void CRenderer::RenderBloom(void)
 {
 	m_pD3DDevice->BeginScene();
-
 	//
 	// Bright
 	//

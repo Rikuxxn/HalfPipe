@@ -10,6 +10,7 @@
 //*****************************************************************************
 // インクルードファイル
 //*****************************************************************************
+#include "GameObject.h"
 
 // 前方宣言
 class CShaderResource;
@@ -27,8 +28,9 @@ public:
     void Draw(void);
 
 private:
-
+    CGameObject* m_GameObject;
     std::shared_ptr<CShaderResource> m_pEffect;
+
 };
 
 #endif

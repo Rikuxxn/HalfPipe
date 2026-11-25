@@ -17,6 +17,7 @@
 #include "MathConstants.h"
 #include "ColorConstants.h"
 #include "UIComponent.h"
+#include "ShaderResource.h"
 
 // 名前空間の使用
 using namespace MathConst;
@@ -154,6 +155,46 @@ void CSpriteRenderComponent::Draw(void)
 
     //頂点バッファをアンロックする
     m_pVtxBuff->Unlock();
+
+    // メッシュの描画
+    if (m_Shader)
+    {
+        auto effect = m_Shader->GetEffect();
+
+        m_Shader->Apply(m_pOwner);
+
+        UINT pass = 0;
+        effect->Begin(&pass, 0);
+
+        for (UINT i = 0; i < pass; i++)
+        {
+            effect->BeginPass(i);
+
+            DrawPolygon();
+
+            effect->EndPass();
+        }
+
+        effect->End();
+    }
+    //------------------------------------------------
+    // シェーダなし
+    //------------------------------------------------
+    else
+    {
+        DrawPolygon();
+    }
+
+}
+
+//=============================================================================
+// 描画処理(ポリゴン)
+//=============================================================================
+void CSpriteRenderComponent::DrawPolygon(void)
+{
+
+    // デバイスの取得
+    auto device = CManager::Instance()->GetRenderer()->GetDevice();
 
     // αテストを有効
     device->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);//デフォルトはfalse

@@ -9,6 +9,7 @@
 // インクルードファイル
 //*****************************************************************************
 #include "DepthOfField.h"
+#include "DepthOfFieldShader.h"
 #include "Manager.h"
 #include "Renderer.h"
 #include "Camera.h"
@@ -20,8 +21,7 @@
 #include "TransformComponent.h"
 #include "ShaderManager.h"
 #include "ShaderResource.h"
-#include "SkyShader.h"
-
+#include "SpriteRenderComponent.h"
 
 //=============================================================================
 // コンストラクタ
@@ -52,33 +52,23 @@ HRESULT CDepthOfField::Init(void)
     auto scene = CManager::Instance()->GetSceneManager()->GetScene();
 
     // メッシュスフィアオブジェクトの生成
-    auto sun = scene->CreateObject();
+    m_GameObject = scene->CreateObject();
 
-    sun->SetTag("MeshSphere");
+    m_GameObject->SetTag("DoF");
 
-    auto meshTransform = sun->AddComponent<CTransformComponent>();
+    auto meshTransform = m_GameObject->AddComponent<CTransformComponent>();
 
     meshTransform->Position = { 0.0f, 0.0f, 0.0f };
 
-    auto renderer = sun->AddComponent<CMeshRenderComponent>();
+    auto SpriteRenderer = m_GameObject->AddComponent<CSpriteRenderComponent>();
 
     // 描画順の設定
-    renderer->SetLayer(RenderLayer::Mesh);
+    SpriteRenderer->SetLayer(RenderLayer::Mesh);
 
-    auto mesh = std::make_shared<CMeshResource>();
+    CManager::Instance()->GetShaderManager()->Load<CDoFShader>(
+        "data/Shader/Sky/Sky.hlsl");
 
-    mesh->CreateSphere(
-        9300.0f,   // 半径
-        64,        // Slice
-        32);       // Stack
 
-    // ポインタ設定
-    renderer->SetMesh(mesh);
-
-    // シェーダーの設定
-    renderer->SetShader(
-        CManager::Instance()->GetShaderManager()->Load<CSkyShader>(
-            "data/Shader/Sky/Sky.hlsl"));
 
     return S_OK;
 }
