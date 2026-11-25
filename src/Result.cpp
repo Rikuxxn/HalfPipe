@@ -299,28 +299,29 @@ void CResult::SpawnPlayer(uint8_t playerId, uint8_t rank)
 
 	// スコアの生成
 	{
-		auto scoreObject = CreateObject<CGameObject>();
-
-		scoreObject->SetTag("Score");
-
-		// UIコンポーネント
-		auto ui = scoreObject->AddComponent<CUIComponent>();
-
-		// スコア描画コンポーネント
-		auto scoreRender = scoreObject->AddComponent<CScoreRenderComponent>();
-
-		ui->SetPosition(m_ScorePositions[rank -1]);
-		ui->SetScale({ 2.0f, 2.0f });
-
-		scoreRender->SetLayer(RenderLayer::UI);
-		scoreRender->SetTexture("data/TEXTURE/Num_01.png");
-		scoreRender->SetDigitSize(0.02f, 0.04f);
-		scoreRender->SetCountSpeed(150.0f);
 
 		auto scores = network->GetPlayerScores();
 
 		for (const auto& score : scores)
 		{
+			auto scoreObject = CreateObject<CGameObject>();
+
+			scoreObject->SetTag("Score");
+
+			// UIコンポーネント
+			auto ui = scoreObject->AddComponent<CUIComponent>();
+
+			// スコア描画コンポーネント
+			auto scoreRender = scoreObject->AddComponent<CScoreRenderComponent>();
+
+			ui->SetPosition(m_ScorePositions[rank - 1]);
+			ui->SetScale({ 2.0f, 2.0f });
+
+			scoreRender->SetLayer(RenderLayer::UI);
+			scoreRender->SetTexture("data/TEXTURE/Num_01.png");
+			scoreRender->SetDigitSize(0.02f, 0.04f);
+			scoreRender->SetCountSpeed(150.0f);
+
 			scoreRender->SetScore(score.score);
 		}
 	}
