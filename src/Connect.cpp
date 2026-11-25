@@ -285,7 +285,7 @@ void CConnect::Update(void)
 	if (pFade->GetFade() == CFade::FADE_NONE &&
 		pKeyboard->GetTrigger(DIK_T))
 	{
-		// ゲーム画面に移行
+		// チュートリアル画面に移行
 		pFade->StartFadeOut(Mode::Tutorial);
 	}
 #endif

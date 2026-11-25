@@ -36,7 +36,6 @@
 #include "UIAnimationComponent.h"
 #include "JumpTiming.h"
 #include "Camera.h"
-#include "JumpTimingRating.h"
 #include "ScoreRenderComponent.h"
 #include "UIAnimationManager.h"
 #include "UIFactory.h"
@@ -102,6 +101,10 @@ HRESULT CGame::Init(void)
 	// 空の生成
 	m_pSky = std::make_unique<CSky>();
 	m_pSky->Init();
+
+	// ジャンプタイミングUIの生成
+	auto jump = CreateObject<CJumpTiming>();
+	jump->Init();
 
 	//============================================================
 	// Player生成(クライアント)
