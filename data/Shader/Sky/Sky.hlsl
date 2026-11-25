@@ -36,6 +36,13 @@ struct VSOutput
 {
     float4 Pos      : POSITION;
     float3 WorldPos : TEXCOORD0;
+    float depthInView : TEXCOORD1;
+};
+
+struct PSOutput
+{
+    float4 Color        : COLOR0;
+    float4 DepthColor   : COLOR1;
 };
 
 //*********************************************************************
@@ -50,6 +57,8 @@ VSOutput main(VSInput Input)
     Output.WorldPos = worldPos.xyz;
     
     Output.Pos = mul(worldPos, View);
+    Output.depthInView = Output.Pos.z;
+
     Output.Pos = mul(Output.Pos, Projection);
 
     return Output;
@@ -248,8 +257,11 @@ float3 GetSkyColor(float3 viewDir, float3 sunDir)
 //*********************************************************************
 // ピクセルシェーダー関数
 //*********************************************************************
-float4 PSmain(VSOutput Input) : COLOR0
+PSOutput PSmain(VSOutput Input) : COLOR0
 {
+    
+    PSOutput psOut;
+       
     //----------------------------------
     // 視線方向
     //----------------------------------
@@ -438,8 +450,11 @@ float4 PSmain(VSOutput Input) : COLOR0
     //----------------------------------
     // 雲に色を合成
     //----------------------------------
-    
-    return float4(color, 1);
+    psOut.Color = float4(color, 1);
+
+    psOut.DepthColor = float4(Input.depthInView,0.0f,0.0f,1.0f);
+
+    return psOut;
 }
 
 //*********************************************************

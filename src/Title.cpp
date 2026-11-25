@@ -45,6 +45,7 @@
 #include "UIAnimationComponent.h"
 #include "TimeSystem.h"
 #include "NetWorkManager.h"
+#include "DepthOfField.h"
 
 
 //*****************************************************************************
@@ -119,6 +120,9 @@ HRESULT CTitle::Init(void)
 	// ãÛÇÃê∂ê¨
 	m_pSky = std::make_unique<CSky>();
 	m_pSky->Init();
+
+	auto DoF = std::make_unique<CDepthOfField>();
+	DoF->Init();
 
 	//-----------------------------------------------------
 	// JSONÇ…ï€ë∂ÇµÇΩUI (Press UI)
