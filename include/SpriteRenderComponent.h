@@ -12,6 +12,8 @@
 //*****************************************************************************
 #include "RenderComponent.h"
 
+class CShaderResource;
+
 //*****************************************************************************
 // スプライトコンポーネントクラス
 //*****************************************************************************
@@ -20,6 +22,7 @@ class CSpriteRenderComponent : public CRenderComponent
 private:
 
     ComPtr<IDirect3DVertexBuffer9> m_pVtxBuff;
+    std::shared_ptr<CShaderResource> m_Shader;
     D3DXCOLOR    m_Color;
     RECT        m_UV;
     float       m_Width;
@@ -35,6 +38,7 @@ public:
 
     HRESULT Init(void) override;
 	void Draw(void) override;
+    void DrawPolygon(void);
 
     // 影を描画するか
     bool IsShadowCaster(void) override
@@ -66,6 +70,12 @@ public:
         m_UV.right = right;
         m_UV.bottom = bottom;
     }
+
+    void SetShader(std::shared_ptr<CShaderResource> shader)
+    {
+        m_Shader = shader;
+    }
+
 
     void SetIsVisible(bool visible) { m_isVisible = visible; }
 

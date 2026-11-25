@@ -12,6 +12,7 @@
 //*****************************************************************************
 //#include "imguimaneger.h"
 #include "RenderTarget.h"
+#include "RenderTargetMulti.h"
 
 //*****************************************************************************
 // ëOï˚êÈåæ
@@ -71,6 +72,7 @@ public:
 	UINT GetBackBufferWidth(void) { return m_d3dpp.BackBufferWidth; }
 	UINT GetBackBufferHeight(void) { return m_d3dpp.BackBufferHeight; }
 	float GetBloomPower(void) { return m_bloomPower; }
+	CRenderTargetMulti GetZScene(void) { return m_ZSceneRT; }
 
 	CShadowMap* GetShadowMap(void);
 
@@ -91,6 +93,8 @@ private:
 	CRenderTarget m_BrightRT;
 	CRenderTarget m_BlurRT1;
 	CRenderTarget m_BlurRT2;
+
+	CRenderTargetMulti m_ZSceneRT;
 
 	// BackBuffer
 	LPDIRECT3DSURFACE9 m_pBackBuffer = nullptr;

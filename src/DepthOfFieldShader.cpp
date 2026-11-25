@@ -1,6 +1,6 @@
 //=============================================================================
 //
-// 空シェーダー処理 [SkyShader.cpp]
+// 被写界深度シェーダー処理 [DepthOfFieldShader.cpp]
 // Author : RIKU TANEKAWA
 //
 //=============================================================================
@@ -16,6 +16,8 @@
 #include "Camera.h"
 #include "TimeSystem.h"
 #include "GameTime.h"
+#include "RenderTargetMulti.h"
+
 
 
 //=============================================================================
@@ -24,6 +26,10 @@
 void CDoFShader::Apply(CGameObject* owner)
 {
     auto effect = GetEffect();
+
+    m_mainTexture;
+    m_gaussianTexture;
+    m_depthTexture;
 
     effect->SetFloat("g_fGaussStart", m_fGaussStart);
     effect->SetFloat("g_fGaussEnd", m_fGaussEnd);
