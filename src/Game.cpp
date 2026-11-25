@@ -96,7 +96,7 @@ HRESULT CGame::Init(void)
 	// 時間を任意の時間で停止する
 	time->Stop();
 	//time->Start();
-	time->SetTime(30.0f);
+	time->SetTime(24.0f);
 
 	// 空の生成
 	m_pSky = std::make_unique<CSky>();
@@ -218,6 +218,15 @@ void CGame::Update(void)
 	CFade* pFade = CManager::Instance()->GetFade();
 	CInputKeyboard* pKeyboard = CManager::Instance()->GetInput()->GetKeyboard();
 	CInputJoypad* pJoypad = CManager::Instance()->GetInput()->GetJoypad();
+
+#ifdef _DEBUG
+	if (pFade->GetFade() == CFade::FADE_NONE &&
+		pKeyboard->GetTrigger(DIK_T))
+	{
+		// リザルト画面に移行
+		pFade->StartFadeOut(Mode::Result);
+	}
+#endif
 
 	// PでポーズON/OFF
 	if (pKeyboard->GetTrigger(DIK_P) || pJoypad->GetTrigger(CInputJoypad::JOYKEY_START))
