@@ -207,6 +207,9 @@ void CRenderer::Uninit(void)
 	m_BrightRT.Release();
 	m_BlurRT1.Release();
 	m_BlurRT2.Release();
+	m_VerticalRT.Release();
+	m_DiagonalRT.Release();
+	m_HexRT.Release();
 
 	if (m_pBackBuffer != nullptr)
 	{
@@ -225,6 +228,10 @@ void CRenderer::ReleaseRenderTargets(void)
 	m_BrightRT.Release();
 	m_BlurRT1.Release();
 	m_BlurRT2.Release();
+	m_VerticalRT.Release();
+	m_DiagonalRT.Release();
+	m_HexRT.Release();
+
 
 	if (m_pBackBuffer != nullptr)
 	{
@@ -429,7 +436,6 @@ HRESULT CRenderer::CreateRenderTargets(void)
 		return E_FAIL;
 	}
 
-
 	// Bright
 	if (FAILED(m_BrightRT.Create(w / 2, h / 2, D3DFMT_A8R8G8B8, D3DFMT_UNKNOWN)))
 	{
@@ -444,6 +450,24 @@ HRESULT CRenderer::CreateRenderTargets(void)
 
 	// Blur2
 	if (FAILED(m_BlurRT2.Create(w / 2, h / 2, D3DFMT_A8R8G8B8, D3DFMT_UNKNOWN)))
+	{
+		return E_FAIL;
+	}
+
+	// HexBlur1
+	if (FAILED(m_VerticalRT.Create(w / 2, h / 2, D3DFMT_A8R8G8B8, D3DFMT_UNKNOWN)))
+	{
+		return E_FAIL;
+	}
+
+	// HexBlur2
+	if (FAILED(m_DiagonalRT.Create(w / 2, h / 2, D3DFMT_A8R8G8B8, D3DFMT_UNKNOWN)))
+	{
+		return E_FAIL;
+	}
+
+	// HexBlur3
+	if (FAILED(m_HexRT.Create(w, h, D3DFMT_A8R8G8B8, D3DFMT_UNKNOWN)))
 	{
 		return E_FAIL;
 	}
@@ -561,6 +585,45 @@ void CRenderer::RenderBloom(void)
 	SetViewport(m_d3dpp.BackBufferWidth, m_d3dpp.BackBufferHeight);
 
 	DrawFullscreenQuad(effect4, static_cast<float>(m_d3dpp.BackBufferWidth), static_cast<float>(m_d3dpp.BackBufferHeight));
+
+	m_pD3DDevice->EndScene();
+}
+
+//=============================================================================
+// 六角形ブラー描画
+//=============================================================================
+void CRenderer::HexBlur(void)
+{
+	m_pD3DDevice->BeginScene();
+
+	m_VerticalRT.Begin();
+	m_DiagonalRT.Begin();
+
+	ID3DXEffect* VD = m_pVDShader->GetEffect();
+
+	VD->SetTexture("SceneTexture", m_SceneRT.GetTexture());
+
+	// ビューポート設定
+	SetViewport(m_d3dpp.BackBufferWidth / 2, m_d3dpp.BackBufferHeight / 2);
+
+	DrawFullscreenQuad(VD, static_cast<float>(m_d3dpp.BackBufferWidth / 2.0f), static_cast<float>(m_d3dpp.BackBufferHeight / 2.0f));
+
+	m_VerticalRT.End();
+	m_DiagonalRT.End();
+
+	m_HexRT.Begin();
+
+	ID3DXEffect* Hex = m_pHexBlurShader->GetEffect();
+
+	Hex->SetTexture("VerticalTexture", m_VerticalRT.GetTexture());
+	Hex->SetTexture("DiagonalTexture", m_DiagonalRT.GetTexture());
+
+	// ビューポート設定
+	SetViewport(m_d3dpp.BackBufferWidth, m_d3dpp.BackBufferHeight);
+
+	DrawFullscreenQuad(Hex, static_cast<float>(m_d3dpp.BackBufferWidth), static_cast<float>(m_d3dpp.BackBufferHeight));
+
+	m_HexRT.End();
 
 	m_pD3DDevice->EndScene();
 }

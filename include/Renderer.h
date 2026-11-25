@@ -49,6 +49,8 @@ public:
 
 	void RenderBloom(void);
 
+	void HexBlur(void);
+
 	void ReleaseRenderTargets(void);
 
 	//*****************************************************************************
@@ -74,6 +76,7 @@ public:
 	float GetBloomPower(void) { return m_bloomPower; }
 	CRenderTarget GetSceneRT(void) { return m_SceneRT; }
 	CRenderTargetMulti GetZScene(void) { return m_ZSceneRT; }
+	CRenderTarget GetHexBlur(void) { return m_HexRT; }
 
 	CShadowMap* GetShadowMap(void);
 
@@ -96,6 +99,13 @@ private:
 	CRenderTarget m_BlurRT2;
 
 	CRenderTargetMulti m_ZSceneRT;
+	//*****************************************************************************
+	// 六角形ブラー用変数
+	//*****************************************************************************
+	CRenderTarget m_VerticalRT;
+	CRenderTarget m_HexRT;
+	CRenderTargetMulti m_DiagonalRT;
+
 
 	// BackBuffer
 	LPDIRECT3DSURFACE9 m_pBackBuffer = nullptr;
@@ -105,6 +115,10 @@ private:
 	std::shared_ptr<CShaderResource> m_pHorizontalShader;
 	std::shared_ptr<CShaderResource> m_pVerticalShader;
 	std::shared_ptr<CShaderResource> m_pCombineShader;
+
+	// 六角形ブラーシェーダ―変数
+	std::shared_ptr<CShaderResource> m_pVDShader;
+	std::shared_ptr<CShaderResource> m_pHexBlurShader;
 
 	// ブルーム強さ(輝度)
 	float m_bloomPower;
