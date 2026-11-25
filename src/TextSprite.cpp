@@ -273,7 +273,7 @@ void CTextSprite::UpdateTexture(void)
 
     device->SetRenderTarget(0, m_pOldSurface);
 
-    // Zバッファを戻す sato
+    // Zバッファを戻す
     if (pDepthStencil)
     {
         device->SetDepthStencilSurface(pDepthStencil);
