@@ -299,11 +299,11 @@ void CTextSprite::Uninit(void)
         m_pFont = nullptr;
     }
 
-    //if (m_pTexture)
-    //{
-    //    m_pTexture->Release();
-    //    m_pTexture = nullptr;
-    //}
+    if (m_pTexture)
+    {
+        m_pTexture->Texture->Release();
+        m_pTexture = nullptr;
+    }
 
     if (m_pRenderSurface != nullptr)
     {
@@ -648,11 +648,11 @@ void CTextSprite::OnLostDevice(void)
         m_pSprite->OnLostDevice();
     }
 
-    //if (m_pTexture)
-    //{
-    //    m_pTexture->Release();
-    //    m_pTexture = nullptr;
-    //}
+    if (m_pTexture)
+    {
+        m_pTexture->Texture->Release();
+        m_pTexture = nullptr;
+    }
 
     if (m_pRenderSurface != nullptr)
     {
