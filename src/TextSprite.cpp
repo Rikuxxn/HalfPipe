@@ -353,7 +353,7 @@ void CTextSprite::Start(const std::string& text, int fontSize, float visibleSpee
     {
         auto sprite = m_pBack->GetComponent<CSpriteRenderComponent>();
 
-        sprite->SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+        sprite->SetColor(DX::WHITE);
     }
 
     // •¶Žš•\Ž¦
@@ -361,7 +361,7 @@ void CTextSprite::Start(const std::string& text, int fontSize, float visibleSpee
     {
         auto sprite = m_pFontTex->GetComponent<CSpriteRenderComponent>();
 
-        sprite->SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+        sprite->SetColor(DX::WHITE);
     }
 }
 
@@ -394,14 +394,14 @@ void CTextSprite::Hide(void)
     {
         auto sprite = m_pBack->GetComponent<CSpriteRenderComponent>();
 
-        sprite->SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f));
+        sprite->SetColor(DX::INVISIBLE);
     }
 
     if (m_pFontTex)
     {
         auto sprite = m_pFontTex->GetComponent<CSpriteRenderComponent>();
 
-        sprite->SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f));
+        sprite->SetColor(DX::INVISIBLE);
     }
 }
 
@@ -442,7 +442,7 @@ std::vector<CTextSprite::CHAR_INFO> CTextSprite::ParseColorTags(const std::strin
 {
     std::vector<CHAR_INFO> chars;
 
-    D3DCOLOR currentColor = D3DCOLOR_ARGB(255, 0, 0, 0);
+    D3DCOLOR currentColor = D3D::BLACK;
 
     std::string tag;
 
