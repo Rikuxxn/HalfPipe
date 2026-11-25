@@ -118,6 +118,24 @@ HRESULT CResult::Init(void)
 			{
 				SpawnPlayer(ranking.playerId, ranking.rank);
 			}
+
+			// スコア更新
+			for (auto& score : m_pScore)
+			{
+				auto scoreRender = score->GetComponent<CScoreRenderComponent>();
+
+				if (!scoreRender)
+				{
+					continue;
+				}
+
+				auto scores = network->GetPlayerScores();
+
+				for (const auto& score : scores)
+				{
+					scoreRender->SetScore(score.score);
+				}
+			}
 		}
 	}
 
@@ -316,13 +334,10 @@ void CResult::SpawnPlayer(uint8_t playerId, uint8_t rank)
 		scoreRender->SetTexture("data/TEXTURE/Num_01.png");
 		scoreRender->SetDigitSize(0.02f, 0.04f);
 		scoreRender->SetCountSpeed(150.0f);
+		scoreRender->SetScore(0);
 
-		auto scores = network->GetPlayerScores();
-
-		for (const auto& score : scores)
-		{
-			scoreRender->SetScore(score.score);
-		}
+		// スコアを保存
+		m_pScore.push_back(scoreObject);
 	}
 }
 

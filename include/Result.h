@@ -18,6 +18,7 @@
 class CBlockManager;
 class CSky;
 class CPlayer;
+class CGameObject;
 
 
 //*****************************************************************************
@@ -77,6 +78,9 @@ private:
 		{	0.64f,	0.48f }, // 3à 
 		{	0.74f,	0.55f }  // 4à 
 	};
+
+	// ÉXÉRÉA
+	std::vector<CGameObject*> m_pScore;
 };
 
 #endif
