@@ -277,10 +277,10 @@ HRESULT CPlayer::Init(void)
 HRESULT CPlayer::ConnectInit(void)
 {
 	// 自動移動コンポーネントの追加
-	auto autoMove = AddComponent<CAutoMoveComponent>();
+	AddComponent<CAutoMoveComponent>();
 
 	// 投擲コンポーネントの追加
-	auto throwCmp = AddComponent<CThrowComponent>();
+	AddComponent<CThrowComponent>();
 
 	// エイムコンポーネントの追加
 	auto aim = AddComponent<CAimComponent>();
@@ -617,10 +617,10 @@ HRESULT CPlayer::TutorialInit(void)
 HRESULT CPlayer::ResultInit(void)
 {
 	// 自動移動コンポーネントの追加
-	auto autoMove = AddComponent<CAutoMoveComponent>();
+	AddComponent<CAutoMoveComponent>();
 
 	// 投擲コンポーネントの追加
-	auto throwCmp = AddComponent<CThrowComponent>();
+	AddComponent<CThrowComponent>();
 
 	// エイムコンポーネントの追加
 	auto aim = AddComponent<CAimComponent>();
@@ -810,9 +810,6 @@ void CPlayer::Update(void)
 
 		// 準備完了状態解除
 		m_IsReady = false;
-
-		// サーバーへ準備待ちを送信
-		auto network = CManager::Instance()->GetNetworkManager();
 
 		if (network)
 		{
