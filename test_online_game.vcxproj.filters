@@ -684,7 +684,6 @@
     <ClInclude Include="include\DepthOfFieldShader.h">
       <Filter>ヘッダー ファイル\Shader\DoF</Filter>
     </ClInclude>
-<<<<<<< HEAD
     <ClInclude Include="include\RenderTargetMulti.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -696,7 +695,7 @@
     </ClInclude>
     <ClInclude Include="include\TextSprite.h">
       <Filter>ヘッダー ファイル</Filter>
-=======
+	</ClInclude>
     <ClInclude Include="include\Tutorial.h">
       <Filter>ヘッダー ファイル\Scenes</Filter>
     </ClInclude>
@@ -708,7 +707,6 @@
     </ClInclude>
     <ClInclude Include="include\DepthOfField.h">
       <Filter>ヘッダー ファイル\DepthOfField</Filter>
->>>>>>> acf814b5373dc8122880705a0b7b71d0e33b1c6d
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1063,7 +1061,6 @@
     <ClCompile Include="src\DepthOfFieldShader.cpp">
       <Filter>ソース ファイル\Shader\DoF</Filter>
     </ClCompile>
-<<<<<<< HEAD
     <ClCompile Include="src\RenderTargetMulti.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -1075,7 +1072,7 @@
     </ClCompile>
     <ClCompile Include="src\TextSprite.cpp">
       <Filter>ソース ファイル</Filter>
-=======
+	</ClCompile>
     <ClCompile Include="src\Tutorial.cpp">
       <Filter>ソース ファイル\Scenes</Filter>
     </ClCompile>
@@ -1087,7 +1084,6 @@
     </ClCompile>
     <ClCompile Include="src\DepthOfField.cpp">
       <Filter>ソース ファイル\DepthOfField</Filter>
->>>>>>> acf814b5373dc8122880705a0b7b71d0e33b1c6d
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
