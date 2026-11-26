@@ -76,7 +76,7 @@ public:
 	float GetBloomPower(void) { return m_bloomPower; }
 	CRenderTarget GetSceneRT(void) { return m_SceneRT; }
 	CRenderTargetMulti GetZScene(void) { return m_ZSceneRT; }
-	CRenderTarget GetHexBlur(void) { return m_HexRT; }
+	CRenderTarget GetHexBlur(void) { return m_VerticalRT; }
 
 	CShadowMap* GetShadowMap(void);
 

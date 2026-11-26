@@ -29,11 +29,11 @@ void CDoFShader::Apply(CGameObject* owner)
     auto effect = GetEffect();
 
     m_mainTexture=CManager::Instance()->GetRenderer()->GetSceneRT().GetTexture();
-    m_gaussianTexture = CManager::Instance()->GetRenderer()->GetZScene().GetTexture();
+    m_gaussianTexture = CManager::Instance()->GetRenderer()->GetHexBlur().GetTexture();
     m_depthTexture = CManager::Instance()->GetRenderer()->GetZScene().GetTexture();
 
-    effect->SetFloat("g_fGaussStart", 700.0f);
-    effect->SetFloat("g_fGaussEnd", 1000.0f);
+    effect->SetFloat("g_fGaussStart", 70000.0f);
+    effect->SetFloat("g_fGaussEnd", 100000.0f);
     effect->SetTexture("g_mainTexture", m_mainTexture);
     effect->SetTexture("g_gaussianTexture", m_gaussianTexture);
     effect->SetTexture("g_depthTexture", m_depthTexture);

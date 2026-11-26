@@ -162,7 +162,7 @@ HRESULT CConnect::Init(void)
 	emitter->Space = ParticleSpace::Space3D;
 
 	// テクスチャ
-	emitter->SetTexture("data/TEXTURE/effect000.jpg");
+	emitter->SetTexture("data/TEXTURE/snowDust.png");
 
 	// シェーダー
 	emitter->SetShader("data/Shader/Instancing/ParticleInstancing.fx");

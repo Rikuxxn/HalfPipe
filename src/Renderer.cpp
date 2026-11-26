@@ -164,6 +164,11 @@ HRESULT CRenderer::Init(HWND hWnd, BOOL bWindow)
 
 	m_pCombineShader = shaderMgr->Load("data/Shader/Bloom/BloomCombine.hlsl");
 
+	m_pVDShader = shaderMgr->Load("data/Shader/Hex/VDShader.hlsl");
+
+	m_pHexBlurShader = shaderMgr->Load("data/Shader/Hex/HexShader.hlsl");
+
+
 	// レンダーターゲット生成
 	CreateRenderTargets();
 
@@ -271,8 +276,11 @@ void CRenderer::End(void)
 {
 	m_pD3DDevice->EndScene();
 
+
+	HexBlur();
+
 	// ブルーム描画
-	RenderBloom();
+	//RenderBloom();
 
 	m_pD3DDevice->BeginScene();
 
@@ -425,7 +433,7 @@ HRESULT CRenderer::CreateRenderTargets(void)
 	UINT h = m_d3dpp.BackBufferHeight;
 
 	// Scene
-	if (FAILED(m_SceneRT.Create(w, h, D3DFMT_A8R8G8B8, D3DFMT_D24S8)))
+	if (FAILED(m_SceneRT.Create(w, h, D3DFMT_A32B32G32R32F, D3DFMT_D24S8)))
 	{
 		return E_FAIL;
 	}
@@ -437,37 +445,37 @@ HRESULT CRenderer::CreateRenderTargets(void)
 	}
 
 	// Bright
-	if (FAILED(m_BrightRT.Create(w / 2, h / 2, D3DFMT_A8R8G8B8, D3DFMT_UNKNOWN)))
+	if (FAILED(m_BrightRT.Create(w / 2, h / 2, D3DFMT_A32B32G32R32F, D3DFMT_UNKNOWN)))
 	{
 		return E_FAIL;
 	}
 
 	// Blur1
-	if (FAILED(m_BlurRT1.Create(w / 2, h / 2, D3DFMT_A8R8G8B8, D3DFMT_UNKNOWN)))
+	if (FAILED(m_BlurRT1.Create(w / 2, h / 2, D3DFMT_A32B32G32R32F, D3DFMT_UNKNOWN)))
 	{
 		return E_FAIL;
 	}
 
 	// Blur2
-	if (FAILED(m_BlurRT2.Create(w / 2, h / 2, D3DFMT_A8R8G8B8, D3DFMT_UNKNOWN)))
+	if (FAILED(m_BlurRT2.Create(w / 2, h / 2, D3DFMT_A32B32G32R32F, D3DFMT_UNKNOWN)))
 	{
 		return E_FAIL;
 	}
 
 	// HexBlur1
-	if (FAILED(m_VerticalRT.Create(w / 2, h / 2, D3DFMT_A8R8G8B8, D3DFMT_UNKNOWN)))
+	if (FAILED(m_VerticalRT.Create(w/2 , h/2 , D3DFMT_A32B32G32R32F, D3DFMT_UNKNOWN)))
 	{
 		return E_FAIL;
 	}
 
 	// HexBlur2
-	if (FAILED(m_DiagonalRT.Create(w / 2, h / 2, D3DFMT_A8R8G8B8, D3DFMT_UNKNOWN)))
+	if (FAILED(m_DiagonalRT.Create(w/2 , h/2 , D3DFMT_A32B32G32R32F, D3DFMT_UNKNOWN)))
 	{
 		return E_FAIL;
 	}
 
 	// HexBlur3
-	if (FAILED(m_HexRT.Create(w, h, D3DFMT_A8R8G8B8, D3DFMT_UNKNOWN)))
+	if (FAILED(m_HexRT.Create(w, h, D3DFMT_A32B32G32R32F, D3DFMT_UNKNOWN)))
 	{
 		return E_FAIL;
 	}
@@ -601,29 +609,34 @@ void CRenderer::HexBlur(void)
 
 	ID3DXEffect* VD = m_pVDShader->GetEffect();
 
-	VD->SetTexture("SceneTexture", m_SceneRT.GetTexture());
+	VD->SetTexture("g_mainTexture", m_SceneRT.GetTexture());
 
 	// ビューポート設定
-	SetViewport(m_d3dpp.BackBufferWidth / 2, m_d3dpp.BackBufferHeight / 2);
+	SetViewport(m_d3dpp.BackBufferWidth/2, m_d3dpp.BackBufferHeight/2);
 
-	DrawFullscreenQuad(VD, static_cast<float>(m_d3dpp.BackBufferWidth / 2.0f), static_cast<float>(m_d3dpp.BackBufferHeight / 2.0f));
+	DrawFullscreenQuad(VD, static_cast<float>(m_d3dpp.BackBufferWidth/2.0f), static_cast<float>(m_d3dpp.BackBufferHeight/2.0f));
 
 	m_VerticalRT.End();
 	m_DiagonalRT.End();
 
-	m_HexRT.Begin();
+	//m_HexRT.Begin();
+
+	m_pD3DDevice->SetRenderTarget(0, m_pBackBuffer);
+	//m_pD3DDevice->SetRenderTarget(1, m_pBackBuffer);
 
 	ID3DXEffect* Hex = m_pHexBlurShader->GetEffect();
 
-	Hex->SetTexture("VerticalTexture", m_VerticalRT.GetTexture());
-	Hex->SetTexture("DiagonalTexture", m_DiagonalRT.GetTexture());
+	Hex->SetTexture("g_verticalTexture", m_VerticalRT.GetTexture());
+	Hex->SetTexture("g_diagonalTexture", m_DiagonalRT.GetTexture());
 
 	// ビューポート設定
 	SetViewport(m_d3dpp.BackBufferWidth, m_d3dpp.BackBufferHeight);
 
 	DrawFullscreenQuad(Hex, static_cast<float>(m_d3dpp.BackBufferWidth), static_cast<float>(m_d3dpp.BackBufferHeight));
 
-	m_HexRT.End();
+	//m_HexRT.End();
+
+	//DrawFullscreenQuad(Hex, static_cast<float>(m_d3dpp.BackBufferWidth), static_cast<float>(m_d3dpp.BackBufferHeight));
 
 	m_pD3DDevice->EndScene();
 }

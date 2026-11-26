@@ -205,7 +205,7 @@ HRESULT CPlayer::Init(void)
 
 		emitter->Space = ParticleSpace::Space3D;
 
-		emitter->SetTexture("data/TEXTURE/smoke.jpg");
+		emitter->SetTexture("data/TEXTURE/snowDust.png");
 
 		emitter->SetShader("data/Shader/Instancing/ParticleInstancing.fx");
 
