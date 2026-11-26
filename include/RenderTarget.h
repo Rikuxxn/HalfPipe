@@ -26,7 +26,8 @@ public:
 
     void Release(void);
 
-    void Begin(void);
+    void Begin(DWORD clearFlags = D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER,
+        D3DCOLOR clearColor = D3DCOLOR_RGBA(255, 255, 255, 255));
     void End(void);
     void Set(void);
 

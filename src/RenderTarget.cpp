@@ -109,7 +109,7 @@ void CRenderTarget::Release(void)
 //=============================================================================
 // 描画開始
 //=============================================================================
-void CRenderTarget::Begin(void)
+void CRenderTarget::Begin(DWORD clearFlags, D3DCOLOR clearColor)
 {
     // デバイスの取得
     auto device = CManager::Instance()->GetRenderer()->GetDevice();
@@ -144,8 +144,8 @@ void CRenderTarget::Begin(void)
     device->Clear(
         0,
         nullptr,
-        D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER,
-        D3DCOLOR_RGBA(255, 255, 255, 255),
+        clearFlags,
+        clearColor,
         1.0f,
         0);
 }

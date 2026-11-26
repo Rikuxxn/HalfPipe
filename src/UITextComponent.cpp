@@ -1,6 +1,6 @@
 //=============================================================================
 //
-// テキストスプライト処理 [TextSprite.cpp]
+// UIテキストコンポーネント処理 [UITextComponent.cpp]
 // Author : RIKU TANEKAWA
 //
 //=============================================================================
@@ -8,44 +8,48 @@
 //*****************************************************************************
 // インクルードファイル
 //*****************************************************************************
-#include "TextSprite.h"
+#include "UITextComponent.h"
 #include "Manager.h"
 #include "Renderer.h"
 #include "TimeSystem.h"
-#include "GameObject.h"
 #include "Scene.h"
 #include "SceneManager.h"
-#include "TransformComponent.h"
-#include "SpriteRenderComponent.h"
 #include "ColorConstants.h"
 #include "TextureResource.h"
+#include "RenderTarget.h"
+#include "GameObject.h"
+#include <SpriteRenderComponent.h>
+#include <RenderTargetManager.h>
+#include <DeviceResourceManager.h>
+
 
 // 名前空間の使用
 using namespace ColorConst;
 
+unsigned int CUITextComponent::s_NextID = 0;
 
 //=============================================================================
 // コンストラクタ
 //=============================================================================
-CTextSprite::CTextSprite() :
-    m_pSprite       (nullptr),      // スプライト
-    m_pFontTex      (nullptr),      // 文字を描画する用のビルボード
-    m_pBack         (nullptr),      // 背景用のビルボード
-    m_pFont         (nullptr),      // フォント
-    m_visibleCount  (0),            // 表示数
-    m_timer         (0.0f),         // タイマー(表示間隔用)
-    m_finished      (false),        // 表示し終えたか
-    m_worldPos      (INIT_VEC3),    // 位置
-    m_fontSize      (0),            // フォントサイズ
-    m_visibleSpeed  (0.05f)         // 文字表示スピード
+CUITextComponent::CUITextComponent() :
+    m_pFont         (nullptr),                  // フォント
+    m_pSprite       (nullptr),                  // スプライト
+    m_pRenderTarget (nullptr),                  // レンダーターゲット
+    m_Color         (D3D::WHITE),               // 色
+    m_FontSize      (DEFAULT_FONT_SIZE),        // フォントサイズ
+    m_VisibleCount  (0),                        // 表示カウント
+    m_Timer         (0.0f),                     // タイマー
+    m_TypingSpeed   (0.05f),                    // 表示スピード
+    m_IsFinished    (true),                     // 表示し終えたか
+    m_NeedsRedraw   (false)                     // 再描画が必要かどうか
 {
-    // 値のクリア
+
 }
 
 //=============================================================================
 // デストラクタ
 //=============================================================================
-CTextSprite::~CTextSprite()
+CUITextComponent::~CUITextComponent()
 {
     Uninit();
 }
@@ -53,7 +57,7 @@ CTextSprite::~CTextSprite()
 //=============================================================================
 // フォント生成処理
 //=============================================================================
-HRESULT CTextSprite::CreateFont(int size)
+HRESULT CUITextComponent::CreateFont(int size)
 {
     // デバイスの取得
     auto device = CManager::Instance()->GetRenderer()->GetDevice();
@@ -65,11 +69,11 @@ HRESULT CTextSprite::CreateFont(int size)
     }
 
     // フォントサイズの設定
-    m_fontSize = size;
+    m_FontSize = size;
 
     return D3DXCreateFont(
         device,
-        m_fontSize,
+        m_FontSize,
         0,
         0,
         0,
@@ -85,125 +89,127 @@ HRESULT CTextSprite::CreateFont(int size)
 //=============================================================================
 // 初期化処理
 //=============================================================================
-HRESULT CTextSprite::Init(void)
+HRESULT CUITextComponent::Init(void)
 {
-    auto device = CManager::Instance()->GetRenderer()->GetDevice();
+    // フォント生成
+    HRESULT hr = CreateFont(m_FontSize);
 
-    // フォントの生成
-    if (FAILED(CreateFont(DEFAULT_FONT_SIZE)))
+    if (FAILED(hr))
     {
-        MessageBox(nullptr, "D3DXCreateFont Failed!", "Error", MB_OK);
         return E_FAIL;
     }
 
+    auto device = CManager::Instance()->GetRenderer()->GetDevice();
+
     // スプライト生成
-    HRESULT hr = D3DXCreateSprite(device, &m_pSprite);
+    hr = D3DXCreateSprite(device, &m_pSprite);
     if (FAILED(hr))
     {
         MessageBox(nullptr, "D3DXCreateSprite Failed!", "Error", MB_OK);
         return E_FAIL;
     }
 
-    // 描画先テクスチャ
-    device->CreateTexture(
+    // オブジェクトごとに固有IDを割り当て
+    m_ID = s_NextID++;
+
+    m_RenderTargetName = "TextUI_" + std::to_string(m_ID);
+
+    // RenderTarget生成
+    m_pRenderTarget = CRenderTargetManager::GetInstance().Create(
+        m_RenderTargetName,
         512,
         128,
-        1,
-        D3DUSAGE_RENDERTARGET,
         D3DFMT_A8R8G8B8,
-        D3DPOOL_DEFAULT,
-        &m_pTexture->Texture,
-        nullptr);
+        D3DFMT_UNKNOWN);
 
-    m_pTexture->Texture->GetSurfaceLevel(
-        0,
-        &m_pRenderSurface);
-
-    // シーンの取得
-    auto scene = CManager::Instance()->GetSceneManager()->GetScene();
-
-    if (!scene)
+    if (!m_pRenderTarget)
     {
         return E_FAIL;
     }
 
-    // 背景用の2Dスプライト
-    m_pBack = scene->CreateObject();
+    // テクスチャリソース作成
+    m_Texture = std::make_shared<CTextureResource>();
 
-    // トランスフォームコンポーネントの追加
-    auto transformBack = m_pBack->AddComponent<CTransformComponent>();
+    // レンダーターゲットのテクスチャを設定
+    m_Texture->Texture = m_pRenderTarget->GetTexture();
 
-    transformBack->Position = { 0.0f, 0.0f, 0.0f };
+    // オーナーのスプライトにテクスチャを設定
+    auto sprite = m_pOwner->GetComponent<CSpriteRenderComponent>();
 
-    // スプライトレンダーコンポーネントの追加
-    auto spriteBack = m_pBack->AddComponent<CSpriteRenderComponent>();
+    if (sprite)
+    {
+        sprite->SetTexture(m_Texture);
+        sprite->SetSize(0.5f, 0.15f);
+        sprite->SetLayer(RenderLayer::UI);
+    }
 
-    spriteBack->SetLayer(RenderLayer::UI);
-
-    // テクスチャの設定
-    spriteBack->SetTexture("data/TEXTURE/.png");
-
-    spriteBack->SetIsVisible(true);
-
-    // 文字を描画する用の2Dスプライト
-    m_pFontTex = scene->CreateObject();
-
-    // トランスフォームコンポーネントの追加
-    auto transformFont = m_pFontTex->AddComponent<CTransformComponent>();
-
-    transformFont->Position = { 0.0f, 0.0f, 0.0f };
-
-    // スプライトレンダーコンポーネントの追加
-    auto spriteFont = m_pFontTex->AddComponent<CSpriteRenderComponent>();
-
-    spriteFont->SetLayer(RenderLayer::UI);
-
-    spriteFont->SetIsVisible(true);
-
-    spriteFont->SetTexture(m_pTexture);
-
-    // 初期は透明にしておいて、文字を表示する際に一緒に表示
-    spriteBack->SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f));
-    spriteFont->SetColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.0f));
+    // デバイスリソース管理へ登録
+    CDeviceResourceManager::GetInstance().Register(this);
 
     return S_OK;
 }
 
 //=============================================================================
+// 更新処理
+//=============================================================================
+void CUITextComponent::Update(void)
+{
+    if (m_NeedsRedraw)
+    {
+        UpdateTexture();
+        m_NeedsRedraw = false;
+    }
+
+    if (m_IsFinished)
+    {
+        return;
+    }
+
+    m_Timer += CManager::Instance()->GetTimeSystem()->GetDeltaTime();
+
+    // 一定間隔で表示していく
+    if (m_Timer >= m_TypingSpeed)
+    {
+        m_Timer = 0.0f;
+
+        if (m_VisibleCount < (int)m_DisplayText.size())
+        {
+            m_VisibleCount++;
+
+            UpdateTexture();
+
+            if (m_VisibleCount >= (int)m_DisplayText.size())
+            {
+                m_IsFinished = true;
+            }
+        }
+        else
+        {
+            m_IsFinished = true;
+        }
+    }
+}
+
+//=============================================================================
 // テクスチャ更新処理
 //=============================================================================
-void CTextSprite::UpdateTexture(void)
+void CUITextComponent::UpdateTexture(void)
 {
-    if (!m_pTexture ||
-        !m_pRenderSurface ||
-        !m_pFont)
+    if (!m_pFont || !m_pRenderTarget)
     {
         return;
     }
 
     auto device = CManager::Instance()->GetRenderer()->GetDevice();
 
+    // テクスチャのバインドを解除
     device->SetTexture(0, nullptr);
 
-    device->GetRenderTarget(0, &m_pOldSurface);
-
-    // Zバッファの退避と解除 sato (前の文字が表示されないやつの原因)
-    IDirect3DSurface9* pDepthStencil = nullptr;
-    device->GetDepthStencilSurface(&pDepthStencil);
-    device->SetDepthStencilSurface(nullptr);
-
-    device->SetRenderTarget(0, m_pRenderSurface);
-
-    device->Clear(
-        0,
-        nullptr,
-        D3DCLEAR_TARGET,
-        D3DCOLOR_ARGB(0, 0, 0, 0),
-        1.0f,
-        0);
+    // レンダーターゲット開始
+    m_pRenderTarget->Begin(D3DCLEAR_TARGET, D3DCOLOR_ARGB(0, 0, 0, 0));
 
     // タグを考慮した文字列を返す
-    std::string drawText = GetVisibleTaggedText(m_visibleCount);
+    std::string drawText = GetVisibleTaggedText(m_VisibleCount);
 
     auto chars = ParseColorTags(drawText);
 
@@ -211,7 +217,7 @@ void CTextSprite::UpdateTexture(void)
     int x = 5;
     int y = 20;
 
-    const int lineHeight = m_fontSize;
+    const int lineHeight = m_FontSize;
 
     HRESULT hr = m_pSprite->Begin(D3DXSPRITE_ALPHABLEND);
 
@@ -224,7 +230,7 @@ void CTextSprite::UpdateTexture(void)
     {
         if (ch.text == "\n")
         {
-            x = 0;
+            x = 5;
             y += lineHeight;
             continue;
         }
@@ -268,52 +274,36 @@ void CTextSprite::UpdateTexture(void)
 
     m_pSprite->End();
 
-    device->SetRenderTarget(0, m_pOldSurface);
-
-    // Zバッファを戻す
-    if (pDepthStencil)
-    {
-        device->SetDepthStencilSurface(pDepthStencil);
-        pDepthStencil->Release();
-        pDepthStencil = nullptr;
-    }
-
-    if (m_pOldSurface)
-    {
-        m_pOldSurface->Release();
-        m_pOldSurface = nullptr;
-    }
+    // レンダーターゲット終了
+    m_pRenderTarget->End();
 }
 
 //=============================================================================
 // 終了処理
 //=============================================================================
-void CTextSprite::Uninit(void)
+void CUITextComponent::Uninit(void)
 {
-    if (m_pFont != nullptr)
+    // デバイスリソースマネージャーから登録解除
+    CDeviceResourceManager::GetInstance().Unregister(this);
+
+    // テクスチャリソースを解放
+    m_Texture.reset();
+
+    // RenderTargetを解放
+    if (!m_RenderTargetName.empty())
+    {
+        CRenderTargetManager::GetInstance().Release(m_RenderTargetName);
+        m_RenderTargetName.clear();
+    }
+
+    // フォントを解放
+    if (m_pFont)
     {
         m_pFont->Release();
         m_pFont = nullptr;
     }
 
-    if (m_pTexture)
-    {
-        m_pTexture->Texture->Release();
-        m_pTexture = nullptr;
-    }
-
-    if (m_pRenderSurface != nullptr)
-    {
-        m_pRenderSurface->Release();
-        m_pRenderSurface = nullptr;
-    }
-
-    if (m_pOldSurface != nullptr)
-    {
-        m_pOldSurface->Release();
-        m_pOldSurface = nullptr;
-    }
-
+    // スプライト破棄
     if (m_pSprite)
     {
         m_pSprite->Release();
@@ -324,118 +314,100 @@ void CTextSprite::Uninit(void)
 //=============================================================================
 // 表示開始処理
 //=============================================================================
-void CTextSprite::Start(const std::string& text, int fontSize, float visibleSpeed)
+void CUITextComponent::SetText(const std::string& text)
 {
-    if (fontSize != m_fontSize)
-    {
-        CreateFont(fontSize);
-    }
+    m_Text = text;
 
-    m_displayText = RemoveTags(text);
-    m_text = text;
+    // タグを除去した文字列
+    m_DisplayText = RemoveTags(text);
 
-    // 表示スピード
-    m_visibleSpeed = visibleSpeed;
+    // 初期化
+    m_VisibleCount = 0;
+    m_Timer = 0.0f;
+    m_IsFinished = false;
 
-    // 最初は0文字表示
-    m_visibleCount = 0;
-
-    // タイマーリセット
-    m_timer = 0.0f;
-
-    m_finished = false;
-
-    // 吹き出し表示
-    if (m_pBack)
-    {
-        auto sprite = m_pBack->GetComponent<CSpriteRenderComponent>();
-
-        sprite->SetColor(DX::WHITE);
-    }
-
-    // 文字表示
-    if (m_pFontTex)
-    {
-        auto sprite = m_pFontTex->GetComponent<CSpriteRenderComponent>();
-
-        sprite->SetColor(DX::WHITE);
-    }
+    // テキストを再描画する
+    UpdateTexture();
 }
 
 //=============================================================================
 // 全文表示
 //=============================================================================
-void CTextSprite::ShowAll(void)
+void CUITextComponent::ShowAll(void)
 {
-    m_visibleCount = (int)m_displayText.size();
+    m_VisibleCount = (int)m_DisplayText.size();
 
-    m_finished = true;
+    m_IsFinished = true;
 
     UpdateTexture();
 }
 
 //=============================================================================
+// フォントサイズ設定
+//=============================================================================
+void CUITextComponent::SetFontSize(int size)
+{
+    if (m_FontSize == size)
+    {
+        return;
+    }
+
+    if (SUCCEEDED(CreateFont(size)))
+    {
+        UpdateTexture();
+    }
+}
+
+//=============================================================================
+// 文字色設定
+//=============================================================================
+void CUITextComponent::SetColor(D3DCOLOR color)
+{
+    m_Color = color;
+
+    UpdateTexture();
+}
+
+//=============================================================================
+// 表示速度設定
+//=============================================================================
+void CUITextComponent::SetTypingSpeed(float speed)
+{
+    m_TypingSpeed = speed;
+}
+
+//=============================================================================
 // 表示中かどうか
 //=============================================================================
-bool CTextSprite::IsTyping(void) const
+bool CUITextComponent::IsTyping(void) const
 {
-    return !m_finished;
+    return !m_IsFinished;
+}
+
+//=============================================================================
+// 終了判定処理
+//=============================================================================
+bool CUITextComponent::IsFinished(void) const
+{
+    return m_IsFinished;
 }
 
 //=============================================================================
 // テキスト非表示
 //=============================================================================
-void CTextSprite::Hide(void)
+void CUITextComponent::Hide(void)
 {
-    if (m_pBack)
-    {
-        auto sprite = m_pBack->GetComponent<CSpriteRenderComponent>();
+    m_VisibleCount = 0;
 
-        sprite->SetColor(DX::INVISIBLE);
-    }
+    m_IsFinished = true;
 
-    if (m_pFontTex)
-    {
-        auto sprite = m_pFontTex->GetComponent<CSpriteRenderComponent>();
-
-        sprite->SetColor(DX::INVISIBLE);
-    }
-}
-
-//=============================================================================
-// 更新処理
-//=============================================================================
-void CTextSprite::Update(void)
-{
-    m_timer += CManager::Instance()->GetTimeSystem()->GetDeltaTime();
-
-    // 一定間隔で表示していく
-    if (m_timer >= m_visibleSpeed)
-    {
-        m_timer = 0.0f;
-
-        if (m_visibleCount < (int)m_displayText.size())
-        {
-            m_visibleCount++;
-
-            UpdateTexture();
-
-            if (m_visibleCount >= (int)m_displayText.size())
-            {
-                m_finished = true;
-            }
-        }
-        else
-        {
-            m_finished = true;
-        }
-    }
+    UpdateTexture();
 }
 
 //=============================================================================
 // タグ解析関数
 //=============================================================================
-std::vector<CTextSprite::CHAR_INFO> CTextSprite::ParseColorTags(const std::string& text)
+std::vector<CUITextComponent::CHAR_INFO> CUITextComponent::ParseColorTags(const std::string& text)
 {
     std::vector<CHAR_INFO> chars;
 
@@ -525,7 +497,7 @@ std::vector<CTextSprite::CHAR_INFO> CTextSprite::ParseColorTags(const std::strin
 //=============================================================================
 // タグ除去関数(表示しない)
 //=============================================================================
-std::string CTextSprite::RemoveTags(const std::string& text)
+std::string CUITextComponent::RemoveTags(const std::string& text)
 {
     std::string result;
 
@@ -557,16 +529,16 @@ std::string CTextSprite::RemoveTags(const std::string& text)
 //=============================================================================
 // タグを考慮して表示文字列を取得
 //=============================================================================
-std::string CTextSprite::GetVisibleTaggedText(int visibleCount)
+std::string CUITextComponent::GetVisibleTaggedText(int visibleCount)
 {
     std::string result;
 
     int visible = 0;
     bool inTag = false;
 
-    for (size_t i = 0; i < m_text.size(); i++)
+    for (size_t i = 0; i < m_Text.size(); i++)
     {
-        char c = m_text[i];
+        char c = m_Text[i];
 
         // タグ開始
         if (c == '<')
@@ -601,71 +573,34 @@ std::string CTextSprite::GetVisibleTaggedText(int visibleCount)
 }
 
 //=============================================================================
-// 位置設定処理
-//=============================================================================
-void CTextSprite::SetPos(D3DXVECTOR3 pos)
-{
-    m_worldPos = pos;
-
-    if (m_pBack)
-    {
-        auto transform = m_pBack->GetComponent<CTransformComponent>();
-
-        transform->Position = pos;
-    }
-
-    if (m_pFontTex)
-    {
-        auto transform = m_pFontTex->GetComponent<CTransformComponent>();
-
-        transform->Position = pos;
-    }
-}
-
-//=============================================================================
-// 終了判定処理
-//=============================================================================
-bool CTextSprite::IsFinished(void) const
-{
-    return m_finished;
-}
-
-//=============================================================================
 // デバイスロスト時
 //=============================================================================
-void CTextSprite::OnLostDevice(void)
+void CUITextComponent::OnLostDevice(void)
 {
+    // フォント
     if (m_pFont)
     {
         m_pFont->OnLostDevice();
     }
 
+    // スプライト
     if (m_pSprite)
     {
         m_pSprite->OnLostDevice();
     }
 
-    if (m_pTexture)
+    // テキスト側のテクスチャ参照を解除
+    if (m_Texture)
     {
-        m_pTexture->Texture->Release();
-        m_pTexture = nullptr;
+        m_Texture->Texture.Reset();
     }
-
-    if (m_pRenderSurface != nullptr)
-    {
-        m_pRenderSurface->Release();
-        m_pRenderSurface = nullptr;
-    }
-
 }
 
 //=============================================================================
 // デバイスリセット時
 //=============================================================================
-void CTextSprite::OnResetDevice(void)
+void CUITextComponent::OnResetDevice(void)
 {
-    auto device = CManager::Instance()->GetRenderer()->GetDevice();
-
     if (m_pFont)
     {
         m_pFont->OnResetDevice();
@@ -676,26 +611,29 @@ void CTextSprite::OnResetDevice(void)
         m_pSprite->OnResetDevice();
     }
 
-    device->CreateTexture(
-        512,
-        128,
-        1,
-        D3DUSAGE_RENDERTARGET,
-        D3DFMT_A8R8G8B8,
-        D3DPOOL_DEFAULT,
-        &m_pTexture->Texture,
-        nullptr);
-
-    m_pTexture->Texture->GetSurfaceLevel(
-        0,
-        &m_pRenderSurface);
-
-    if (m_pFontTex)
+    if (!m_pRenderTarget || !m_Texture)
     {
-        auto sprite = m_pFontTex->GetComponent<CSpriteRenderComponent>();
-
-        sprite->SetTexture(m_pTexture);
+        return;
     }
 
-    UpdateTexture();
+    // 再生成されたレンダーターゲットのテクスチャを設定
+    m_Texture->Texture = m_pRenderTarget->GetTexture();
+
+    auto sprite = m_pOwner->GetComponent<CSpriteRenderComponent>();
+
+    if (sprite)
+    {
+        sprite->SetTexture(m_Texture);
+    }
+
+    // 再描画フラグ
+    m_NeedsRedraw = true;
+}
+
+//=============================================================================
+// リソースの破棄
+//=============================================================================
+void CUITextComponent::ReleaseResource(void)
+{
+    Uninit();
 }

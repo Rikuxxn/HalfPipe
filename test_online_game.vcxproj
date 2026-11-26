@@ -277,7 +277,7 @@
     <ClInclude Include="include\StageObjectList.h" />
     <ClInclude Include="include\State.h" />
     <ClInclude Include="include\Tag.h" />
-    <ClInclude Include="include\TextSprite.h" />
+    <ClInclude Include="include\UITextComponent.h" />
     <ClInclude Include="include\TextureManager.h" />
     <ClInclude Include="include\TextureResource.h" />
     <ClInclude Include="include\ThirdPersonCamera.h" />
@@ -406,7 +406,7 @@
     <ClCompile Include="src\StageManager.cpp" />
     <ClCompile Include="src\StageObject.cpp" />
     <ClCompile Include="src\StageObjectList.cpp" />
-    <ClCompile Include="src\TextSprite.cpp" />
+    <ClCompile Include="src\UITextComponent.cpp" />
     <ClCompile Include="src\TextureManager.cpp" />
     <ClCompile Include="src\TextureResource.cpp" />
     <ClCompile Include="src\ThirdPersonCamera.cpp" />

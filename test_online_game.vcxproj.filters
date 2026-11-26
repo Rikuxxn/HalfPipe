@@ -693,9 +693,6 @@
     <ClInclude Include="include\TutorialState.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="include\TextSprite.h">
-      <Filter>ヘッダー ファイル</Filter>
-	</ClInclude>
     <ClInclude Include="include\Tutorial.h">
       <Filter>ヘッダー ファイル\Scenes</Filter>
     </ClInclude>
@@ -707,6 +704,9 @@
     </ClInclude>
     <ClInclude Include="include\DepthOfField.h">
       <Filter>ヘッダー ファイル\DepthOfField</Filter>
+    </ClInclude>
+    <ClInclude Include="include\UITextComponent.h">
+      <Filter>ヘッダー ファイル\Component</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1070,9 +1070,6 @@
     <ClCompile Include="src\TutorialState.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="src\TextSprite.cpp">
-      <Filter>ソース ファイル</Filter>
-	</ClCompile>
     <ClCompile Include="src\Tutorial.cpp">
       <Filter>ソース ファイル\Scenes</Filter>
     </ClCompile>
@@ -1084,6 +1081,9 @@
     </ClCompile>
     <ClCompile Include="src\DepthOfField.cpp">
       <Filter>ソース ファイル\DepthOfField</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UITextComponent.cpp">
+      <Filter>ソース ファイル\Component</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1119,5 +1119,6 @@
     <None Include="data\Shader\Shadow\ShadowMap.hlsl">
       <Filter>リソース ファイル\ShadowMap</Filter>
     </None>
+    <None Include="data\Shader\DepthOfField.hlsl" />
   </ItemGroup>
 </Project>

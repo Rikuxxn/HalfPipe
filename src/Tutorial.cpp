@@ -42,6 +42,7 @@
 #include "TimeSystem.h"
 #include <StageObjectList.h>
 #include "TutorialState.h"
+#include <UITextComponent.h>
 
 
 //=============================================================================
@@ -168,6 +169,22 @@ HRESULT CTutorial::Init(void)
 			sprite->SetIsVisible(true);
 		}
 	}
+
+	auto textObject = CreateObject();
+
+	auto uiText = textObject->AddComponent<CUIComponent>();
+	auto uiSprite = textObject->AddComponent<CSpriteRenderComponent>();
+
+	auto& uiTransform = uiText->GetTransform();
+	uiTransform.Position = { 0.5f,0.5f };
+	uiTransform.Scale = { 1.1f,1.1f };
+
+	auto text = textObject->AddComponent<CUITextComponent>();
+
+	text->SetText("こんにちは。\n"
+		"「<orange>aaa</orange>」sdsdfs「<dodgerblue>あああ</dodgerblue>」");
+	text->ShowAll();
+	text->SetTypingSpeed(0.05f);
 
 	// インスタンスのポインタを渡す
 	m_stateMachine.Start(this);
