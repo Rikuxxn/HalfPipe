@@ -86,6 +86,7 @@ public:
 	bool IsJoined(void) const {	return m_IsJoined; }
 
 	void ResetJoinState(void) {	m_IsJoined = false;	}
+	void ResetGameFinish(void) { m_IsGameFinish = false; }
 	void ResetGameSession(void);
 	bool IsPlayerReady(uint8_t playerId) const;
 	void SendPlayerReady(bool isReady);

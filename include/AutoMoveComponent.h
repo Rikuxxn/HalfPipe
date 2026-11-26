@@ -63,6 +63,9 @@ public:
     CAutoMoveComponent();
     ~CAutoMoveComponent();
 
+    // リセット処理
+    void ResetAutoMove(void);
+
     // 自動移動ポイントエディター描画
     void DrawMovePointEditor(void);
 
@@ -110,6 +113,9 @@ public:
     {
         return m_Jump;
     }
+
+    // 最後まで到達したか
+    bool IsFinish(void) const { return m_IsFinish; }
 
     // 溜め中か
     bool IsPress(void) const { return m_Press; }
@@ -218,6 +224,9 @@ private:
 
     // 確定したタイミング結果
     CJumpTiming::TIMING m_TimingResult;
+
+    // 最後まで到達したか
+    bool m_IsFinish;
 };
 
 #endif

@@ -52,6 +52,10 @@ public:
     // ステート用のフラグ更新処理
     void UpdateMovementFlags(const D3DXVECTOR3& moveDir);
 
+    // チュートリアルの説明中か設定
+    void SetIsTutorial(bool flag) { m_IsTutorial = flag; }
+    bool IsTutorial(void) const { return m_IsTutorial; }
+
 public:
 
     // ネットワーク関係
@@ -97,6 +101,7 @@ private:
     D3DXVECTOR3 m_rotDest;          // 目標の向き
     bool        m_bIsMoving;	    // 移動入力フラグ
     bool        m_bControlFlag;     // 移動許可フラグ
+    bool        m_IsTutorial;       // チュートリアルの説明中かどうか
 
     // ステートを管理するクラスのインスタンス
     StateMachine<CPlayer> m_stateMachine;
