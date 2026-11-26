@@ -1256,25 +1256,32 @@ void CPointCircleBlock::OnTriggerEnter(CGameObject* other)
 	// 得点加算
 	AddScore(m_Point);
 
-	// サーバーに得点を通知
+	// ネットワーク取得
 	auto network = CManager::Instance()->GetNetworkManager();
 
-	if (network && network->IsConnected())
+	if (CManager::Instance()->GetSceneManager()->GetMode() != CScene::Mode::Tutorial)
 	{
-		network->SendAddScore(m_Point);
+		if (network && network->IsConnected())
+		{
+			// サーバーに得点を通知
+			network->SendAddScore(m_Point);
+		}
 	}
 
 	// 50点・30点なら削除
 	if (m_Point == 50 || m_Point == 30)
 	{
-		if (network && m_Basket)
+		if (CManager::Instance()->GetSceneManager()->GetMode() != CScene::Mode::Tutorial)
 		{
-			network->SendPointCircleScored(m_Basket->GetBasketId(), m_CircleId);
-		}
+			if (network && m_Basket)
+			{
+				network->SendPointCircleScored(m_Basket->GetBasketId(), m_CircleId);
+			}
 
-		if (m_Basket)
-		{
-			m_Basket->RemovePointCircleById(m_CircleId);
+			if (m_Basket)
+			{
+				m_Basket->RemovePointCircleById(m_CircleId);
+			}
 		}
 	}
 }

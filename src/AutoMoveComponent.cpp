@@ -57,7 +57,8 @@ CAutoMoveComponent::CAutoMoveComponent() :
 	m_fDeltaSpeed			(0.005f),					// スプラインの早さ
 	m_fBasicSpeed			(0.02f),					// 基礎スピード
     m_TimingResult			(CJumpTiming::TIMING_MAX),  // 確定したタイミング結果
-	m_Timing				(CJumpTiming::TIMING_MAX)	// タイミングの種類
+	m_Timing				(CJumpTiming::TIMING_MAX),	// タイミングの種類
+	m_IsFinish				(false)						// 最後まで到達したか
 {
 
 }
@@ -68,6 +69,24 @@ CAutoMoveComponent::CAutoMoveComponent() :
 CAutoMoveComponent::~CAutoMoveComponent()
 {
 
+}
+
+//=============================================================================
+// 自動移動リセット
+//=============================================================================
+void CAutoMoveComponent::ResetAutoMove(void)
+{
+	m_CurrentMovePoint			= 1;				// 現在目指しているポイント
+	m_CurrentMovePointMinas		= 0;				// 現在目指しているポイント
+	m_CurrentMovePointPlus		= 2;				// 現在目指しているポイント
+	m_CurrentMovePointPlusPlus	= 3;				// 現在目指しているポイント
+	m_JumpStartPoint			= 0;				// ジャンプ開始ポイント
+	m_JumpTargetPoint			= 0;				// ジャンプ先ポイント
+	m_fJumpHeight				= 0.0f;				// ジャンプの最終的な高さ
+	m_fDeltaSpeed				= 0.005f;			// スプラインの早さ
+	m_fBasicSpeed				= 0.02f;			// 基礎スピード
+	m_CurrentTime				= 0.0f;				// 現在の移動時間(0.0f～1.0f)
+	m_IsFinish					= false;			// 最後まで到達したか
 }
 
 //=============================================================================
@@ -153,6 +172,9 @@ void CAutoMoveComponent::UpdateAutoMove(float deltaTime)
 		m_CurrentMovePoint + 2 >= m_MovePoints.size()) 
 	{
 		StopAutoMove();
+
+		// 最後まで到達した
+		m_IsFinish = true;
 		return;
 	}
 

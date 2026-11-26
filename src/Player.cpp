@@ -71,7 +71,8 @@ CPlayer::CPlayer() :
     m_AlignToSurface	(true),					// 面に姿勢を合わせるか
 	m_ParticleObject	(nullptr),				// パーティクル
 	m_bAutoMove			(false),
-	m_IsReady			(false)
+	m_IsReady			(false),
+	m_IsTutorial		(false)
 {
 
 }
@@ -774,46 +775,51 @@ void CPlayer::Update(void)
 	}
 #endif
 
-	// サーバーへ準備完了を送信
-	auto network = CManager::Instance()->GetNetworkManager();
-
-	if (!m_IsReady && m_pReadyUI && !network->IsGameReady() && 
-		(pKeyboard->GetTrigger(DIK_RETURN) || pJoypad->GetTrigger(CInputJoypad::JOYKEY_A)))
+	// チュートリアルの説明中の場合はスキップ入力を受け付けない
+	if (m_IsTutorial)
 	{
-		// 準備UIの取得
-		auto readyUI = m_pReadyUI->GetComponent<CUIComponent>();
+		// サーバーへ準備完了を送信
+		auto network = CManager::Instance()->GetNetworkManager();
 
-		// 準備完了
-		if (readyUI)
+		if (!m_IsReady && m_pReadyUI && !network->IsGameReady() &&
+			(pKeyboard->GetTrigger(DIK_RETURN) || pJoypad->GetTrigger(CInputJoypad::JOYKEY_A)))
 		{
-			readyUI->SetUVFrame(2, 3);
+			// 準備UIの取得
+			auto readyUI = m_pReadyUI->GetComponent<CUIComponent>();
+
+			// 準備完了
+			if (readyUI)
+			{
+				readyUI->SetUVFrame(2, 3);
+			}
+
+			// 準備完了状態
+			m_IsReady = true;
+
+			if (network)
+			{
+				network->SendPlayerReady(true);
+			}
 		}
-
-		// 準備完了状態
-		m_IsReady = true;
-
-		if (network)
+		else if (m_IsReady && m_pReadyUI && !network->IsGameReady() && 
+			(pKeyboard->GetTrigger(DIK_BACKSPACE) || pJoypad->GetTrigger(CInputJoypad::JOYKEY_B)))
 		{
-			network->SendPlayerReady(true);
-		}
-	}
-	else if (m_IsReady && m_pReadyUI && !network->IsGameReady() && (pKeyboard->GetTrigger(DIK_BACKSPACE) || pJoypad->GetTrigger(CInputJoypad::JOYKEY_B)))
-	{
-		// 準備UIの取得
-		auto readyUI = m_pReadyUI->GetComponent<CUIComponent>();
+			// 準備UIの取得
+			auto readyUI = m_pReadyUI->GetComponent<CUIComponent>();
 
-		// 準備OK (完了前)
-		if (readyUI)
-		{
-			readyUI->SetUVFrame(1, 3);
-		}
+			// 準備OK (完了前)
+			if (readyUI)
+			{
+				readyUI->SetUVFrame(1, 3);
+			}
 
-		// 準備完了状態解除
-		m_IsReady = false;
+			// 準備完了状態解除
+			m_IsReady = false;
 
-		if (network)
-		{
-			network->SendPlayerReady(false);
+			if (network)
+			{
+				network->SendPlayerReady(false);
+			}
 		}
 	}
 
@@ -822,6 +828,16 @@ void CPlayer::Update(void)
 
 	// 自動移動コンポーネントの取得
 	auto autoMove = GetComponent<CAutoMoveComponent>();
+
+	if (CManager::Instance()->GetSceneManager()->GetMode() == CScene::Mode::Tutorial)
+	{
+		if (autoMove->IsFinish())
+		{
+			transform->Position = { -400.0f, 580.0f, -1330.0f };
+			autoMove->ResetAutoMove();
+			autoMove->StartAutoMove();
+		}
+	}
 
 	if (aim && autoMove->IsJump())
 	{
