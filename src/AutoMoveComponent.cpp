@@ -76,17 +76,42 @@ CAutoMoveComponent::~CAutoMoveComponent()
 //=============================================================================
 void CAutoMoveComponent::ResetAutoMove(void)
 {
-	m_CurrentMovePoint			= 1;				// 現在目指しているポイント
-	m_CurrentMovePointMinas		= 0;				// 現在目指しているポイント
-	m_CurrentMovePointPlus		= 2;				// 現在目指しているポイント
-	m_CurrentMovePointPlusPlus	= 3;				// 現在目指しているポイント
-	m_JumpStartPoint			= 0;				// ジャンプ開始ポイント
-	m_JumpTargetPoint			= 0;				// ジャンプ先ポイント
-	m_fJumpHeight				= 0.0f;				// ジャンプの最終的な高さ
-	m_fDeltaSpeed				= 0.005f;			// スプラインの早さ
-	m_fBasicSpeed				= 0.02f;			// 基礎スピード
-	m_CurrentTime				= 0.0f;				// 現在の移動時間(0.0f～1.0f)
-	m_IsFinish					= false;			// 最後まで到達したか
+	if (m_OriginalMovePoints.size() == m_MovePoints.size())
+	{
+		m_MovePoints = m_OriginalMovePoints;
+	}
+
+	m_CurrentMovePoint = 1;
+	m_CurrentMovePointMinas = 0;
+	m_CurrentMovePointPlus = 2;
+	m_CurrentMovePointPlusPlus = 3;
+
+	m_JumpStartPoint = 0;
+	m_JumpTargetPoint = 0;
+
+	m_fJumpHeight = 0.0f;
+	m_fPressCount = 0.0f;
+
+	m_fDeltaSpeed = 0.005f;
+	m_fBasicSpeed = 0.02f;
+
+	m_CurrentTime = 0.0f;
+
+	m_MoveDirection = INIT_VEC3;
+
+	m_Press = false;
+	m_ReleaseZone = false;
+	m_Jump = false;
+
+	m_JumpStartHandled = false;
+	m_IsTimingActive = false;
+	m_IsWaitingForJumpPoint = false;
+	m_HasTimingResult = false;
+
+	m_TimingResult = CJumpTiming::TIMING_MAX;
+	m_Timing = CJumpTiming::TIMING_MAX;
+
+	m_IsFinish = false;
 }
 
 //=============================================================================
@@ -122,10 +147,10 @@ void CAutoMoveComponent::AddMovePoint(const D3DXVECTOR3& position, MovePointType
 
 	m_MovePoints.push_back(point);
 
-//#ifdef _DEBUG
-//	// デバッグ用自動移動ポイントモデルの生成
-//	CreateMovePointObject(position, type);
-//#endif
+#ifdef _DEBUG
+	// デバッグ用自動移動ポイントモデルの生成
+	CreateMovePointObject(position, type);
+#endif
 }
 
 //=============================================================================
@@ -641,7 +666,14 @@ void CAutoMoveComponent::JumpTiming(void)
 		m_fPressCount = 0.0f;
 	}
 
-	m_fJumpHeight = fPoint * (nPressCount * 5.0f + 0.5f);
+	if (nPressCount <= 0.0f)
+	{
+		m_fJumpHeight = 0.0f;
+	}
+	else
+	{
+		m_fJumpHeight = fPoint * (nPressCount * 5.0f + 0.5f);
+	}
 	m_fBasicSpeed = m_fBasicSpeed * (m_fJumpHeight * 0.2f + 1.0f);
 	m_HasTimingResult = true;
 }
@@ -897,6 +929,7 @@ void CAutoMoveComponent::LoadMovePoint(const char* filename)
 
 	m_pPointObj.clear();
 	m_MovePoints.clear();
+	m_OriginalMovePoints.clear();
 
 	// JSONから読み込み
 	for (const auto& b : j)
@@ -945,10 +978,13 @@ void CAutoMoveComponent::LoadMovePoint(const char* filename)
 
 			m_MovePoints.push_back(point);
 
-//#ifdef _DEBUG
-//			// ポイントデバッグ表示用モデルの生成
-//			CreateMovePointObject(position, type);
-//#endif
+#ifdef _DEBUG
+			// ポイントデバッグ表示用モデルの生成
+			CreateMovePointObject(position, type);
+#endif
 		}
 	}
+
+	// 初期状態の移動ポイントを保存
+	m_OriginalMovePoints = m_MovePoints;
 }

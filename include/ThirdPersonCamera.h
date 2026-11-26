@@ -41,6 +41,17 @@ private:
 
     float       m_fDistance;
 
+    // 着地カメラへの移行時間
+    float m_LandingBlend;
+
+    // 着地カメラへの移行開始位置
+    D3DXVECTOR3 m_LandingStartPos;
+
+    // 着地カメラへの移行開始注視点
+    D3DXVECTOR3 m_LandingStartTarget;
+
+    // 移行開始フラグ
+    bool m_IsLandingBlend;
 };
 
 #endif

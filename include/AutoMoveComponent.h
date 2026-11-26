@@ -148,6 +148,8 @@ private:
     // 移動ポイント
     std::vector<MovePoint> m_MovePoints;
 
+    std::vector<MovePoint> m_OriginalMovePoints;
+
     // 自動移動ポイントデバッグ表示用
     std::vector<CGameObject*> m_pPointObj;
 

@@ -21,6 +21,7 @@
 #include "CollisionGroup.h"
 #include "AutoMoveComponent.h"
 #include "AimComponent.h"
+#include "TimeSystem.h"
 
 
 // 名前空間の使用
@@ -33,7 +34,11 @@ using namespace MathUtil;
 // コンストラクタ
 //=============================================================================
 CThirdPersonCamera::CThirdPersonCamera() :
-	m_fDistance(50.0f)
+	m_fDistance			(50.0f),
+	m_LandingBlend		(0.0f),
+	m_LandingStartPos	(INIT_VEC3),
+	m_LandingStartTarget(INIT_VEC3),
+	m_IsLandingBlend	(false)
 {
 
 }
@@ -96,42 +101,83 @@ void CThirdPersonCamera::Update(CameraTransform& transform)
 		if (!playerAutoMove->IsJump())
 		{
 			nTimeCount = 0.0f;
-			bJumpUp=false;
-		}
+			bJumpUp = false;
+			m_LandingBlend = 0.0f;
+			m_IsLandingBlend = false;
 
-		if (!playerAutoMove->IsJump())
-		{
-			transform.posV.x += (dirX) * 0.05f;
+			transform.posV.x += dirX * 0.05f;
 			transform.posV.y += ((playerPos.y + 60.0f) - transform.posV.y) * 0.05f;
-			transform.posV.z += (dirZ) * 0.05f;
-			
-			// 注視点
+			transform.posV.z += dirZ * 0.05f;
+
 			transform.posR = playerPos;
 			transform.posR.y += 60.0f;
 		}
-		else if (nTimeCount >1.5f)
+		else if (nTimeCount <= 1.5f)
 		{
-			transform.posV.x += (dirX) * 0.04f;
-			transform.posV.y += ((playerPos.y + 20.0f) - transform.posV.y) * 0.04f;
-			transform.posV.z += (dirZ) * 0.04f;
-			
-			// 注視点
-			transform.posR = playerPos;
-			transform.posR.y += 60.0f;
-		}
-		else
-		{
-			// プレイヤーの自動移動を取得
-			auto Aim = pPlayer->GetComponent<CAimComponent>();
-			D3DXVECTOR3 targetCenter = Aim->GetTargetCenter();
+			// ジャンプ中の注視位置
+			auto aim = pPlayer->GetComponent<CAimComponent>();
+
+			D3DXVECTOR3 targetCenter = aim->GetTargetCenter();
 
 			transform.posV.x = playerPos.x + (playerPos.x - targetCenter.x) * 0.1f;
 			transform.posV.y = playerPos.y + (playerPos.y - targetCenter.y) * 0.08f;
-			transform.posV.z += (dirZ) * 0.1f;
-			
-			// 注視点
+			transform.posV.z += dirZ * 0.1f;
+
 			transform.posR = targetCenter;
 			transform.posR.y += 20.0f;
+		}
+		else
+		{
+			//=====================================================
+			// 着地カメラへの切り替え開始
+			//=====================================================
+			if (!m_IsLandingBlend)
+			{
+				m_IsLandingBlend = true;
+				m_LandingBlend = 0.0f;
+
+				// 現在のカメラ位置と注視点を保存
+				m_LandingStartPos = transform.posV;
+				m_LandingStartTarget = transform.posR;
+			}
+
+			//=====================================================
+			// 補間時間
+			//=====================================================
+			float deltaTime = CManager::Instance()->GetTimeSystem()->GetDeltaTime();
+
+			m_LandingBlend += deltaTime / 0.8f;
+
+			if (m_LandingBlend > 1.0f)
+			{
+				m_LandingBlend = 1.0f;
+			}
+
+			// イージング
+			float t = m_LandingBlend * m_LandingBlend * (3.0f - 2.0f * m_LandingBlend);
+
+			//=====================================================
+			// 着地カメラの目標位置
+			//=====================================================
+			D3DXVECTOR3 targetPos = playerPos;
+
+			// プレイヤーより後方・上方に配置
+			targetPos.x -= dir.x * 150.0f;
+			targetPos.y += 120.0f;
+			targetPos.z -= dir.z * 150.0f;
+
+			// 注視点は着地地点
+			D3DXVECTOR3 targetLook = playerPos;
+			targetLook.y += 10.0f;
+
+			//=====================================================
+			// カメラ位置と注視点を補間
+			//=====================================================
+			transform.posV = m_LandingStartPos +
+				(targetPos - m_LandingStartPos) * t;
+
+			transform.posR = m_LandingStartTarget +
+				(targetLook - m_LandingStartTarget) * t;
 		}
 
 		// 向きの更新
