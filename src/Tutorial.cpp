@@ -49,6 +49,7 @@
 //=============================================================================
 CTutorial::CTutorial() :
 	m_pPointUI(nullptr),
+	m_pTutorialUI (nullptr),
 	m_nReadyCount(0),
 	m_fCount(3.0f),
 	m_IsGameStart(false)
@@ -120,27 +121,27 @@ HRESULT CTutorial::Init(void)
 		}
 	}
 
-	// スコアの生成
-	{
-		auto scoreObject = CreateObject<CGameObject>();
+	//// スコアの生成
+	//{
+	//	auto scoreObject = CreateObject<CGameObject>();
 
-		scoreObject->SetTag("Score");
+	//	scoreObject->SetTag("Score");
 
-		// UIコンポーネント
-		auto ui = scoreObject->AddComponent<CUIComponent>();
+	//	// UIコンポーネント
+	//	auto ui = scoreObject->AddComponent<CUIComponent>();
 
-		// スコア描画コンポーネント
-		auto score = scoreObject->AddComponent<CScoreRenderComponent>();
+	//	// スコア描画コンポーネント
+	//	auto score = scoreObject->AddComponent<CScoreRenderComponent>();
 
-		ui->SetPosition({ 0.54f, 0.13f });
-		ui->SetScale({ 2.0f, 2.0f });
+	//	ui->SetPosition({ 0.54f, 0.13f });
+	//	ui->SetScale({ 2.0f, 2.0f });
 
-		score->SetLayer(RenderLayer::UI);
-		score->SetTexture("data/TEXTURE/Num_01.png");
-		score->SetDigitSize(0.02f, 0.04f);
-		score->SetCountSpeed(150.0f);
-		score->SetScore(0);
-	}
+	//	score->SetLayer(RenderLayer::UI);
+	//	score->SetTexture("data/TEXTURE/Num_01.png");
+	//	score->SetDigitSize(0.02f, 0.04f);
+	//	score->SetCountSpeed(150.0f);
+	//	score->SetScore(0);
+	//}
 
 	//-----------------------------------------------------
 	// JSONに保存したUI (「点」 UI)
@@ -167,6 +168,33 @@ HRESULT CTutorial::Init(void)
 		{
 			sprite->SetIsVisible(true);
 		}
+	}
+
+	// チュートリアルUIオブジェクトの生成
+	m_pTutorialUI = CreateObject();
+
+	m_pTutorialUI->SetTag("TutorialUI");
+
+	// UIコンポーネント
+	auto uiReady = m_pTutorialUI->AddComponent<CUIComponent>();
+
+	auto& readyTransform = uiReady->GetTransform();
+	readyTransform.Position = { 0.5f, 0.18f };
+	readyTransform.Alpha = 1.0f;
+	readyTransform.Scale = { 0.0035f, 0.0025f };
+
+	// スプライトコンポーネントに追加
+	auto spriteReady = m_pTutorialUI->AddComponent<CSpriteRenderComponent>();
+
+	// 描画順の設定
+	spriteReady->SetLayer(RenderLayer::UI);
+
+	// テクスチャの設定
+	spriteReady->SetTexture("data/TEXTURE/Tutorial_Text.png");
+
+	if (uiReady)
+	{
+		uiReady->SetUVFrame(0, 3);
 	}
 
 	// インスタンスのポインタを渡す
