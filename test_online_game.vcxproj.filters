@@ -712,9 +712,15 @@
       <Filter>ヘッダー ファイル\Component\Render</Filter>
     </ClInclude>
     <ClInclude Include="include\VD.h">
-      <Filter>ヘッダー ファイル\Shader\DoF</Filter>
+      <Filter>ヘッダー ファイル\DepthOfField</Filter>
     </ClInclude>
     <ClInclude Include="include\HexBlur.h">
+      <Filter>ヘッダー ファイル\DepthOfField</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VDShader.h">
+      <Filter>ヘッダー ファイル\Shader\DoF</Filter>
+    </ClInclude>
+    <ClInclude Include="include\HexBlurShader.h">
       <Filter>ヘッダー ファイル\Shader\DoF</Filter>
     </ClInclude>
   </ItemGroup>
@@ -1097,10 +1103,16 @@
     <ClCompile Include="src\RenderTargetChangeComponent.cpp">
       <Filter>ソース ファイル\Component\Render</Filter>
     </ClCompile>
+    <ClCompile Include="src\HexBlur.cpp">
+      <Filter>ソース ファイル\DepthOfField</Filter>
+    </ClCompile>
     <ClCompile Include="src\VD.cpp">
+      <Filter>ソース ファイル\DepthOfField</Filter>
+    </ClCompile>
+    <ClCompile Include="src\HexBlurShader.cpp">
       <Filter>ソース ファイル\Shader\DoF</Filter>
     </ClCompile>
-    <ClCompile Include="src\HexBlur.cpp">
+    <ClCompile Include="src\VDShader.cpp">
       <Filter>ソース ファイル\Shader\DoF</Filter>
     </ClCompile>
   </ItemGroup>
