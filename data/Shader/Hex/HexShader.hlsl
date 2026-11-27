@@ -8,7 +8,7 @@
 static const float BLUR_TEX_W = 1280.0f;
 // ブラーをかけるテクスチャの高さ
 static const float BLUR_TEX_H = 720.0f;
-float BLUR_RADIUS = 1.0f;
+float BLUR_RADIUS = 8.0f;
 
 // 垂直のテクスチャ
 texture g_verticalTexture;
