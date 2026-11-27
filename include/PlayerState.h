@@ -20,7 +20,7 @@ class CPlayer;
 //*****************************************************************************
 // プレイヤーの待機状態
 //*****************************************************************************
-class CPlayerStandState :public StateBase<CPlayer>
+class CPlayerStandState : public StateBase<CPlayer>
 {
 public:
 
@@ -35,7 +35,7 @@ private:
 //*****************************************************************************
 // プレイヤーの移動状態
 //*****************************************************************************
-class CPlayerMoveState :public StateBase<CPlayer>
+class CPlayerMoveState : public StateBase<CPlayer>
 {
 public:
 
@@ -50,7 +50,37 @@ private:
 //*****************************************************************************
 // プレイヤーの溜め状態
 //*****************************************************************************
-class CPlayerChargeState :public StateBase<CPlayer>
+class CPlayerChargeState : public StateBase<CPlayer>
+{
+public:
+
+	void OnStart(CPlayer* pPlayer) override;
+	void OnUpdate(CPlayer* pPlayer) override;
+	void OnExit(CPlayer* /*pPlayer*/) override {}
+
+private:
+
+};
+
+//*****************************************************************************
+// プレイヤーの技(クレイルグラブ)状態
+//*****************************************************************************
+class CCrailGrabState : public StateBase<CPlayer>
+{
+public:
+
+	void OnStart(CPlayer* pPlayer) override;
+	void OnUpdate(CPlayer* pPlayer) override;
+	void OnExit(CPlayer* /*pPlayer*/) override {}
+
+private:
+
+};
+
+//*****************************************************************************
+// プレイヤーの技(テールグラブ)状態
+//*****************************************************************************
+class CTailGrabState : public StateBase<CPlayer>
 {
 public:
 

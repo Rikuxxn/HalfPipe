@@ -106,6 +106,14 @@ void CPlayerMoveState::OnUpdate(CPlayer* pPlayer)
 	// 自動移動コンポーネントの取得
 	auto autoMove = pPlayer->GetComponent<CAutoMoveComponent>();
 
+	if (autoMove->IsJump() && !autoMove->IsPress())
+	{
+		// クレイルグラブ状態へ移行
+		m_pMachine->ChangeState<CCrailGrabState>();
+
+		return;
+	}
+
 	if (!autoMove->IsJump() && autoMove->IsPress())
 	{
 		// 溜め状態へ移行
@@ -142,8 +150,8 @@ void CPlayerChargeState::OnStart(CPlayer* pPlayer)
 		return;
 	}
 
-	// 待機モーション
-	character->PlayMotion(4, 1);
+	// 溜めモーション
+	character->PlayMotion(2, 25);
 }
 //=============================================================================
 // 溜め状態の更新処理
@@ -156,7 +164,77 @@ void CPlayerChargeState::OnUpdate(CPlayer* pPlayer)
 	// 自動移動コンポーネントの取得
 	auto autoMove = pPlayer->GetComponent<CAutoMoveComponent>();
 
-	if (autoMove->IsJump() || !autoMove->IsPress())
+	if (!autoMove->IsJump() && !autoMove->IsPress())
+	{
+		// 移動状態へ移行
+		m_pMachine->ChangeState<CPlayerMoveState>();
+
+		return;
+	}
+}
+
+//=============================================================================
+// クレイルグラブ状態の開始処理
+//=============================================================================
+void CCrailGrabState::OnStart(CPlayer* pPlayer)
+{
+	// キャラクターコンポーネントの取得
+	auto character = pPlayer->GetComponent<CCharacterComponent>();
+
+	if (!character)
+	{
+		return;
+	}
+
+	// クレイルグラブモーション
+	character->PlayMotion(3, 5);
+}
+//=============================================================================
+// クレイルグラブ状態の更新処理
+//=============================================================================
+void CCrailGrabState::OnUpdate(CPlayer* pPlayer)
+{
+	// 入力を取得
+	CPlayer::InputData input = pPlayer->GatherInput();
+
+	// 自動移動コンポーネントの取得
+	auto autoMove = pPlayer->GetComponent<CAutoMoveComponent>();
+
+	if (!autoMove->IsJump())
+	{
+		// 移動状態へ移行
+		m_pMachine->ChangeState<CPlayerMoveState>();
+	}
+}
+
+//=============================================================================
+// テールグラブ状態の開始処理
+//=============================================================================
+void CTailGrabState::OnStart(CPlayer* pPlayer)
+{
+	// キャラクターコンポーネントの取得
+	auto character = pPlayer->GetComponent<CCharacterComponent>();
+
+	if (!character)
+	{
+		return;
+	}
+
+	// テールグラブモーション
+	character->PlayMotion(4, 5);
+}
+//=============================================================================
+// テールグラブ状態の更新処理
+//=============================================================================
+void CTailGrabState::OnUpdate(CPlayer* pPlayer)
+{
+	// 入力を取得
+	CPlayer::InputData input = pPlayer->GatherInput();
+
+	// 自動移動コンポーネントの取得
+	auto autoMove = pPlayer->GetComponent<CAutoMoveComponent>();
+
+	if (!autoMove->IsJump())
 	{
 		// 移動状態へ移行
 		m_pMachine->ChangeState<CPlayerMoveState>();
