@@ -92,4 +92,19 @@ private:
 
 };
 
+//*****************************************************************************
+// プレイヤーの技(トゥイーク)状態
+//*****************************************************************************
+class CTweakState : public StateBase<CPlayer>
+{
+public:
+
+	void OnStart(CPlayer* pPlayer) override;
+	void OnUpdate(CPlayer* pPlayer) override;
+	void OnExit(CPlayer* /*pPlayer*/) override {}
+
+private:
+
+};
+
 #endif

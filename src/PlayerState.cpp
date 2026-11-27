@@ -151,7 +151,7 @@ void CPlayerChargeState::OnStart(CPlayer* pPlayer)
 	}
 
 	// 溜めモーション
-	character->PlayMotion(2, 25);
+	character->PlayMotion(2, 10);
 }
 //=============================================================================
 // 溜め状態の更新処理
@@ -187,7 +187,7 @@ void CCrailGrabState::OnStart(CPlayer* pPlayer)
 	}
 
 	// クレイルグラブモーション
-	character->PlayMotion(3, 5);
+	character->PlayMotion(3, 15);
 }
 //=============================================================================
 // クレイルグラブ状態の更新処理
@@ -221,12 +221,46 @@ void CTailGrabState::OnStart(CPlayer* pPlayer)
 	}
 
 	// テールグラブモーション
-	character->PlayMotion(4, 5);
+	character->PlayMotion(4, 15);
 }
 //=============================================================================
 // テールグラブ状態の更新処理
 //=============================================================================
 void CTailGrabState::OnUpdate(CPlayer* pPlayer)
+{
+	// 入力を取得
+	CPlayer::InputData input = pPlayer->GatherInput();
+
+	// 自動移動コンポーネントの取得
+	auto autoMove = pPlayer->GetComponent<CAutoMoveComponent>();
+
+	if (!autoMove->IsJump())
+	{
+		// 移動状態へ移行
+		m_pMachine->ChangeState<CPlayerMoveState>();
+	}
+}
+
+//=============================================================================
+// トゥイーク状態の開始処理
+//=============================================================================
+void CTweakState::OnStart(CPlayer* pPlayer)
+{
+	// キャラクターコンポーネントの取得
+	auto character = pPlayer->GetComponent<CCharacterComponent>();
+
+	if (!character)
+	{
+		return;
+	}
+
+	// トゥイークモーション
+	character->PlayMotion(5, 15);
+}
+//=============================================================================
+// トゥイーク状態の更新処理
+//=============================================================================
+void CTweakState::OnUpdate(CPlayer* pPlayer)
 {
 	// 入力を取得
 	CPlayer::InputData input = pPlayer->GatherInput();
