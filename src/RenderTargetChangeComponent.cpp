@@ -1,14 +1,14 @@
 //=============================================================================
 //
-// 2Dレンダーコンポーネント処理 [SpriteComponent.cpp]
-// Author : RIKU TANEKAWA
+// レンダーターゲットチェンジコンポーネント処理 [RenderTargetChangeComponent.cpp]
+// Author : SOICHIRO SASAKI
 //
 //=============================================================================
 
 //*****************************************************************************
 // インクルードファイル
 //*****************************************************************************
-#include "SpriteRenderComponent.h"
+#include "RenderTargetChangeComponent.h"
 #include "GameObject.h"
 #include "TransformComponent.h"
 #include "Manager.h"
@@ -27,7 +27,7 @@ using namespace ColorConst;
 //=============================================================================
 // コンストラクタ
 //=============================================================================
-CSpriteRenderComponent::CSpriteRenderComponent() :
+CRenderTargetChangeComponent::CRenderTargetChangeComponent() :
     m_pVtxBuff(nullptr),
     m_Color(ColorConst::DX::WHITE),
     m_Width(100.0f),
@@ -42,7 +42,7 @@ CSpriteRenderComponent::CSpriteRenderComponent() :
 //=============================================================================
 // 初期化処理
 //=============================================================================
-HRESULT CSpriteRenderComponent::Init(void)
+HRESULT CRenderTargetChangeComponent::Init(void)
 {
     // デバイスの取得
     auto device = CManager::Instance()->GetRenderer()->GetDevice();
@@ -55,13 +55,38 @@ HRESULT CSpriteRenderComponent::Init(void)
         m_pVtxBuff.GetAddressOf(),
         nullptr);
 
+    UINT w = CManager::Instance()->GetRenderer()->GetBackBufferHeight();
+    UINT h = CManager::Instance()->GetRenderer()->GetBackBufferWidth();
+
+
+    // レンダーターゲット1
+    if (FAILED(m_pRenderTarget.Create(w / 2, h / 2, D3DFMT_A32B32G32R32F, D3DFMT_UNKNOWN)))
+    {
+        return E_FAIL;
+    }
+
+    // レンダーターゲット2
+    if (FAILED(m_pRenderTargetMulti.Create(w / 2, h / 2, D3DFMT_A32B32G32R32F, D3DFMT_UNKNOWN)))
+    {
+        return E_FAIL;
+    }
+
+
     return S_OK;
+}
+
+//=============================================================================
+// 終了処理
+//=============================================================================
+void CRenderTargetChangeComponent::Uninit(void)
+{
+
 }
 
 //=============================================================================
 // 描画処理
 //=============================================================================
-void CSpriteRenderComponent::Draw(void)
+void CRenderTargetChangeComponent::Draw(void)
 {
     if (!m_isVisible)
     {
@@ -156,6 +181,9 @@ void CSpriteRenderComponent::Draw(void)
     //頂点バッファをアンロックする
     m_pVtxBuff->Unlock();
 
+    m_pRenderTarget.Begin();
+    m_pRenderTargetMulti.Begin();
+
     // メッシュの描画
     if (m_Shader)
     {
@@ -184,13 +212,15 @@ void CSpriteRenderComponent::Draw(void)
     {
         DrawPolygon();
     }
+    m_pRenderTarget.End();
+    m_pRenderTargetMulti.End();
 
 }
 
 //=============================================================================
 // 描画処理(ポリゴン)
 //=============================================================================
-void CSpriteRenderComponent::DrawPolygon(void)
+void CRenderTargetChangeComponent::DrawPolygon(void)
 {
 
     // デバイスの取得

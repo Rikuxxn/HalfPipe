@@ -19,7 +19,7 @@ class CRenderTargetMulti;
 //*****************************************************************************
 // スプライトコンポーネントクラス
 //*****************************************************************************
-class CSpriteRenderComponent : public CRenderComponent
+class CRenderTargetChangeComponent : public CRenderComponent
 {
 private:
 
@@ -27,20 +27,22 @@ private:
     std::shared_ptr<CShaderResource> m_Shader;
     D3DXCOLOR    m_Color;
     RECT        m_UV;
-    CRenderTarget* m_pRenderTarget;
-    CRenderTarget* m_pRenderTargetMulti;
+    CRenderTarget m_pRenderTarget;
+    CRenderTargetMulti m_pRenderTargetMulti;
     float       m_Width;
     float       m_Height;
     bool m_isVisible = true;
+    bool m_isMulti = false;
 
 public:
 
-    CSpriteRenderComponent();
-    ~CSpriteRenderComponent() = default;
+    CRenderTargetChangeComponent();
+    ~CRenderTargetChangeComponent() = default;
 
 public:
 
     HRESULT Init(void) override;
+    void Uninit(void) override;
     void Draw(void) override;
     void DrawPolygon(void);
 
@@ -83,6 +85,11 @@ public:
     void SetIsVisible(bool visible) { m_isVisible = visible; }
 
     bool IsVisible(void) { return m_isVisible; }
+
+    void SetRenderTargetMulti(bool isMulti) { m_isMulti; }
+
+    CRenderTarget GetRenderTarget(void) { return m_pRenderTarget; }
+    CRenderTargetMulti GetRenderTargetMulti(void) { return m_pRenderTargetMulti; }
 };
 
 #endif

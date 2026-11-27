@@ -212,6 +212,7 @@
     <ClInclude Include="include\GhostObjectComponent.h" />
     <ClInclude Include="include\GhostObjectManager.h" />
     <ClInclude Include="include\Grid.h" />
+    <ClInclude Include="include\HexBlur.h" />
     <ClInclude Include="include\HpGaugeComponent.h" />
     <ClInclude Include="include\Input.h" />
     <ClInclude Include="include\InputManager.h" />
@@ -301,6 +302,7 @@
     <ClInclude Include="include\UIAnimationSerializer.h" />
     <ClInclude Include="include\UIComponent.h" />
     <ClInclude Include="include\UIFactory.h" />
+    <ClInclude Include="include\VD.h" />
     <ClInclude Include="include\Water.h" />
     <ClInclude Include="include\WaterShader.h" />
     <ClInclude Include="include\XModelRenderComponent.h" />
@@ -350,6 +352,7 @@
     <ClCompile Include="src\GhostObjectComponent.cpp" />
     <ClCompile Include="src\GhostObjectManager.cpp" />
     <ClCompile Include="src\Grid.cpp" />
+    <ClCompile Include="src\HexBlur.cpp" />
     <ClCompile Include="src\HpGaugeComponent.cpp" />
     <ClCompile Include="src\Input.cpp" />
     <ClCompile Include="src\InputManager.cpp" />
@@ -430,6 +433,7 @@
     <ClCompile Include="src\UIAnimationSerializer.cpp" />
     <ClCompile Include="src\UIComponent.cpp" />
     <ClCompile Include="src\UIFactory.cpp" />
+    <ClCompile Include="src\VD.cpp" />
     <ClCompile Include="src\Water.cpp" />
     <ClCompile Include="src\WaterShader.cpp" />
     <ClCompile Include="src\XModelRenderComponent.cpp" />
