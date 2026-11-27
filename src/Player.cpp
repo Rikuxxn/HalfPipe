@@ -826,13 +826,29 @@ void CPlayer::Update(void)
 	// エイムコンポーネント取得
 	auto aim = GetComponent<CAimComponent>();
 
+	// 投擲コンポーネントの取得
+	auto ballThrow = GetComponent<CThrowComponent>();
+
 	// 自動移動コンポーネントの取得
 	auto autoMove = GetComponent<CAutoMoveComponent>();
 
 	if (CManager::Instance()->GetSceneManager()->GetMode() == CScene::Mode::Tutorial)
 	{
-		if (autoMove->IsFinish())
+		if (autoMove && autoMove->IsFinish())
 		{
+			if (ballThrow)
+			{
+				auto scene = CManager::Instance()->GetSceneManager()->GetScene();
+
+				auto snowBallCount = scene->FindGameObject("SnowBallCount");
+
+				// カウント描画コンポーネント
+				auto count = snowBallCount->GetComponent<CCountRenderComponent>();
+
+				ballThrow->SetThrowNum(50);
+				count->SetCount(ballThrow->GetCurrentThrowCount());
+			}
+
 			transform->Position = { -400.0f, 580.0f, -1330.0f };
 			autoMove->ResetAutoMove();
 			autoMove->StartAutoMove();
@@ -856,9 +872,6 @@ void CPlayer::Update(void)
 	if (autoMove->IsJump() &&
 		(pKeyboard->GetTrigger(DIK_F) || pJoypad->GetTriggerR2()))
 	{
-		// 投擲コンポーネントの取得
-		auto ballThrow = GetComponent<CThrowComponent>();
-
 		if (ballThrow)
 		{
 			ballThrow->Throw();
