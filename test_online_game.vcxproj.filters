@@ -708,6 +708,9 @@
     <ClInclude Include="include\UITextComponent.h">
       <Filter>ヘッダー ファイル\Component</Filter>
     </ClInclude>
+    <ClInclude Include="include\RenderTargetChangeComponent.h">
+      <Filter>ヘッダー ファイル\Component\Render</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="imgui\imgui.cpp">
@@ -1085,6 +1088,9 @@
     <ClCompile Include="src\UITextComponent.cpp">
       <Filter>ソース ファイル\Component</Filter>
     </ClCompile>
+    <ClCompile Include="src\RenderTargetChangeComponent.cpp">
+      <Filter>ソース ファイル\Component\Render</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="data\Shader\Bloom\BloomBrightPass.hlsl">
@@ -1120,5 +1126,7 @@
       <Filter>リソース ファイル\ShadowMap</Filter>
     </None>
     <None Include="data\Shader\DepthOfField.hlsl" />
+    <None Include="data\Shader\Hex\HexShader.hlsl" />
+    <None Include="data\Shader\Hex\VDShader.hlsl" />
   </ItemGroup>
 </Project>
