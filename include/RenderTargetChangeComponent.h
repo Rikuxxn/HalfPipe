@@ -11,6 +11,8 @@
 // インクルードファイル
 //*****************************************************************************
 #include "RenderComponent.h"
+#include "RenderTarget.h"
+#include "RenderTargetMulti.h"
 
 class CShaderResource;
 class CRenderTarget;
