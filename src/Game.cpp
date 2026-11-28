@@ -112,6 +112,8 @@ HRESULT CGame::Init(void)
 	{
 		auto network = CManager::Instance()->GetNetworkManager();
 
+		m_nReadyCount = 0;
+
 		if (network)
 		{
 			// サーバーから受け取った参加プレイヤー一覧を取得
@@ -359,33 +361,44 @@ void CGame::Update(void)
 		//return;
 	}
 
-	// 人数がそろって、一定時間経過したら
-	if (m_nReadyCount >= Network::MAX_PLAYERS && !m_IsGameStart)
+	//============================================================
+	// 参加プレイヤーがそろったらゲーム開始
+	//============================================================
+	if (!m_IsGameStart)
 	{
-		m_fCount -= dt;
-
-		if (m_fCount <= 0.0f)
+		if (network)
 		{
-			m_fCount = 3.0f;
-			m_IsGameStart = true;
+			// 現在参加しているプレイヤー数
+			int playerCount = static_cast<int>(network->GetActivePlayerIds().size());
 
-			// プレイヤーの自動移動を開始
-			auto players = FindGameObjects<CPlayer>();
-
-			for (auto player : players)
+			// 参加人数と生成済み人数が一致したら
+			if (playerCount > 0 && m_nReadyCount == playerCount)
 			{
-				if (!player)
-				{
-					continue;
-				}
+				m_fCount -= dt;
 
-				if (!player->IsLocalPlayer())
+				if (m_fCount <= 0.0f)
 				{
-					continue;
-				}
+					m_fCount = 3.0f;
+					m_IsGameStart = true;
 
-				// 自動移動開始
-				player->SetIsAutoMove(true);
+					// ローカルプレイヤーの自動移動を開始
+					auto players = FindGameObjects<CPlayer>();
+
+					for (auto player : players)
+					{
+						if (!player || !player->IsLocalPlayer())
+						{
+							continue;
+						}
+
+						player->SetIsAutoMove(true);
+					}
+				}
+			}
+			else
+			{
+				// 人数がそろっていなければカウントを戻す
+				m_fCount = 3.0f;
 			}
 		}
 	}
