@@ -89,6 +89,7 @@ public:
 	void ResetGameFinish(void) { m_IsGameFinish = false; }
 	void ResetGameSession(void);
 	bool IsPlayerReady(uint8_t playerId) const;
+	bool IsAllPlayersReady(void) const;
 	void SendPlayerReady(bool isReady);
 	bool PopPlayerReady(PlayerReadyInfo& info);
 	bool PopPointCircleScored(PointCircleScoredInfo& info);

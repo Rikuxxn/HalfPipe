@@ -733,13 +733,13 @@ void CPlayer::Update(void)
 	// デルタタイムの取得
 	float dt = CManager::Instance()->GetTimeSystem()->GetDeltaTime();
 
+	auto network = CManager::Instance()->GetNetworkManager();
+
 	//============================================================
 	// LocalPlayerなら入力をサーバーへ送信
 	//============================================================
 	if (m_IsLocalPlayer)
 	{
-		auto network = CManager::Instance()->GetNetworkManager();
-
 		if (network && network->IsConnected())
 		{
 			// 一定間隔で位置を送信
@@ -790,8 +790,11 @@ void CPlayer::Update(void)
 	}
 #endif
 
-	// プレイヤーの準備・スキップ処理
-	UpdateReady();
+	if (!network->IsAllPlayersReady())
+	{
+		// プレイヤーの準備・スキップ処理
+		UpdateReady();
+	}
 
 	// エイムコンポーネント取得
 	auto aim = GetComponent<CAimComponent>();

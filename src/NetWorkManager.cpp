@@ -969,6 +969,37 @@ bool CNetworkManager::IsPlayerReady(uint8_t playerId) const
 }
 
 //=============================================================================
+// 全参加プレイヤーの準備完了確認
+//=============================================================================
+bool CNetworkManager::IsAllPlayersReady(void) const
+{
+	// サーバーから受け取った参加プレイヤー一覧
+	const auto& playerIds = GetActivePlayerIds();
+
+	// 参加者がいなければ開始しない
+	if (playerIds.empty())
+	{
+		return false;
+	}
+
+	for (uint8_t playerId : playerIds)
+	{
+		if (playerId >= Network::MAX_PLAYERS)
+		{
+			continue;
+		}
+
+		// 参加プレイヤーが未準備ならfalse
+		if (!m_PlayerReady[playerId])
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
+//=============================================================================
 // プレイヤーの準備状態を送信
 //=============================================================================
 void CNetworkManager::SendPlayerReady(bool isReady)

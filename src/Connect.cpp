@@ -454,8 +454,10 @@ void CConnect::Update(void)
 			}
 		}
 
-		// 全員が準備完了になったら
-		if (network->IsGameReady())
+		//============================================================
+		// 参加プレイヤー全員が準備完了になったらゲーム開始
+		//============================================================
+		if (network->IsAllPlayersReady()/*network->IsGameReady()*/)
 		{
 			// デルタタイムの取得
 			float dt = CManager::Instance()->GetTimeSystem()->GetDeltaTime();
@@ -470,9 +472,12 @@ void CConnect::Update(void)
 				pFade->StartFadeOut(Mode::Game);
 			}
 		}
-
-		return;
 	}
+	//else
+	//{
+	//	// 誰かが準備解除、または未準備ならカウントをリセット
+	//	m_fCount = 3.0f;
+	//}
 
 	// 参加要求は1回だけ送信
 	if (!m_JoinRequestSent)
