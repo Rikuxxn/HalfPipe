@@ -17,6 +17,8 @@
 #include "RigidBodyComponent.h"
 #include "TimeSystem.h"
 #include "AutoMoveComponent.h"
+#include <AimComponent.h>
+#include "TransformComponent.h"
 
 
 //=============================================================================
@@ -106,18 +108,23 @@ void CPlayerMoveState::OnUpdate(CPlayer* pPlayer)
 	// 自動移動コンポーネントの取得
 	auto autoMove = pPlayer->GetComponent<CAutoMoveComponent>();
 
-	if (autoMove->IsJump() && !autoMove->IsPress())
+	if (!autoMove)
 	{
-		// クレイルグラブ状態へ移行
-		m_pMachine->ChangeState<CCrailGrabState>();
-
 		return;
 	}
 
-	if (!autoMove->IsJump() && autoMove->IsPress())
+	// ジャンプ中ならクレイルグラブ
+	if (autoMove->IsJump())
 	{
-		// 溜め状態へ移行
+		m_pMachine->ChangeState<CCrailGrabState>();
+		return;
+	}
+
+	// Press中なら溜め状態
+	if (autoMove->IsPress())
+	{
 		m_pMachine->ChangeState<CPlayerChargeState>();
+		return;
 	}
 
 	//
@@ -164,9 +171,22 @@ void CPlayerChargeState::OnUpdate(CPlayer* pPlayer)
 	// 自動移動コンポーネントの取得
 	auto autoMove = pPlayer->GetComponent<CAutoMoveComponent>();
 
-	if (!autoMove->IsJump() && !autoMove->IsPress())
+	if (!autoMove)
 	{
-		// 移動状態へ移行
+		return;
+	}
+
+	// ジャンプ中ならクレイルグラブ状態へ移行
+	if (autoMove->IsJump())
+	{
+		m_pMachine->ChangeState<CCrailGrabState>();
+
+		return;
+	}
+
+	// Pressが解除されたら移動状態へ移行
+	if (!autoMove->IsPress())
+	{
 		m_pMachine->ChangeState<CPlayerMoveState>();
 
 		return;
@@ -188,6 +208,56 @@ void CCrailGrabState::OnStart(CPlayer* pPlayer)
 
 	// クレイルグラブモーション
 	character->PlayMotion(3, 15);
+
+	//=============================================================
+	// ターゲット方向へプレイヤーを向ける
+	//=============================================================
+
+	// コンポーネント取得
+	auto aim = pPlayer->GetComponent<CAimComponent>();
+	auto transform = pPlayer->GetComponent<CTransformComponent>();
+
+	if (!aim || !transform)
+	{
+		return;
+	}
+
+	// プレイヤーの位置
+	D3DXVECTOR3 position = transform->Position;
+
+	// ターゲットの中心位置
+	D3DXVECTOR3 targetCenter = aim->GetTargetCenter();
+
+	// ターゲットへの方向
+	D3DXVECTOR3 direction = targetCenter - position;
+
+	// Y方向は無視（水平方向だけを向く）
+	direction.y = 0.0f;
+
+	if (D3DXVec3LengthSq(&direction) < 0.0001f)
+	{
+		return;
+	}
+
+	// 正規化
+	D3DXVec3Normalize(&direction, &direction);
+
+	// Y軸回転角度を計算
+	float rotY = atan2f(-direction.x, -direction.z);
+
+	// クォータニオン作成
+	D3DXQUATERNION quaternion;
+
+	D3DXQuaternionRotationYawPitchRoll(
+		&quaternion,
+		rotY,
+		0.0f,
+		0.0f
+	);
+
+	// 回転を反映
+	transform->Quaternion = quaternion;
+	transform->UseQuaternion = true;
 }
 //=============================================================================
 // クレイルグラブ状態の更新処理

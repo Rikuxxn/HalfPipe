@@ -52,10 +52,6 @@ public:
     // ステート用のフラグ更新処理
     void UpdateMovementFlags(const D3DXVECTOR3& moveDir);
 
-    // チュートリアルの説明中か設定
-    void SetIsTutorial(bool flag) { m_IsTutorial = flag; }
-    bool IsTutorial(void) const { return m_IsTutorial; }
-
 public:
 
     // ネットワーク関係
@@ -65,6 +61,19 @@ public:
 
     void SendPlayerTransform(void);
     void SetReady(bool isReady);
+
+    // ネットワーク位置設定
+    void SetNetworkTransform(
+        const D3DXVECTOR3& position, 
+        const D3DXVECTOR3& rotation, 
+        const D3DXQUATERNION& quaternion)
+    {
+        m_NetworkTargetPosition = position;
+        m_NetworkTargetRotation = rotation;
+        m_NetworkTargetQuaternion = quaternion;
+
+        m_HasNetworkTarget = true;
+    }
 
     // プレイヤーID
     void SetPlayerId(uint8_t id) { m_PlayerId = id; }
@@ -77,6 +86,9 @@ public:
     // モーション更新
     void UpdateNetworkMotion(bool isMoving);
 
+    // リモートプレイヤーの位置補間
+    void UpdateNetworkTransform(float dt);
+
     // ゴール判定
     void SetGoal(bool flag) { m_IsGoal = flag; }
     bool IsGoal(void) { return m_IsGoal; }
@@ -84,6 +96,17 @@ public:
 private:
 
     void UpdateSurfaceAlignment(float deltaTime);
+
+    void ResetAirRotation(float deltaTime);
+
+    // チュートリアルのスキップ待ち処理
+    void UpdateTutorialSkip(void);
+
+    // 接続シーンの準備状態処理
+    void UpdateConnectReady(void);
+
+    // プレイヤーの準備・スキップ処理
+    void UpdateReady(void);
 
 private:
 
@@ -101,7 +124,7 @@ private:
     D3DXVECTOR3 m_rotDest;          // 目標の向き
     bool        m_bIsMoving;	    // 移動入力フラグ
     bool        m_bControlFlag;     // 移動許可フラグ
-    bool        m_IsTutorial;       // チュートリアルの説明中かどうか
+    bool        m_IsSkipWaiting;    // スキップ待ち状態
 
     // ステートを管理するクラスのインスタンス
     StateMachine<CPlayer> m_stateMachine;
@@ -115,7 +138,14 @@ private:
 
     // Network interpolation
     D3DXVECTOR3 m_NetworkTargetPosition = INIT_VEC3;
-    D3DXVECTOR3 m_NetworkTargetRotation = INIT_VEC3;
+    D3DXVECTOR3 m_NetworkTargetRotation{};
+    D3DXQUATERNION m_NetworkTargetQuaternion{};
+    
+    bool m_HasNetworkTarget = false;
+
+    // 送信間隔
+    float m_NetworkSendTimer = 0.0f;
+    float m_NetworkSendInterval = 0.05f;
 
     // ハーフパイプの面に沿って向きを変える用
     D3DXVECTOR3     m_SurfaceNormal;        // 面の法線

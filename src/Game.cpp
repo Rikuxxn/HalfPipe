@@ -432,10 +432,17 @@ void CGame::Update(void)
 					continue;
 				}
 
-				transform->Position		= { state.posX, state.posY,	state.posZ };
-				transform->Rotation		= { state.rotX, state.rotY,	state.rotZ };
-				transform->Quaternion	= { state.quatX, state.quatY, state.quatZ, state.quatW };
+				D3DXVECTOR3 position = { state.posX, state.posY,	state.posZ };
+				D3DXVECTOR3 rotation		= { state.rotX, state.rotY,	state.rotZ };
+				D3DXQUATERNION  quaternion	= { state.quatX, state.quatY, state.quatZ, state.quatW };
 				transform->UseQuaternion = true;
+
+				// –Ú•WˆÊ’u‚Æ‚µ‚Ä•Û‘¶
+				player->SetNetworkTransform(
+					position,
+					rotation,
+					quaternion
+				);
 
 				auto rigid = player->GetComponent<CRigidBodyComponent>();
 

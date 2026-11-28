@@ -293,6 +293,14 @@ void CConnect::Update(void)
 	// シーンの更新処理
 	CScene::Update();
 
+	if (!network->IsGameReady() && pFade->GetFade() == CFade::FADE_NONE &&
+		(pKeyboard->GetTrigger(DIK_R) ||
+			pJoypad->GetTrigger(CInputJoypad::JOYKEY_BACK)))
+	{
+		// タイトルに戻る
+		pFade->StartFadeOut(Mode::Title);
+	}
+
 	if (m_PlayerSpawned && m_pJoinUI)
 	{
 		auto spriteUI = m_pJoinUI->GetComponent<CSpriteRenderComponent>();
@@ -420,14 +428,6 @@ void CConnect::Update(void)
 				player->Destroy();
 			}
 		}
-	}
-
-	if (!network->IsGameReady() && pFade->GetFade() == CFade::FADE_NONE &&
-		(pKeyboard->GetTrigger(DIK_R) ||
-			pJoypad->GetTrigger(CInputJoypad::JOYKEY_BACK)))
-	{
-		// タイトルに戻る
-		pFade->StartFadeOut(Mode::Title);
 	}
 
 	// 参加確定後はゲームシーンへの遷移を待つ

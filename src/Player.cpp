@@ -72,7 +72,7 @@ CPlayer::CPlayer() :
 	m_ParticleObject	(nullptr),				// パーティクル
 	m_bAutoMove			(false),
 	m_IsReady			(false),
-	m_IsTutorial		(false)
+	m_IsSkipWaiting		(false)					// スキップ待ち状態
 {
 
 }
@@ -742,20 +742,35 @@ void CPlayer::Update(void)
 
 		if (network && network->IsConnected())
 		{
-			network->SendPlayerTransform(
-				transform->Position,
-				transform->Rotation,
-				transform->Quaternion);
+			// 一定間隔で位置を送信
+			m_NetworkSendTimer += dt;
+
+			if (m_NetworkSendTimer >= m_NetworkSendInterval)
+			{
+				m_NetworkSendTimer = 0.0f;
+
+				network->SendPlayerTransform(
+					transform->Position,
+					transform->Rotation,
+					transform->Quaternion
+				);
+			}
 		}
+		// ハーフパイプの面に合わせた姿勢制御
+		UpdateSurfaceAlignment(dt);
+	}
+	//============================================================
+	// リモートプレイヤー
+	//============================================================
+	else
+	{
+		UpdateNetworkTransform(dt);
 	}
 
 	if (!m_IsLocalPlayer)
 	{
 		return;
 	}
-
-	// ハーフパイプの面に合わせた姿勢制御
-	UpdateSurfaceAlignment(dt);
 
 	// カメラの取得
 	CCamera* pCamera = CManager::Instance()->GetCamera();
@@ -775,53 +790,8 @@ void CPlayer::Update(void)
 	}
 #endif
 
-	// チュートリアルの説明中の場合はスキップ入力を受け付けない
-	if (m_IsTutorial)
-	{
-		// サーバーへ準備完了を送信
-		auto network = CManager::Instance()->GetNetworkManager();
-
-		if (!m_IsReady && m_pReadyUI && !network->IsGameReady() &&
-			(pKeyboard->GetTrigger(DIK_RETURN) || pJoypad->GetTrigger(CInputJoypad::JOYKEY_A)))
-		{
-			// 準備UIの取得
-			auto readyUI = m_pReadyUI->GetComponent<CUIComponent>();
-
-			// 準備完了
-			if (readyUI)
-			{
-				readyUI->SetUVFrame(2, 3);
-			}
-
-			// 準備完了状態
-			m_IsReady = true;
-
-			if (network)
-			{
-				network->SendPlayerReady(true);
-			}
-		}
-		else if (m_IsReady && m_pReadyUI && !network->IsGameReady() && 
-			(pKeyboard->GetTrigger(DIK_BACKSPACE) || pJoypad->GetTrigger(CInputJoypad::JOYKEY_B)))
-		{
-			// 準備UIの取得
-			auto readyUI = m_pReadyUI->GetComponent<CUIComponent>();
-
-			// 準備OK (完了前)
-			if (readyUI)
-			{
-				readyUI->SetUVFrame(1, 3);
-			}
-
-			// 準備完了状態解除
-			m_IsReady = false;
-
-			if (network)
-			{
-				network->SendPlayerReady(false);
-			}
-		}
-	}
+	// プレイヤーの準備・スキップ処理
+	UpdateReady();
 
 	// エイムコンポーネント取得
 	auto aim = GetComponent<CAimComponent>();
@@ -959,6 +929,112 @@ void CPlayer::Update(void)
 }
 
 //=============================================================================
+//  接続シーンの準備状態処理
+//=============================================================================
+void CPlayer::UpdateConnectReady(void)
+{
+	auto keyboard = CManager::Instance()->GetInput()->GetKeyboard();
+	auto joypad = CManager::Instance()->GetInput()->GetJoypad();
+
+	// サーバーへ準備完了を送信
+	auto network = CManager::Instance()->GetNetworkManager();
+
+	if (!m_IsReady && m_pReadyUI && !network->IsGameReady() &&
+		(keyboard->GetTrigger(DIK_RETURN) || joypad->GetTrigger(CInputJoypad::JOYKEY_A)))
+	{
+		// 準備UIの取得
+		auto readyUI = m_pReadyUI->GetComponent<CUIComponent>();
+
+		// 準備完了
+		if (readyUI)
+		{
+			readyUI->SetUVFrame(2, 3);
+		}
+
+		// 準備完了状態
+		m_IsReady = true;
+
+		if (network)
+		{
+			network->SendPlayerReady(true);
+		}
+	}
+	else if (m_IsReady && m_pReadyUI && !network->IsGameReady() &&
+		(keyboard->GetTrigger(DIK_BACKSPACE) || joypad->GetTrigger(CInputJoypad::JOYKEY_B)))
+	{
+		// 準備UIの取得
+		auto readyUI = m_pReadyUI->GetComponent<CUIComponent>();
+
+		// 準備OK (完了前)
+		if (readyUI)
+		{
+			readyUI->SetUVFrame(1, 3);
+		}
+
+		// 準備完了状態解除
+		m_IsReady = false;
+
+		if (network)
+		{
+			network->SendPlayerReady(false);
+		}
+	}
+}
+
+//=============================================================================
+// チュートリアルのスキップ待ち処理
+//=============================================================================
+void CPlayer::UpdateTutorialSkip(void)
+{
+	auto keyboard = CManager::Instance()->GetInput()->GetKeyboard();
+	auto joypad = CManager::Instance()->GetInput()->GetJoypad();
+
+	// STARTボタン
+	if (keyboard->GetTrigger(DIK_RETURN) ||
+		joypad->GetTrigger(CInputJoypad::JOYKEY_START))
+	{
+		// スキップ待ち状態を切り替える
+		m_IsSkipWaiting = !m_IsSkipWaiting;
+
+		// UI取得
+		auto skipUI = m_pReadyUI->GetComponent<CUIComponent>();
+
+		if (skipUI)
+		{
+			if (m_IsSkipWaiting)
+			{
+				// スキップ待ち
+				skipUI->SetUVFrame(2, 3);
+			}
+			else
+			{
+				// 通常状態
+				skipUI->SetUVFrame(1, 3);
+			}
+		}
+	}
+}
+
+//=============================================================================
+// プレイヤーの準備・スキップ処理
+//=============================================================================
+void CPlayer::UpdateReady(void)
+{
+	auto network = CManager::Instance()->GetNetworkManager();
+
+	// Tutorialシーン
+	if (CManager::Instance()->GetSceneManager()->GetMode() == CScene::Mode::Tutorial)
+	{
+		UpdateTutorialSkip();
+	}
+	else 
+	{
+		// 現在の準備完了処理
+		UpdateConnectReady();
+	}
+}
+
+//=============================================================================
 // ハーフパイプの面に姿勢を合わせる
 //=============================================================================
 void CPlayer::UpdateSurfaceAlignment(float deltaTime)
@@ -1005,8 +1081,19 @@ void CPlayer::UpdateSurfaceAlignment(float deltaTime)
 		}
 	}
 
-	// 空中では面に合わせた姿勢制御をしない
-	if (!m_AlignToSurface || !m_IsGrounded)
+	//=============================================================================
+	// 空中処理
+	//=============================================================================
+	if (!m_IsGrounded)
+	{
+		// X・Z軸の回転をリセット
+		ResetAirRotation(deltaTime);
+
+		return;
+	}
+
+	// 面への姿勢合わせが無効なら終了
+	if (!m_AlignToSurface)
 	{
 		return;
 	}
@@ -1118,6 +1205,78 @@ void CPlayer::UpdateSurfaceAlignment(float deltaTime)
 }
 
 //=============================================================================
+// 空中姿勢をリセットする
+//=============================================================================
+void CPlayer::ResetAirRotation(float deltaTime)
+{
+	auto transform = GetComponent<CTransformComponent>();
+
+	if (!transform)
+	{
+		return;
+	}
+
+	// 現在のクォータニオンから回転行列を作成
+	D3DXMATRIX rotationMatrix;
+	D3DXMatrixRotationQuaternion(
+		&rotationMatrix,
+		&transform->Quaternion
+	);
+
+	// 現在のForward方向を取得
+	D3DXVECTOR3 forward(
+		rotationMatrix._31,
+		rotationMatrix._32,
+		rotationMatrix._33
+	);
+
+	// Y軸方向の成分を取り除く
+	forward.y = 0.0f;
+
+	// 正規化
+	if (D3DXVec3LengthSq(&forward) < 0.0001f)
+	{
+		return;
+	}
+
+	D3DXVec3Normalize(&forward, &forward);
+
+	// 現在のY軸回転を取得
+	float yaw = atan2f(forward.x, forward.z);
+
+	// Y軸回転だけを残したクォータニオンを作成
+	D3DXQUATERNION targetQuaternion;
+
+	D3DXQuaternionRotationYawPitchRoll(
+		&targetQuaternion,
+		yaw,
+		0.0f,
+		0.0f
+	);
+
+	// 現在の回転から補間
+	float t = 1.0f - expf(-5.0f * deltaTime);
+
+	D3DXQUATERNION resultQuaternion;
+
+	D3DXQuaternionSlerp(
+		&resultQuaternion,
+		&transform->Quaternion,
+		&targetQuaternion,
+		t
+	);
+
+	D3DXQuaternionNormalize(
+		&resultQuaternion,
+		&resultQuaternion
+	);
+
+	// 反映
+	transform->Quaternion = resultQuaternion;
+	transform->UseQuaternion = true;
+}
+
+//=============================================================================
 // リモート用モーション更新
 //=============================================================================
 void CPlayer::UpdateNetworkMotion(bool isMoving)
@@ -1147,6 +1306,47 @@ void CPlayer::UpdateNetworkMotion(bool isMoving)
 		// 待機モーション
 		character->PlayMotion(0, 10);
 	}
+}
+
+//=============================================================================
+// リモートプレイヤーの位置補間
+//=============================================================================
+void CPlayer::UpdateNetworkTransform(float dt)
+{
+	if (!m_HasNetworkTarget)
+	{
+		return;
+	}
+
+	auto transform = GetComponent<CTransformComponent>();
+
+	if (!transform)
+	{
+		return;
+	}
+
+	// 補間速度
+	float t = std::min(dt * 12.0f, 1.0f);
+
+	// 位置補間
+	D3DXVec3Lerp(
+		&transform->Position,
+		&transform->Position,
+		&m_NetworkTargetPosition,
+		t
+	);
+
+	// 回転補間
+	D3DXQUATERNION result;
+
+	D3DXQuaternionSlerp(
+		&result,
+		&transform->Quaternion,
+		&m_NetworkTargetQuaternion,
+		t
+	);
+
+	transform->Quaternion = result;
 }
 
 //=============================================================================
